@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/bottom_nav_theme.xml" value="0.1865" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_chat.xml" value="0.1" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_circle_interface_essential_40.xml" value="0.1" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_single_interface_essential_40.xml" value="0.1" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_main.xml" value="0.67" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_profile.xml" value="0.2807153965785381" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
       </map>
