@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_resource"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.newapp.profileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="com.example.newapp.scheduleFragment"
+        android:label="fragment_schedule"
+        tools:layout="@layout/fragment_schedule" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.newapp.chatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="com.example.newapp.newsFragment"
+        android:label="fragment_news"
+        tools:layout="@layout/fragment_news" />
+    <fragment
+        android:id="@+id/evaluationsFragment"
+        android:name="com.example.newapp.evaluationsFragment"
+        android:label="fragment_evaluations"
+        tools:layout="@layout/fragment_evaluations" />
+
+
+</navigation>
