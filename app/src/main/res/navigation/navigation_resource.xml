@@ -7,28 +7,28 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.newapp.profileFragment"
+        android:name="com.example.newapp.ui.profileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/scheduleFragment"
-        android:name="com.example.newapp.scheduleFragment"
+        android:name="com.example.newapp.ui.scheduleFragment"
         android:label="fragment_schedule"
         tools:layout="@layout/fragment_schedule" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.newapp.chatFragment"
+        android:name="com.example.newapp.ui.chatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/newsFragment"
-        android:name="com.example.newapp.newsFragment"
+        android:name="com.example.newapp.ui.newsFragment"
         android:label="fragment_news"
         tools:layout="@layout/fragment_news" />
     <fragment
         android:id="@+id/evaluationsFragment"
-        android:name="com.example.newapp.evaluationsFragment"
+        android:name="com.example.newapp.ui.evaluationsFragment"
         android:label="fragment_evaluations"
         tools:layout="@layout/fragment_evaluations" />
 
