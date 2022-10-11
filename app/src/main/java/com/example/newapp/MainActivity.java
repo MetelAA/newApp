@@ -20,15 +20,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         fAuth = FirebaseAuth.getInstance();
-        //checkUserRegistration();
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-        
     }
 
 

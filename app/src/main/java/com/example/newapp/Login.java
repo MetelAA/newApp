@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.RadioGroup;
 
 import com.example.newapp.core.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
@@ -77,29 +79,76 @@ public class Login extends AppCompatActivity {
     }
 
     private void loginUser(String Email, String Password){
-        fAuth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    String UID = fAuth.getUid();
-                    fStore.collection("users").document(UID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.isSuccessful()){
-                                DocumentSnapshot data = task.getResult();
-                                User.getUser().create(UID, data.get("Name").toString(), data.get("Email").toString(), data.get("Type").toString());
-
-                            }else{
-                                Snackbar.make(mainElem, task.getException().toString(), Snackbar.LENGTH_LONG).show();
-                                fAuth.signOut();
-                            }
+        fAuth.signInWithEmailAndPassword(Email, Password)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG);
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            String UID = fAuth.getUid();
+                            fStore.collection("users").document(UID).get()
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                            fAuth.signOut();
+                                        }
+                                    })
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                DocumentSnapshot userData = task.getResult();
+                                                User.getUser().create(UID, userData.get("Name").toString(), userData.get("Email").toString(), userData.get("Type").toString());
+                                                User.getUser().setGroupKey(userData.get("GroupKey").toString());
+                                                if(!(TextUtils.isEmpty(userData.get("GroupKey").toString()))){
+                                                    fStore.collection("groups").document(userData.get("GroupKey").toString()).get()
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    fAuth.signOut();
+                                                                    Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                                                }
+                                                            })
+                                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                    if(task.isSuccessful()){
+                                                                        DocumentSnapshot groupData = task.getResult();
+                                                                        User.getUser().setGroupName(groupData.get("nameGroup").toString());
+                                                                    }else{
+                                                                        fAuth.signOut();
+                                                                        Snackbar.make(mainElem, task.getException().toString(), Snackbar.LENGTH_LONG).show();
+                                                                    }
+                                                                }
+                                                            });
+                                                }else{
+                                                    User.getUser().setGroupName("");
+                                                }
+                                                Log.d("Aboba", User.getUser().getEmail());
+                                                Log.d("Aboba", User.getUser().getName());
+                                                Log.d("Aboba", User.getUser().getType());
+                                                Log.d("Aboba", User.getUser().getUID());
+                                                Log.d("Aboba", User.getUser().getGroupName());
+                                                Log.d("Aboba", User.getUser().getGroupKey());
+                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                finish();
+                                            }else{
+                                                fAuth.signOut();
+                                                Snackbar.make(mainElem, task.getException().toString(), Snackbar.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                        }else{
+                            Snackbar.make(mainElem, task.getException().toString(), Snackbar.LENGTH_LONG).show();
                         }
-                    });
-                }else{
-                    Snackbar.make(mainElem, task.getException().toString(), Snackbar.LENGTH_LONG).show();
-                }
-            }
-        });
+                    }
+                });
     }
 
 
