@@ -130,12 +130,6 @@ public class Login extends AppCompatActivity {
                                                 }else{
                                                     User.getUser().setGroupName("");
                                                 }
-                                                Log.d("Aboba", User.getUser().getEmail());
-                                                Log.d("Aboba", User.getUser().getName());
-                                                Log.d("Aboba", User.getUser().getType());
-                                                Log.d("Aboba", User.getUser().getUID());
-                                                Log.d("Aboba", User.getUser().getGroupName());
-                                                Log.d("Aboba", User.getUser().getGroupKey());
                                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                                 finish();
                                             }else{

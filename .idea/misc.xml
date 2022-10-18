@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/alert_dilog_round_corners.xml" value="0.262" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/bottom_nav_theme.xml" value="0.1865" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/btn_style.xml" value="0.266" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/btn_style_blue_primary.xml" value="0.275" />
@@ -13,12 +14,19 @@
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_chat.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_close.xml" value="0.1695" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_five.xml" value="0.1695" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.262" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_circle_interface_essential_40.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_single_interface_essential_40.xml" value="0.1" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/round.xml" value="0.2905" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/round_corners.xml" value="0.2905" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_login.xml" value="0.55" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_registration.xml" value="0.67" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_sign_in.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dilog_join_group.xml" value="0.33" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dilog_logout.xml" value="0.33" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dilog_register.xml" value="0.25" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/dsa.xml" value="0.55" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_chat.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_profile.xml" value="0.5" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
