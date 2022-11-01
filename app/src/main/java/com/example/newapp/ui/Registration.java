@@ -1,29 +1,31 @@
-package com.example.newapp;
+package com.example.newapp.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.newapp.MainActivity;
+import com.example.newapp.R;
+import com.example.newapp.core.UpdateUserData;
 import com.example.newapp.core.User;
+import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -35,14 +37,14 @@ public class Registration extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
-    ConstraintLayout mainElem;
+    private ViewGroup mainElem;
 
-    EditText editTextPersonName;
-    EditText editTextEmailAddress;
-    EditText editTextPassword;
-    RadioGroup radioGroup;
-    Button createAccountBtnReg;
-    Button redirectionToLogin;
+    private EditText editTextPersonName;
+    private EditText editTextEmailAddress;
+    private EditText editTextPassword;
+    private RadioGroup radioGroup;
+    private Button createAccountBtnReg;
+    private Button redirectionToLogin;
 
 
 
@@ -52,11 +54,12 @@ public class Registration extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        checkUser();
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+
+
+
 
         mainElem = findViewById(R.id.mainElemRegistration);
         editTextPersonName = findViewById(R.id.editTextPersonNameReg);
@@ -65,11 +68,6 @@ public class Registration extends AppCompatActivity {
         radioGroup = findViewById(R.id.radioGroupReg);
         createAccountBtnReg = findViewById(R.id.createAccountBtnReg);
         redirectionToLogin = findViewById(R.id.redirectionToLoginReg);
-
-
-
-
-
 
 
         createAccountBtnReg.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +101,7 @@ public class Registration extends AppCompatActivity {
                     createUserAcc(textPersonName, password, textEmailAddress, Type);
                 }
             }
+
         });
 
 
@@ -114,8 +113,7 @@ public class Registration extends AppCompatActivity {
                 finish();
             }
         });
-
-
+        checkUser();
     }
 
 
@@ -156,7 +154,6 @@ public class Registration extends AppCompatActivity {
                                         User.getUser().create(UID, Name, Email, Type);
                                         User.getUser().setGroupKey("");
                                         User.getUser().setGroupName("");
-                                        Snackbar.make(mainElem, "Аккаунт успешно создан", Snackbar.LENGTH_LONG).show();
                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                         finish();
                                     }else{
@@ -233,7 +230,7 @@ public class Registration extends AppCompatActivity {
                                                         if (task.isSuccessful()) {
                                                             Map<String, String> groupData = new HashMap<>();
                                                             groupData.put("nameGroup", groupName[0]);
-                                                            groupData.put("nameKey", groupKey);
+                                                            groupData.put("groupKey", groupKey);
                                                             fStore.collection("groups").document(groupKey).set(groupData)
 
                                                                     .addOnFailureListener(new OnFailureListener() {
@@ -310,55 +307,25 @@ public class Registration extends AppCompatActivity {
 
 
 
-    private void checkUser(){
-        if(fAuth.getUid() != null){
-            String UID = fAuth.getUid();
 
-            fStore.collection("users").document(UID).get()
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            //обрабтать ошибку
-                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG);
-                        }
-                    })
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DocumentSnapshot userData = task.getResult();
-                        User.getUser().create(UID, userData.get("Name").toString(), userData.get("Email").toString(), userData.get("Type").toString());
-                        User.getUser().setGroupKey(userData.get("GroupKey").toString());
-                        if(!(TextUtils.equals(userData.get("GroupKey").toString(), ""))){
-                            fStore.collection("groups").document(userData.get("GroupKey").toString()).get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                DocumentSnapshot groupData = task.getResult();
-                                                User.getUser().setGroupName(groupData.get("nameGroup").toString());
-                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                finish();
-                                            }else{
-                                                //отрабатывать ошибку
-                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
-                        }else{
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            User.getUser().setGroupName("");
-                            finish();
-                        }
-                    }else{
-                        Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG);
-                    }
+
+    private void checkUser(){ //хз мб както изменить тк эта хуйня повторяется уже дважды но хз
+        UpdateUserData upData = new UpdateUserData(new CallbackInterface() {
+            @Override
+            public void callback(Boolean status) {
+                if(status){
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    finish();
+                }else{
+                    return;
                 }
-            });
-        }else {
-            return;
-        }
+            }
+        });
+        upData.updateUserData(mainElem, fAuth, fStore);
     }
+
+
+
 
 
 

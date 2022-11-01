@@ -5,12 +5,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.newapp.Login;
 import com.example.newapp.R;
+import com.example.newapp.core.UpdateUserData;
 import com.example.newapp.core.User;
+import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -46,7 +46,9 @@ public class profileFragment extends Fragment {
     private TextView nameGroup;
     private Button optionGroupBtn;
     private ImageButton logOutBtn;
-    private ConstraintLayout mainElem;
+    private Button groupSettingsBtn;
+
+    private ViewGroup mainElem;
 
 
     @Override
@@ -57,9 +59,6 @@ public class profileFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-
-        mainElem = v.findViewById(R.id.mainElemProfile);
-
         profileImg = v.findViewById(R.id.profileFragment);
         profileName = v.findViewById(R.id.nameText);
         profileEmail = v.findViewById(R.id.emailText);
@@ -68,17 +67,35 @@ public class profileFragment extends Fragment {
         profileImg = v.findViewById(R.id.profileImage);
         optionGroupBtn = v.findViewById(R.id.btnProfileOptionGroup);
         logOutBtn = v.findViewById(R.id.logOutBtn);
+        groupSettingsBtn = v.findViewById(R.id.groupSettingsBtn);
 
-        checkUserGroup();
+        mainElem = getActivity().findViewById(android.R.id.content);
+
+        return v;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
 
         profileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Aboba", " huita");
+
             }
         });
 
+
+
+        logOutListener();
+        showProfileData();
+
+    }
+
+
+
+    private void logOutListener(){
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,25 +128,6 @@ public class profileFragment extends Fragment {
                 });
             }
         });
-
-
-        showProfileData();
-
-        return v;
-    }
-
-    private void checkUserGroup() {
-        if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
-            Drawable drawableExit = getContext().getDrawable(R.drawable.btn_style_red);
-            optionGroupBtn.setText("Выйти из группы");
-            optionGroupBtn.setBackground(drawableExit);
-            exitGroupAlertDialogListener();
-        } else {
-            Drawable drawableJoin = getContext().getDrawable(R.drawable.btn_style_blue_primary);
-            optionGroupBtn.setText("Присоединиться к группе");
-            optionGroupBtn.setBackground(drawableJoin);
-            joinGroupAlertDialogListener();
-        }
     }
 
     private void joinGroupAlertDialogListener() {
@@ -195,7 +193,7 @@ public class profileFragment extends Fragment {
                                                                                         if (task.isSuccessful()) {
 
                                                                                             dialog.cancel();
-                                                                                            showProfileData();
+                                                                                            updateProfileData();
                                                                                         } else {
                                                                                             dialog.cancel();
                                                                                             Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
@@ -243,6 +241,7 @@ public class profileFragment extends Fragment {
         });
     }
 
+
     private void exitGroupAlertDialogListener() {
         optionGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,7 +262,42 @@ public class profileFragment extends Fragment {
                 dialogSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        fStore.collection("users").document(User.getUID()).update("GroupKey", "")
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                    }
+                                })
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            fStore.collection("groups").document(User.getUser().getGroupKey()).collection("groupUsers").document(User.getUID()).delete()
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                                        }
+                                                    })
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if(task.isSuccessful()){
+                                                                updateProfileData();
+                                                                User.getUser().setGroupKey("");
+                                                                User.getUser().setGroupName("");
+                                                                dialog.cancel();
+                                                            }else{
+                                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                                                            }
+                                                        }
+                                                    });
+                                        }else{
+                                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
                     }
                 });
                 dialogCancel.setOnClickListener(new View.OnClickListener() {
@@ -276,11 +310,63 @@ public class profileFragment extends Fragment {
         });
     }
 
+//    private void groupSettingsBtnListener() {
+//        groupSettingsBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//
+//                View customView = getLayoutInflater().inflate( , null);
+//                builder.setView(customView);
+//
+//                AlertDialog dialog = builder.create();
+//                dialog.show();
+//            }
+//        });
+//    }
+
+    private void updateProfileData() {
+        UpdateUserData upData = new UpdateUserData(new CallbackInterface() {
+            @Override
+            public void callback(Boolean status) {
+                if (status) {
+                    showProfileData();
+                } else {
+                    return;
+                }
+            }
+        });
+
+        upData.updateUserData(mainElem, fAuth, fStore);
+    }
 
     private void showProfileData() {
         profileName.setText(User.getName());
         profileEmail.setText(User.getEmail());
         nameGroup.setText(User.getUser().getGroupName());
+
+        if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
+            Drawable drawableExit = getContext().getDrawable(R.drawable.btn_style_red);
+            optionGroupBtn.setText("Выйти из группы");
+            optionGroupBtn.setBackground(drawableExit);
+            exitGroupAlertDialogListener();
+        } else {
+            Drawable drawableJoin = getContext().getDrawable(R.drawable.btn_style_blue_primary);
+            optionGroupBtn.setText("Присоединиться к группе");
+            optionGroupBtn.setBackground(drawableJoin);
+            joinGroupAlertDialogListener();
+        }
+
+
+        if(TextUtils.equals(User.getType(), "Учитель")){
+            groupSettingsBtn.setVisibility(View.VISIBLE);
+            //groupSettingsBtnListener();
+        }else{
+            groupSettingsBtn.setVisibility(View.INVISIBLE);
+        }
+
     }
+
+
 
 }

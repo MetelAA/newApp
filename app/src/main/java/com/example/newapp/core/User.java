@@ -10,8 +10,9 @@ public class User {
     private String groupKey;
     private String groupName;
 
-    public static synchronized User getUser(){
-        if(user == null){
+
+    public static synchronized User getUser() {
+        if (user == null) {
             user = new User();
         }
         return user;
@@ -21,7 +22,7 @@ public class User {
 
     }
 
-    public void create(String uid, String username, String Email, String Type){
+    public void create(String uid, String username, String Email, String Type) {
         UID = uid;
         name = username;
         email = Email;
@@ -59,5 +60,7 @@ public class User {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+
 
 }

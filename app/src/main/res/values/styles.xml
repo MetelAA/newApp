@@ -42,11 +42,8 @@
     <style name="AlertDialogButtonStyle">
         <item name="android:textSize">17sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-
-
-
-
-
     </style>
+
+
 
 </resources>

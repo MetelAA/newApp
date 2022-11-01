@@ -8,6 +8,20 @@
     android:id="@+id/mainElemProfile"
     >
 
+    <ImageButton
+        android:id="@+id/logOutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="#FFFFFFFF"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
     <TextView
         android:id="@+id/textView4"
         style="@style/titleTextStyle"
@@ -30,10 +44,10 @@
         android:layout_marginTop="60dp"
         android:src="@drawable/ic_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.004"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        android:background="#FFFFFF"
+        android:background="#FFFFFFFF"
         android:scaleType="fitXY"
          />
 
@@ -45,7 +59,7 @@
         android:layout_marginTop="10dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintHorizontal_bias="0.30"
         app:layout_constraintStart_toEndOf="@+id/profileImage"
         app:layout_constraintTop_toTopOf="@+id/profileImage" />
 
@@ -68,7 +82,6 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileImage">
 
@@ -93,25 +106,23 @@
         style="@style/btnDefaultStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
-    <ImageButton
-        android:id="@+id/logOutBtn"
+    <Button
+        android:id="@+id/groupSettingsBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="#FFFFFFFF"
-        android:src="@drawable/ic_close"
-        app:layout_constraintBottom_toTopOf="@+id/textView4"
+        android:layout_marginTop="25dp"
+        android:text="Настройки группы"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnProfileOptionGroup"
+
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.newapp;
+package com.example.newapp.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,15 +6,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 
+import com.example.newapp.MainActivity;
+import com.example.newapp.R;
 import com.example.newapp.core.User;
+import com.example.newapp.ui.Registration;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -29,12 +29,12 @@ public class Login extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
-    ConstraintLayout mainElem;
+    private ConstraintLayout mainElem;
 
-    EditText editTextEmail;
-    EditText editTextPassword;
-    Button loginButtonLog;
-    Button redirectionToReg;
+    private EditText editTextEmail;
+    private EditText editTextPassword;
+    private Button loginButtonLog;
+    private Button redirectionToReg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
