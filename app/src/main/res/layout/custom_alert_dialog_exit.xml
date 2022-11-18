@@ -31,17 +31,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:text="Отмена"
+                android:text=""
                 android:textColor="@color/btnBluePrimary" />
 
             <Button
-                android:id="@+id/buttonCustomLogOutAlertDialogSubmit"
+                android:id="@+id/buttonCustomLogOutAlertDialogConfirm"
                 style="@style/AlertDialogButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:text="Выйти"
+                android:text=""
                 android:textColor="@color/btnRed" />
         </LinearLayout>
 

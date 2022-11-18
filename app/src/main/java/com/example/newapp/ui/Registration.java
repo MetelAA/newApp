@@ -19,6 +19,7 @@ import com.example.newapp.MainActivity;
 import com.example.newapp.R;
 import com.example.newapp.core.UpdateUserData;
 import com.example.newapp.core.User;
+import com.example.newapp.databinding.ActivityRegistrationBinding;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,7 +27,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,61 +46,59 @@ public class Registration extends AppCompatActivity {
     private EditText editTextEmailAddress;
     private EditText editTextPassword;
     private RadioGroup radioGroup;
-    private Button createAccountBtnReg;
-    private Button redirectionToLogin;
 
+
+    private ActivityRegistrationBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        super.onCreate(savedInstanceState);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+
+        binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
 
+        mainElem = binding.getRoot();
+        editTextPersonName = binding.editTextPersonNameReg;
+        editTextEmailAddress = binding.editTextEmailAddressReg;
+        editTextPassword = binding.editTextPasswordReg;
+        radioGroup = binding.radioGroupReg;
 
 
-
-        mainElem = findViewById(R.id.mainElemRegistration);
-        editTextPersonName = findViewById(R.id.editTextPersonNameReg);
-        editTextEmailAddress = findViewById(R.id.editTextEmailAddressReg);
-        editTextPassword = findViewById(R.id.editTextPasswordReg);
-        radioGroup = findViewById(R.id.radioGroupReg);
-        createAccountBtnReg = findViewById(R.id.createAccountBtnReg);
-        redirectionToLogin = findViewById(R.id.redirectionToLoginReg);
-
-
-        createAccountBtnReg.setOnClickListener(new View.OnClickListener() {
+        binding.createAccountBtnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RadioButton selectedBtn =  findViewById(radioGroup.getCheckedRadioButtonId());
+                RadioButton selectedBtn = findViewById(radioGroup.getCheckedRadioButtonId());
                 String textPersonName, password, textEmailAddress, Type;
                 textPersonName = editTextPersonName.getText().toString();
                 password = editTextPassword.getText().toString();
                 textEmailAddress = editTextEmailAddress.getText().toString();
                 Type = selectedBtn.getText().toString();
 
-                if(TextUtils.isEmpty(textPersonName)){
+                if (TextUtils.isEmpty(textPersonName)) {
                     editTextPersonName.setError("Введите имя");
                     return;
-            }
+                }
 
-                if(TextUtils.isEmpty(textEmailAddress)){
+                if (TextUtils.isEmpty(textEmailAddress)) {
                     editTextEmailAddress.setError("Введите email");
                     return;
                 }
 
-                if(password.length() <= 8){
+                if (password.length() < 8) {
                     editTextPassword.setError("Пароль должен быть длинее 8 символов");
                     return;
                 }
 
-                if(Type.equals("Учитель")){
+                if (Type.equals("Учитель")) {
                     createAdminAccAndGroup(textPersonName, password, textEmailAddress, Type, v.getContext());
-                }else{
+                } else {
                     createUserAcc(textPersonName, password, textEmailAddress, Type);
                 }
             }
@@ -105,8 +106,7 @@ public class Registration extends AppCompatActivity {
         });
 
 
-
-        redirectionToLogin.setOnClickListener(new View.OnClickListener() {
+        binding.redirectionToLoginReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), Login.class));
@@ -117,8 +117,7 @@ public class Registration extends AppCompatActivity {
     }
 
 
-
-    private void createUserAcc(String Name, String Password, String Email, String Type){
+    private void createUserAcc(String Name, String Password, String Email, String Type) {
         fAuth.createUserWithEmailAndPassword(Email, Password)
 
                 .addOnFailureListener(new OnFailureListener() {
@@ -129,46 +128,45 @@ public class Registration extends AppCompatActivity {
                 })
 
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    String UID = fAuth.getCurrentUser().getUid(); //не уверен что именно current (проверить)
-                    Map<String, String> data = new HashMap<>();
-                    data.put("Name", Name);
-                    data.put("Email", Email);
-                    data.put("Type", Type);
-                    data.put("GroupKey", "");
-                    fStore.collection("users").document(UID).set(data)
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            String UID = fAuth.getCurrentUser().getUid(); //не уверен что именно current (проверить)
+                            Map<String, String> data = new HashMap<>();
+                            data.put("Name", Name);
+                            data.put("Email", Email);
+                            data.put("Type", Type);
+                            data.put("GroupKey", "");
+                            fStore.collection("users").document(UID).set(data)
 
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                }
-                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                                        }
+                                    })
 
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        User.getUser().create(UID, Name, Email, Type);
-                                        User.getUser().setGroupKey("");
-                                        User.getUser().setGroupName("");
-                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                        finish();
-                                    }else{
-                                        fAuth.getCurrentUser().delete();
-                                        Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                }else{
-                    Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                }
-            }
-        });
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                User.getUser().create(UID, Name, Email, Type);
+                                                User.getUser().setGroupKey("");
+                                                User.getUser().setGroupName("");
+                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                finish();
+                                            } else {
+                                                fAuth.getCurrentUser().delete();
+                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                        } else {
+                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
-
 
 
     private void createAdminAccAndGroup(String Name, String password, String Email, String Type, Context context) {
@@ -176,7 +174,7 @@ public class Registration extends AppCompatActivity {
         final String[] groupName = new String[1];
         String groupKey = UUID.randomUUID().toString().substring(0, 8);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View customView = getLayoutInflater().inflate(R.layout.custom_alert_dilog_register, null);
+        View customView = getLayoutInflater().inflate(R.layout.custom_alert_dialog_register, null);
 
         EditText inputForNameGroupTextInAlertDialog = customView.findViewById(R.id.inputForNameGroupTextInAlertDialog);
         Button submitButton = customView.findViewById(R.id.submitButtonForAlertDialog);
@@ -200,7 +198,6 @@ public class Registration extends AppCompatActivity {
                     userData.put("GroupKey", groupKey);
                     //сделать индкатор загрузки
                     fAuth.createUserWithEmailAndPassword(Email, password)
-
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) { //проверить куда выкидывать будет
@@ -213,79 +210,43 @@ public class Registration extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         String UID = fAuth.getCurrentUser().getUid();
-                                        fStore.collection("users").document(UID).set(userData)
+                                        WriteBatch batch = fStore.batch();
 
+                                        batch.set(fStore.collection("users").document(UID), userData);
+
+                                        Map<String, String> groupData = new HashMap<>();
+                                        groupData.put("nameGroup", groupName[0]);
+                                        groupData.put("groupKey", groupKey);
+                                        groupData.put("Admin", UID);
+                                        batch.set(fStore.collection("groups").document(groupKey), groupData);
+
+                                        Map<String, String> userGroupData = new HashMap<>();
+                                        userGroupData.put("UID", UID);
+                                        userGroupData.put("Name", Name);
+                                        userGroupData.put("Email", Email);
+                                        batch.set(fStore.collection("groups").document(groupKey).collection("groupUsers").document(UID), userGroupData);
+
+                                        batch.update(fStore.collection("groups").document(groupKey), "numberUsers", FieldValue.increment(1));
+
+
+                                        batch.commit()
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
-                                                    public void onFailure(@NonNull Exception e) { //проверить куда выкидывать будет
+                                                    public void onFailure(@NonNull Exception e) {
                                                         fAuth.getCurrentUser().delete();
-                                                        fStore.collection("users").document(UID).delete();
                                                         Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
                                                     }
                                                 })
-
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
-                                                        if (task.isSuccessful()) {
-                                                            Map<String, String> groupData = new HashMap<>();
-                                                            groupData.put("nameGroup", groupName[0]);
-                                                            groupData.put("groupKey", groupKey);
-                                                            fStore.collection("groups").document(groupKey).set(groupData)
-
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) { //проверить куда выкидывать будет
-                                                                            fAuth.getCurrentUser().delete();
-                                                                            fStore.collection("users").document(UID).delete();
-                                                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                        }
-                                                                    })
-
-                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                            if (task.isSuccessful()) {
-                                                                                Map<String, String> userGroupData = new HashMap<>();
-                                                                                userGroupData.put("UID", UID);
-                                                                                userGroupData.put("Type", Type);
-                                                                                fStore.collection("groups").document(groupKey).collection("groupUsers").document(UID).set(userGroupData)
-
-                                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                                            @Override
-                                                                                            public void onFailure(@NonNull Exception e) { //проверить куда выкидывать будет
-                                                                                                fAuth.getCurrentUser().delete();
-                                                                                                fStore.collection("users").document(UID).delete();
-                                                                                                fStore.collection("groups").document(groupKey).delete();
-                                                                                                Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                                            }
-                                                                                        })
-
-                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                            @Override
-                                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                                if (task.isSuccessful()) {
-                                                                                                    User.getUser().create(UID, Name, Email, Type);
-                                                                                                    User.getUser().setGroupKey(groupKey);
-                                                                                                    User.getUser().setGroupName(groupName[0]);
-                                                                                                    Snackbar.make(mainElem, "Аккаунт успешно создан", Snackbar.LENGTH_LONG).show();
-                                                                                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                                                                    finish();
-                                                                                                } else {
-                                                                                                    fAuth.getCurrentUser().delete();
-                                                                                                    fStore.collection("users").document(UID).delete();
-                                                                                                    fStore.collection("groups").document(groupKey).delete();
-                                                                                                    Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                                                }
-                                                                                            }
-                                                                                        });
-                                                                            } else {
-                                                                                fAuth.getCurrentUser().delete();
-                                                                                fStore.collection("users").document(UID).delete();
-                                                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                            }
-                                                                        }
-                                                                    });
+                                                        if (task.isSuccessful()){
+                                                            User.getUser().create(UID, Name, Email, Type);
+                                                            User.getUser().setGroupKey(groupKey);
+                                                            User.getUser().setGroupName(groupName[0]);
+                                                            Snackbar.make(mainElem, "Аккаунт успешно создан", Snackbar.LENGTH_LONG).show();
+                                                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                            finish();
                                                         } else {
                                                             fAuth.getCurrentUser().delete();
                                                             Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
@@ -305,32 +266,21 @@ public class Registration extends AppCompatActivity {
     }
 
 
-
-
-
-
-    private void checkUser(){ //хз мб както изменить тк эта хуйня повторяется уже дважды но хз
+    private void checkUser() { //хз мб както изменить тк эта хуйня повторяется уже дважды но хз
         UpdateUserData upData = new UpdateUserData(new CallbackInterface() {
             @Override
-            public void callback(Boolean status) {
-                if(status){
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    finish();
-                }else{
-                    return;
+            public void callback(String status) {
+                switch (status) {
+                    case "ok":
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
+                        break;
+                    case "error":
+
+                        break;
                 }
             }
         });
         upData.updateUserData(mainElem, fAuth, fStore);
     }
-
-
-
-
-
-
-
-
-
-
 }

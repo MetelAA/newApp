@@ -2,6 +2,7 @@ package com.example.newapp.core;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,7 @@ public class UpdateUserData{
     }
 
     public void updateUserData(ViewGroup mainElem, FirebaseAuth fAuth, FirebaseFirestore fStore){
-            final Boolean[] status = {false};
+        final String[] status = {"error"};
             if(fAuth.getUid() != null){
                 String UID = fAuth.getUid();
 
@@ -42,6 +43,7 @@ public class UpdateUserData{
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if(task.isSuccessful()){
                                     DocumentSnapshot userData = task.getResult();
+
                                     User.getUser().create(UID, userData.get("Name").toString(), userData.get("Email").toString(), userData.get("Type").toString());
                                     User.getUser().setGroupKey(userData.get("GroupKey").toString());
                                     if(!(TextUtils.equals(userData.get("GroupKey").toString(), ""))){
@@ -59,18 +61,18 @@ public class UpdateUserData{
                                                         if(task.isSuccessful()){
                                                             DocumentSnapshot groupData = task.getResult();
                                                             User.getUser().setGroupName(groupData.get("nameGroup").toString());
-                                                            status[0] = true;
-                                                            callbackEvent.callback(status[0]);
+                                                            User.getUser().setNumberUsers((long) groupData.get("numberUsers"));
+                                                            status[0] = "ok";
                                                         }else{
                                                             //отрабатывать ошибку
                                                             Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                                            callbackEvent.callback(status[0]);
                                                         }
+                                                        callbackEvent.callback(status[0]);
                                                     }
                                                 });
                                     }else{
                                         User.getUser().setGroupName("");
-                                        status[0] = true;
+                                        status[0] = "ok";
                                         callbackEvent.callback(status[0]);
                                     }
                                 }else{

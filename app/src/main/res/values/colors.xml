@@ -10,6 +10,7 @@
 
     <color name="blue">#0000FF</color>
     <color name="grey">#808080</color>
+    <color name="liteGrey">#A5A5A5</color>
     <color name="btnBluePrimary">#007BFF</color>
     <color name="btnGreen">#28A745</color>
     <color name="btnRed">#D70000</color>

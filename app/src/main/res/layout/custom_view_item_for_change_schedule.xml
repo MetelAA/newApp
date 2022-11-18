@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lessonChangeSchedule"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="1dp"
+    >
+
+    <TextView
+        android:id="@+id/lessonNumberChangeSchedule"
+        style="@style/simpleTextStyleMontserrat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="6"
+        android:text="1 Урок" />
+
+    <EditText
+        android:id="@+id/lessonNameChangeSchedule"
+        style="@style/simpleTextStyleMontserrat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="12"
+        android:inputType="textPersonName"
+        android:text=""
+        android:hint="Название урока"
+        />
+
+    <EditText
+        android:id="@+id/lessonTimeChangeSchedule"
+        style="@style/simpleTextStyleMontserrat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="9"
+        android:fontFamily="@font/montserrat_light"
+        android:hint="Начало урока"
+        android:inputType="time"
+        android:text=""
+        android:textSize="15sp" />
+</LinearLayout>

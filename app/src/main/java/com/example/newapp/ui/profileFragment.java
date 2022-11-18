@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,37 +20,37 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.newapp.R;
+
+import com.example.newapp.core.ExitJoinFromGroup;
+import com.example.newapp.core.ListOfUsers;
 import com.example.newapp.core.UpdateUserData;
 import com.example.newapp.core.User;
+import com.example.newapp.databinding.FragmentProfileBinding;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class profileFragment extends Fragment {
 
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
+    private FragmentProfileBinding binding;
 
     private ImageButton profileImg;
-    private TextView profileName;
-    private TextView profileEmail;
-    private TextView nameGroup;
-    private Button optionGroupBtn;
-    private ImageButton logOutBtn;
+    private Button userOptionGroupBtn;
     private Button groupSettingsBtn;
 
     private ViewGroup mainElem;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,17 +58,14 @@ public class profileFragment extends Fragment {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        View v = inflater.inflate(R.layout.fragment_profile, container, false);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View v = binding.getRoot();
 
-        profileImg = v.findViewById(R.id.profileFragment);
-        profileName = v.findViewById(R.id.nameText);
-        profileEmail = v.findViewById(R.id.emailText);
-        nameGroup = v.findViewById(R.id.nameGroupText);
+        profileImg = binding.profileImage;
 
-        profileImg = v.findViewById(R.id.profileImage);
-        optionGroupBtn = v.findViewById(R.id.btnProfileOptionGroup);
-        logOutBtn = v.findViewById(R.id.logOutBtn);
-        groupSettingsBtn = v.findViewById(R.id.groupSettingsBtn);
+        userOptionGroupBtn = binding.btnProfileOptionGroup;
+
+        groupSettingsBtn = binding.groupSettingsProfileBtn;
 
         mainElem = getActivity().findViewById(android.R.id.content);
 
@@ -78,64 +76,63 @@ public class profileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         profileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
-
-
-
-        logOutListener();
-        showProfileData();
-
-    }
-
-
-
-    private void logOutListener(){
-        logOutBtn.setOnClickListener(new View.OnClickListener() {
+        binding.logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                logOut();
+            }
+        });
 
-                View customView = getLayoutInflater().inflate(R.layout.custom_alert_dilog_exit, null);
-                builder.setView(customView);
+        showProfileData();
+    }
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+    private void logOut() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                Button dialogCancel = customView.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
-                Button dialogSubmit = customView.findViewById(R.id.buttonCustomLogOutAlertDialogSubmit);
-                ((TextView) customView.findViewById(R.id.textCustomLogOutAlertDialog)).setText("Вы уверены, что хотите выйти из аккаунта?");
+        View customView = getLayoutInflater().inflate(R.layout.custom_alert_dialog_exit, null);
+        builder.setView(customView);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        Button dialogCancel = customView.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
+        Button dialogConfirm = customView.findViewById(R.id.buttonCustomLogOutAlertDialogConfirm);
+
+        dialogCancel.setText("Отмена");
+        dialogConfirm.setText("Выйти");
+
+        ((TextView) customView.findViewById(R.id.textCustomLogOutAlertDialog)).setText("Вы уверены, что хотите выйти из аккаунта?");
 
 
-                dialogSubmit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        fAuth.signOut();
-                        startActivity(new Intent(getActivity(), Login.class));
-                        getActivity().finish();
-                    }
-                });
-                dialogCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
+        dialogConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fAuth.signOut();
+                startActivity(new Intent(getActivity(), Login.class));
+                getActivity().finish();
+            }
+        });
+        dialogCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
             }
         });
     }
 
+
     private void joinGroupAlertDialogListener() {
-        optionGroupBtn.setOnClickListener(new View.OnClickListener() {
+        userOptionGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                View customView = getLayoutInflater().inflate(R.layout.custom_alert_dilog_join_group, null);
+                View customView = getLayoutInflater().inflate(R.layout.custom_alert_dialog_join_group, null);
                 builder.setView(customView);
 
                 AlertDialog dialog = builder.create();
@@ -150,80 +147,26 @@ public class profileFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         String editTextGroupKey = editText.getText().toString();
-
                         if (!TextUtils.isEmpty(editTextGroupKey)) {
-                            fStore.collection("groups").whereEqualTo("nameKey", editTextGroupKey).get()
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                        }
-                                    })
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                QuerySnapshot data = task.getResult();
-                                                if (!data.isEmpty()) {
-                                                    fStore.collection("users").document(User.getUID()).update("GroupKey", editTextGroupKey)
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                }
-                                                            })
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        Map<String, String> userGroupData = new HashMap<>();
-                                                                        userGroupData.put("Type", "Ученик"); //тк админ только 1 и он задаётся при создании (мб переделать бд, то есть убрать присвоение типа пользователям в группе тк одмин всё равно только 1)
-                                                                        userGroupData.put("UID", User.getUID());
 
-                                                                        fStore.collection("groups").document(editTextGroupKey).collection("groupUsers").document(User.getUID()).set(userGroupData)
-                                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                                    @Override
-                                                                                    public void onFailure(@NonNull Exception e) {
-                                                                                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                                    }
-                                                                                })
-                                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                    @Override
-                                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                                        if (task.isSuccessful()) {
-
-                                                                                            dialog.cancel();
-                                                                                            updateProfileData();
-                                                                                        } else {
-                                                                                            dialog.cancel();
-                                                                                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                                            fStore.collection("users").document(User.getUID()).update("GroupKey", "")
-                                                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                                                        @Override
-                                                                                                        public void onFailure(@NonNull Exception e) {
-                                                                                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                                                        }
-                                                                                                    });
-                                                                                        }
-                                                                                    }
-                                                                                });
-
-                                                                    } else {
-                                                                        dialog.cancel();
-                                                                        Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                    }
-                                                                }
-                                                            });
-                                                } else {
-                                                    editText.setError("такой группы не существует");
-                                                }
-                                            } else {
-                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
-
-
+                            ExitJoinFromGroup exitJoinFromGroup = new ExitJoinFromGroup(new CallbackInterface() {
+                                @Override
+                                public void callback(String status) {
+                                    switch (status){
+                                        case "ok":
+                                            dialog.cancel();
+                                            updateProfileData();
+                                        break;
+                                        case "no such group":
+                                            editText.setError("Такой группы не существует");
+                                        break;
+                                        case "error":
+                                            dialog.cancel();
+                                        break;
+                                    }
+                                }
+                            });
+                            exitJoinFromGroup.joinGroup(mainElem, fStore, editTextGroupKey);
                         } else {
                             editText.setError("Введите код группы");
                         }
@@ -241,65 +184,47 @@ public class profileFragment extends Fragment {
         });
     }
 
-
     private void exitGroupAlertDialogListener() {
-        optionGroupBtn.setOnClickListener(new View.OnClickListener() {
+        userOptionGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                View customView = getLayoutInflater().inflate(R.layout.custom_alert_dilog_exit, null);
+                View customView = getLayoutInflater().inflate(R.layout.custom_alert_dialog_exit, null);
                 builder.setView(customView);
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
 
                 Button dialogCancel = customView.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
-                Button dialogSubmit = customView.findViewById(R.id.buttonCustomLogOutAlertDialogSubmit);
+                Button dialogConfirm = customView.findViewById(R.id.buttonCustomLogOutAlertDialogConfirm);
+
+                dialogCancel.setText("Отмена");
+                dialogConfirm.setText("Выйти");
 
                 ((TextView) customView.findViewById(R.id.textCustomLogOutAlertDialog)).setText("Вы уверены, что хотите покинуть группу?");
 
-                dialogSubmit.setOnClickListener(new View.OnClickListener() {
+                dialogConfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fStore.collection("users").document(User.getUID()).update("GroupKey", "")
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                    }
-                                })
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            fStore.collection("groups").document(User.getUser().getGroupKey()).collection("groupUsers").document(User.getUID()).delete()
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                        }
-                                                    })
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if(task.isSuccessful()){
-                                                                updateProfileData();
-                                                                User.getUser().setGroupKey("");
-                                                                User.getUser().setGroupName("");
-                                                                dialog.cancel();
-                                                            }else{
-                                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                                            }
-                                                        }
-                                                    });
-                                        }else{
-                                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
+                        ExitJoinFromGroup exitJoinFromGroup = new ExitJoinFromGroup(new CallbackInterface() {
+                            @Override
+                            public void callback(String status) {
+                                switch (status){
+                                    case "ok":
+                                        dialog.cancel();
+                                        updateProfileData();
+                                        break;
+                                    case "error":
+                                        dialog.cancel();
+                                        break;
+                                }
+                            }
+                        });
+                        exitJoinFromGroup.exitGroup(mainElem, fStore);
                     }
                 });
+
                 dialogCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -310,63 +235,71 @@ public class profileFragment extends Fragment {
         });
     }
 
-//    private void groupSettingsBtnListener() {
-//        groupSettingsBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//
-//                View customView = getLayoutInflater().inflate( , null);
-//                builder.setView(customView);
-//
-//                AlertDialog dialog = builder.create();
-//                dialog.show();
-//            }
-//        });
-//    }
 
     private void updateProfileData() {
         UpdateUserData upData = new UpdateUserData(new CallbackInterface() {
             @Override
-            public void callback(Boolean status) {
-                if (status) {
-                    showProfileData();
-                } else {
-                    return;
+            public void callback(String status) {
+                switch (status){
+                    case "ok":
+                        showProfileData();
+                    break;
+                    case "error":
+
+                    break;
                 }
             }
         });
-
         upData.updateUserData(mainElem, fAuth, fStore);
     }
 
-    private void showProfileData() {
-        profileName.setText(User.getName());
-        profileEmail.setText(User.getEmail());
-        nameGroup.setText(User.getUser().getGroupName());
-
-        if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
-            Drawable drawableExit = getContext().getDrawable(R.drawable.btn_style_red);
-            optionGroupBtn.setText("Выйти из группы");
-            optionGroupBtn.setBackground(drawableExit);
-            exitGroupAlertDialogListener();
-        } else {
-            Drawable drawableJoin = getContext().getDrawable(R.drawable.btn_style_blue_primary);
-            optionGroupBtn.setText("Присоединиться к группе");
-            optionGroupBtn.setBackground(drawableJoin);
-            joinGroupAlertDialogListener();
-        }
+    private void showProfileData() { //Здесь 3 текстовых поля заполняются (не имеет смысла выносить в отдельные переменные тк используются только здесь)
+        binding.profileNameText.setText(User.getName());
+        binding.profileEmailText.setText(User.getEmail());
+        binding.profileNameGroupText.setText(User.getUser().getGroupName());
+        Log.d("Aboba",String.valueOf(User.getUser().getNumberUsers()));
 
 
-        if(TextUtils.equals(User.getType(), "Учитель")){
+
+        if (TextUtils.equals(User.getType(), "Учитель")) {
             groupSettingsBtn.setVisibility(View.VISIBLE);
-            //groupSettingsBtnListener();
-        }else{
+            userOptionGroupBtn.setVisibility(View.INVISIBLE);
+            groupSettingsBtnListener();
+        } else {
             groupSettingsBtn.setVisibility(View.INVISIBLE);
         }
 
+        if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
+            Drawable drawableExit = getContext().getDrawable(R.drawable.btn_style_red);
+            userOptionGroupBtn.setText("Выйти из группы");
+            userOptionGroupBtn.setBackground(drawableExit);
+            exitGroupAlertDialogListener();
+
+            long numberGroup = User.getUser().getNumberUsers();
+            if (numberGroup == 1) {
+                binding.profileNumberGroupText.setText(numberGroup + " участник");
+            } else if (User.getUser().getNumberUsers() <= 4) {
+                binding.profileNumberGroupText.setText(numberGroup + " участника");
+            } else if (User.getUser().getNumberUsers() > 4) {
+                binding.profileNumberGroupText.setText(numberGroup + " участников");
+            }
+        } else {
+            binding.profileNumberGroupText.setText("");
+            Drawable drawableJoin = getContext().getDrawable(R.drawable.btn_style_blue_primary);
+            userOptionGroupBtn.setText("Присоединиться к группе");
+            userOptionGroupBtn.setBackground(drawableJoin);
+            joinGroupAlertDialogListener();
+        }
     }
 
-
+    private void groupSettingsBtnListener() {
+        groupSettingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ListOfUsers listOfUsers = new ListOfUsers(getContext(), getLayoutInflater(), mainElem, fStore);
+                listOfUsers.showListOfUsers();
+            }
+        });
+    }
 
 }

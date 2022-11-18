@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import com.example.newapp.MainActivity;
 import com.example.newapp.R;
 import com.example.newapp.core.User;
+import com.example.newapp.databinding.ActivityLoginBinding;
 import com.example.newapp.ui.Registration;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,24 +35,31 @@ public class Login extends AppCompatActivity {
 
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Button loginButtonLog;
-    private Button redirectionToReg;
+
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+
+        setContentView(view);
+
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        mainElem = findViewById(R.id.mainElemLogin);
-        editTextEmail = findViewById(R.id.editTextEmailLog);
-        editTextPassword = findViewById(R.id.editTextPasswordLog);
-        loginButtonLog = findViewById(R.id.loginButtonLog);
-        redirectionToReg = findViewById(R.id.redirectionToRegistrationLog);
 
-        loginButtonLog.setOnClickListener(new View.OnClickListener() {
+
+
+        mainElem = binding.getRoot();
+        editTextEmail = binding.editTextEmailLog;
+        editTextPassword = binding.editTextPasswordLog;
+
+
+        binding.loginButtonLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String Email =  editTextEmail.getText().toString();
@@ -69,7 +78,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        redirectionToReg.setOnClickListener(new View.OnClickListener() {
+        binding.redirectionToRegistrationLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), Registration.class));
@@ -77,6 +86,7 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
 
     private void loginUser(String Email, String Password){
         fAuth.signInWithEmailAndPassword(Email, Password)
@@ -123,7 +133,7 @@ public class Login extends AppCompatActivity {
                                                                         User.getUser().setGroupName(groupData.get("nameGroup").toString());
                                                                     }else{
                                                                         fAuth.signOut();
-                                                                        Snackbar.make(mainElem, task.getException().toString(), Snackbar.LENGTH_LONG).show();
+                                                                        Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                                                                     }
                                                                 }
                                                             });
@@ -134,21 +144,15 @@ public class Login extends AppCompatActivity {
                                                 finish();
                                             }else{
                                                 fAuth.signOut();
-                                                Snackbar.make(mainElem, task.getException().toString(), Snackbar.LENGTH_LONG).show();
+                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                                             }
                                         }
                                     });
                         }else{
-                            Snackbar.make(mainElem, task.getException().toString(), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
     }
-
-
-
-
-
-
 
 }

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.243" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/alert_dilog_round_corners.xml" value="0.262" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/bottom_nav_theme.xml" value="0.1865" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/btn_style.xml" value="0.266" />
@@ -11,24 +12,52 @@
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/btn_style_red.xml" value="0.275" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/btn_styles.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_____________.xml" value="0.1695" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_arrow_right.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_add.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_change.xml" value="0.2875" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_check.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_create_24.xml" value="0.2875" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_delete.xml" value="0.287" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_done.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_mode_edit.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_change.xml" value="0.2915" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_chat.xml" value="0.1" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_check.xml" value="0.243" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_close.xml" value="0.1695" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_edit.xml" value="0.243" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_five.xml" value="0.1695" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.262" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_news.xml" value="0.2915" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_profile.xml" value="0.2915" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_schedule.xml" value="0.2915" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_circle_interface_essential_40.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_single_interface_essential_40.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/round.xml" value="0.2905" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/round_corners.xml" value="0.2905" />
-        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_login.xml" value="0.55" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_login.xml" value="0.5090634441087614" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_registration.xml" value="0.67" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_sign_in.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_exit.xml" value="0.8243559718969555" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_join_group.xml" value="0.8243559718969555" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_list_view.xml" value="0.54765625" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_register.xml" value="0.8243559718969555" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dilog_exit.xml" value="0.55" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dilog_join_group.xml" value="0.33" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dilog_logout.xml" value="0.33" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dilog_register.xml" value="0.25" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_list_item_for_lesson_schedule.xml" value="0.6407766990291263" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_list_item_for_list_of_users.xml" value="0.67" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_list_item_for_schedule.xml" value="0.9" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_view_item_for_change_schedule.xml" value="0.9" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/dsa.xml" value="0.55" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_chat.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_evaluations.xml" value="0.54140625" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_news.xml" value="0.54140625" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_profile.xml" value="0.5" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_schedule.xml" value="0.9" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/artem/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/auto_complete_list.xml" value="0.4125" />
       </map>

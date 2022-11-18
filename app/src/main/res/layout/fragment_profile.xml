@@ -2,24 +2,23 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainElemProfile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.profileFragment"
-    android:id="@+id/mainElemProfile"
-    >
+    tools:context=".ui.profileFragment">
 
     <ImageButton
         android:id="@+id/logOutBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:background="#FFFFFFFF"
         android:src="@drawable/ic_close"
         app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 
     <TextView
@@ -31,9 +30,7 @@
         android:text="Ваш профиль"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageButton
@@ -42,36 +39,35 @@
         android:layout_height="125dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="60dp"
+        android:background="@null"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        android:background="#FFFFFFFF"
-        android:scaleType="fitXY"
-         />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
-        android:id="@+id/nameText"
+        android:id="@+id/profileNameText"
         style="@style/simpleTextStyleRoboto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="TextView"
+        android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.30"
         app:layout_constraintStart_toEndOf="@+id/profileImage"
         app:layout_constraintTop_toTopOf="@+id/profileImage" />
 
     <TextView
-        android:id="@+id/emailText"
+        android:id="@+id/profileEmailText"
         style="@style/simpleTextStyleRoboto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/nameText"
-        app:layout_constraintTop_toBottomOf="@+id/nameText" />
+        android:text="Email"
+        app:layout_constraintStart_toStartOf="@+id/profileNameText"
+        app:layout_constraintTop_toBottomOf="@+id/profileNameText" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -79,8 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:orientation="horizontal"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileImage">
@@ -94,11 +90,24 @@
             android:textColor="@color/grey" />
 
         <TextView
-            android:id="@+id/nameGroupText"
+            android:id="@+id/profileNameGroupText"
             style="@style/simpleTextStyleRoboto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView" />
+
+        <TextView
+            style="@style/simpleTextStyleRoboto"
+            android:id="@+id/profileNumberGroupText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/grey"
+            android:gravity="right"
+            />
+
+
+
     </LinearLayout>
 
     <Button
@@ -113,16 +122,27 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <Button
-        android:id="@+id/groupSettingsBtn"
+        android:id="@+id/groupSettingsProfileBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="Настройки группы"
+        android:background="@drawable/btn_style_green"
+        android:padding="5dp"
+        android:text="Список участников"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnProfileOptionGroup"
 
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        tools:layout_editor_absoluteX="0dp"></LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

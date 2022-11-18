@@ -9,6 +9,7 @@ public class User {
     private static String type;
     private String groupKey;
     private String groupName;
+    private long numberUsers;
 
 
     public static synchronized User getUser() {
@@ -21,6 +22,10 @@ public class User {
     private User() {
 
     }
+
+
+
+
 
     public void create(String uid, String username, String Email, String Type) {
         UID = uid;
@@ -57,10 +62,15 @@ public class User {
         return groupName;
     }
 
+    public long getNumberUsers() {
+        return numberUsers;
+    }
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
 
-
+    public void setNumberUsers(long numberUsers) {
+        this.numberUsers = numberUsers;
+    }
 
 }

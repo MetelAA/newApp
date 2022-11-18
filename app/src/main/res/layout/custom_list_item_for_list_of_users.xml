@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_weight="10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:padding="5dp"
+        >
+
+        <TextView
+            android:id="@+id/nameTextInCustomListViewUsers"
+            style="@style/simpleTextStyleMontserrat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="text"
+            />
+
+        <TextView
+            android:layout_marginTop="1dp"
+            android:id="@+id/emailTextInCustomListViewUsers"
+            style="@style/simpleTextStyleMontserrat"
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="text"
+            />
+
+        <TextView
+            android:id="@+id/hideUIDInCustomListViewUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            tools:visibility="gone" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:scaleType="fitXY"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/ic_baseline_delete"
+        android:layout_marginRight="5dp"/>
+
+
+</LinearLayout>

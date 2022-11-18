@@ -1,5 +1,5 @@
 package com.example.newapp.interfaces;
 
 public interface CallbackInterface {
-    void callback(Boolean status);
+    void callback(String status);
 }
