@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -39,7 +40,7 @@ public class scheduleFragment extends Fragment {
     private int selector = 1;
 
     private ListView scheduleListViewSchedule;
-    private ConstraintLayout changeScheduleConstraintLayoutSchedule;
+    private ScrollView changeScheduleConstraintLayoutSchedule;
 
     private ImageButton btnShowNextSchedule;
     private ImageButton btnShowPreviousSchedule;

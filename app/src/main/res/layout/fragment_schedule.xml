@@ -86,9 +86,7 @@
 
             />
     </LinearLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:id="@+id/changeScheduleConstraintLayoutSchedule"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -98,7 +96,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="1.0"
+        android:orientation="vertical"
+        >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hui"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
 
         <LinearLayout
@@ -110,11 +115,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-
-
-
-
         </LinearLayout>
+
+
 
         <ImageButton
             android:visibility="gone"
@@ -128,6 +131,7 @@
             app:layout_constraintTop_toBottomOf="@+id/changeListLessonsSchedule" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </ScrollView>
     <ListView
         android:id="@+id/scheduleListViewSchedule"
         android:layout_width="0dp"
