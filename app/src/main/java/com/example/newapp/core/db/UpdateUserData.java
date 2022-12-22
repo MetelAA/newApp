@@ -1,17 +1,16 @@
-package com.example.newapp.core;
+package com.example.newapp.core.db;
 
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.example.newapp.core.User;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -24,8 +23,7 @@ public class UpdateUserData{
         this.callbackEvent = callbackEvent;
     }
 
-    public void updateUserData(ViewGroup mainElem, FirebaseAuth fAuth, FirebaseFirestore fStore){
-        final String[] status = {"error"};
+    public void updateUserData(FirebaseAuth fAuth, FirebaseFirestore fStore){
             if(fAuth.getUid() != null){
                 String UID = fAuth.getUid();
 
@@ -33,9 +31,7 @@ public class UpdateUserData{
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                //обрабтать ошибку
-                                Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG);
-                                callbackEvent.callback(status[0]);
+                                callbackEvent.throwError(e.getMessage());
                             }
                         })
                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -51,8 +47,7 @@ public class UpdateUserData{
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                        callbackEvent.callback(status[0]);
+                                                        callbackEvent.throwError(e.getMessage());
                                                     }
                                                 })
                                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -62,27 +57,25 @@ public class UpdateUserData{
                                                             DocumentSnapshot groupData = task.getResult();
                                                             User.getUser().setGroupName(groupData.get("nameGroup").toString());
                                                             User.getUser().setNumberUsers((long) groupData.get("numberUsers"));
-                                                            status[0] = "ok";
+                                                            callbackEvent.requestStatus("ok");
                                                         }else{
-                                                            //отрабатывать ошибку
-                                                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                                                            callbackEvent.throwError(task.getException().getMessage());
                                                         }
-                                                        callbackEvent.callback(status[0]);
+
                                                     }
                                                 });
                                     }else{
                                         User.getUser().setGroupName("");
-                                        status[0] = "ok";
-                                        callbackEvent.callback(status[0]);
+                                        callbackEvent.requestStatus("ok");
                                     }
                                 }else{
-                                    Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG);
-                                    callbackEvent.callback(status[0]);
+                                    callbackEvent.throwError(task.getException().getMessage());
                                 }
                             }
                         });
             }else {
-                callbackEvent.callback(status[0]);
+                //расцениваю как ошибку так как юзер который не вошёл вообще это видеть не должен
+                callbackEvent.throwError("Not sigh up");
             }
     }
 

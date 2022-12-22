@@ -20,8 +20,10 @@
         >
 
         <TextView
-            android:id="@+id/nameTextInCustomListViewUsers"
-            style="@style/simpleTextStyleMontserrat"
+            android:id="@+id/nameTextInCustomListViewWithTwoTextFieldsAndBtn"
+            android:fontFamily="@font/montserrat_light"
+            android:textColor="@color/black"
+            android:textSize="22sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="text"
@@ -29,16 +31,17 @@
 
         <TextView
             android:layout_marginTop="1dp"
-            android:id="@+id/emailTextInCustomListViewUsers"
-            style="@style/simpleTextStyleMontserrat"
-            android:textSize="14sp"
+            android:id="@+id/emailTextInCustomListViewWithTwoTextFieldsAndBtn"
+            android:fontFamily="@font/montserrat_light"
+            android:textColor="@color/black"
+            android:textSize="18sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="text"
             />
 
         <TextView
-            android:id="@+id/hideUIDInCustomListViewUsers"
+            android:id="@+id/hideUIDInCustomListViewWithTwoTextFieldsAndBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
@@ -47,10 +50,10 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewInCustomListViewWithTwoTextFieldsAndBtn"
         android:scaleType="fitXY"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_weight="1"
         app:srcCompat="@drawable/ic_baseline_delete"
         android:layout_marginRight="5dp"/>

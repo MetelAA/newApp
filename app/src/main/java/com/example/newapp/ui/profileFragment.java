@@ -1,5 +1,7 @@
 package com.example.newapp.ui;
 
+import android.animation.Animator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,12 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,23 +26,19 @@ import android.widget.TextView;
 
 import com.example.newapp.R;
 
-import com.example.newapp.core.ExitJoinFromGroup;
-import com.example.newapp.core.ListOfUsers;
-import com.example.newapp.core.UpdateUserData;
+import com.example.newapp.adapters.customAdapterListUsers;
+import com.example.newapp.core.db.ExitJoinFromGroup;
+import com.example.newapp.core.db.UpdateUserData;
 import com.example.newapp.core.User;
+import com.example.newapp.core.db.getDeleteUsers;
 import com.example.newapp.databinding.FragmentProfileBinding;
 import com.example.newapp.interfaces.CallbackInterface;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.example.newapp.interfaces.CallbackInterfaceWithList;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class profileFragment extends Fragment {
 
@@ -48,7 +49,7 @@ public class profileFragment extends Fragment {
 
     private ImageButton profileImg;
     private Button userOptionGroupBtn;
-    private Button groupSettingsBtn;
+    private Button groupUserListBtn;
 
     private ViewGroup mainElem;
 
@@ -65,7 +66,7 @@ public class profileFragment extends Fragment {
 
         userOptionGroupBtn = binding.btnProfileOptionGroup;
 
-        groupSettingsBtn = binding.groupSettingsProfileBtn;
+        groupUserListBtn = binding.groupUserListProfileBtn;
 
         mainElem = getActivity().findViewById(android.R.id.content);
 
@@ -95,7 +96,7 @@ public class profileFragment extends Fragment {
     private void logOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        View customView = getLayoutInflater().inflate(R.layout.custom_alert_dialog_exit, null);
+        View customView = getLayoutInflater().inflate(R.layout.alert_dialog_exit, null);
         builder.setView(customView);
 
         AlertDialog dialog = builder.create();
@@ -132,16 +133,39 @@ public class profileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                View customView = getLayoutInflater().inflate(R.layout.custom_alert_dialog_join_group, null);
+                View customView = getLayoutInflater().inflate(R.layout.alert_dialog_join_group, null);
                 builder.setView(customView);
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                AlertDialog alertDialog = builder.create();
+
 
                 Button dialogCancel = customView.findViewById(R.id.btnCustomJoinGroupAlertDialogCancel);
                 Button dialogSubmit = customView.findViewById(R.id.btnCustomJoinGroupAlertDialogSubmit);
 
                 EditText editText = customView.findViewById(R.id.editCustomJoinGroupAlertDialogField);
+
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        View customViewForAnim = alertDialog.getWindow().getDecorView();
+                        int height = customViewForAnim.getHeight();
+                        int width = customViewForAnim.getWidth();
+
+                        Animator animation =  ViewAnimationUtils.createCircularReveal(
+                                customViewForAnim,
+                                width / 2,
+                                height / 2,
+                                1F,
+                                Math.max(width, height)
+                        );
+
+                        animation.setDuration(500);
+                        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animation.start();
+                    }
+                });
+
+                alertDialog.show();
 
                 dialogSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -151,22 +175,24 @@ public class profileFragment extends Fragment {
 
                             ExitJoinFromGroup exitJoinFromGroup = new ExitJoinFromGroup(new CallbackInterface() {
                                 @Override
-                                public void callback(String status) {
-                                    switch (status){
+                                public void requestStatus(String status) {
+                                    switch(status){
                                         case "ok":
-                                            dialog.cancel();
+                                            alertDialog.cancel();
                                             updateProfileData();
                                         break;
-                                        case "no such group":
-                                            editText.setError("Такой группы не существует");
-                                        break;
-                                        case "error":
-                                            dialog.cancel();
+                                        case "No such group":
+                                            editText.setError("Группы с таким названием не сущесвтует");
                                         break;
                                     }
                                 }
+
+                                @Override
+                                public void throwError(String error) {
+                                    Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
+                                }
                             });
-                            exitJoinFromGroup.joinGroup(mainElem, fStore, editTextGroupKey);
+                            exitJoinFromGroup.joinGroup(fStore, editTextGroupKey);
                         } else {
                             editText.setError("Введите код группы");
                         }
@@ -176,7 +202,7 @@ public class profileFragment extends Fragment {
                 dialogCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.cancel();
+                        alertDialog.cancel();
                     }
                 });
 
@@ -190,11 +216,11 @@ public class profileFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                View customView = getLayoutInflater().inflate(R.layout.custom_alert_dialog_exit, null);
+                View customView = getLayoutInflater().inflate(R.layout.alert_dialog_exit, null);
                 builder.setView(customView);
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                AlertDialog alertDialog = builder.create();
+
 
                 Button dialogCancel = customView.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
                 Button dialogConfirm = customView.findViewById(R.id.buttonCustomLogOutAlertDialogConfirm);
@@ -204,31 +230,54 @@ public class profileFragment extends Fragment {
 
                 ((TextView) customView.findViewById(R.id.textCustomLogOutAlertDialog)).setText("Вы уверены, что хотите покинуть группу?");
 
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        View customViewForAnim = alertDialog.getWindow().getDecorView();
+                        int height = customViewForAnim.getHeight();
+                        int width = customViewForAnim.getWidth();
+
+                        Animator animation =  ViewAnimationUtils.createCircularReveal(
+                                customViewForAnim,
+                                width / 2,
+                                height / 2,
+                                1F,
+                                Math.max(width, height)
+                        );
+
+                        animation.setDuration(500);
+                        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animation.start();
+                    }
+                });
+
+                alertDialog.show();
+
                 dialogConfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ExitJoinFromGroup exitJoinFromGroup = new ExitJoinFromGroup(new CallbackInterface() {
                             @Override
-                            public void callback(String status) {
-                                switch (status){
-                                    case "ok":
-                                        dialog.cancel();
-                                        updateProfileData();
-                                        break;
-                                    case "error":
-                                        dialog.cancel();
-                                        break;
-                                }
+                            public void requestStatus(String result) {
+                                //здесь он может вернуть только ок
+                                alertDialog.cancel();
+                                updateProfileData();
+                            }
+
+                            @Override
+                            public void throwError(String error) {
+                                alertDialog.cancel();
+                                Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
                             }
                         });
-                        exitJoinFromGroup.exitGroup(mainElem, fStore);
+                        exitJoinFromGroup.exitGroup(fStore);
                     }
                 });
 
                 dialogCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.cancel();
+                        alertDialog.cancel();
                     }
                 });
             }
@@ -239,34 +288,29 @@ public class profileFragment extends Fragment {
     private void updateProfileData() {
         UpdateUserData upData = new UpdateUserData(new CallbackInterface() {
             @Override
-            public void callback(String status) {
-                switch (status){
-                    case "ok":
-                        showProfileData();
-                    break;
-                    case "error":
+            public void requestStatus(String status) {
+                showProfileData();
+            }
 
-                    break;
-                }
+            @Override
+            public void throwError(String error) {
+                Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
             }
         });
-        upData.updateUserData(mainElem, fAuth, fStore);
+        upData.updateUserData(fAuth, fStore);
     }
 
     private void showProfileData() { //Здесь 3 текстовых поля заполняются (не имеет смысла выносить в отдельные переменные тк используются только здесь)
         binding.profileNameText.setText(User.getName());
         binding.profileEmailText.setText(User.getEmail());
         binding.profileNameGroupText.setText(User.getUser().getGroupName());
-        Log.d("Aboba",String.valueOf(User.getUser().getNumberUsers()));
-
-
 
         if (TextUtils.equals(User.getType(), "Учитель")) {
-            groupSettingsBtn.setVisibility(View.VISIBLE);
+            groupUserListBtn.setVisibility(View.VISIBLE);
             userOptionGroupBtn.setVisibility(View.INVISIBLE);
-            groupSettingsBtnListener();
+            groupUserSettingsBtnListener();
         } else {
-            groupSettingsBtn.setVisibility(View.INVISIBLE);
+            groupUserListBtn.setVisibility(View.INVISIBLE);
         }
 
         if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
@@ -292,14 +336,67 @@ public class profileFragment extends Fragment {
         }
     }
 
-    private void groupSettingsBtnListener() {
-        groupSettingsBtn.setOnClickListener(new View.OnClickListener() {
+    private void groupUserSettingsBtnListener() {
+        groupUserListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ListOfUsers listOfUsers = new ListOfUsers(getContext(), getLayoutInflater(), mainElem, fStore);
-                listOfUsers.showListOfUsers();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                View customListViewInALDialog = getLayoutInflater().inflate(R.layout.alert_dialog_recycler_view, null);
+
+                builder.setView(customListViewInALDialog);
+
+                AlertDialog alertDialog = builder.create();
+
+
+
+                getDeleteUsers getDeleteUsers = new getDeleteUsers(new CallbackInterfaceWithList() {
+                    @Override
+                    public void requestResult(ArrayList list) {
+                        RecyclerView recyclerView = customListViewInALDialog.findViewById(R.id.RecyclerViewInAlertDialog);
+                        showListOfUsers(list, recyclerView);
+                    }
+                    @Override
+                    public void throwError(String error) {
+                        Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
+                    }
+                });
+
+                getDeleteUsers.getListOfUsers(fStore);
+
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        View customViewForAnim = alertDialog.getWindow().getDecorView();
+                        int height = customViewForAnim.getHeight();
+                        int width = customViewForAnim.getWidth();
+
+                        Animator animation =  ViewAnimationUtils.createCircularReveal(
+                                customViewForAnim,
+                                width / 2,
+                                height / 2,
+                                1F,
+                                Math.max(width, height)
+                        );
+
+                        animation.setDuration(500);
+                        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animation.start();
+                    }
+                });
+
+                alertDialog.show();
             }
         });
+    }
+
+    private void showListOfUsers(ArrayList listUsers, RecyclerView recyclerView){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        customAdapterListUsers adapter = new customAdapterListUsers(listUsers);
+        recyclerView.setAdapter(adapter);
     }
 
 }

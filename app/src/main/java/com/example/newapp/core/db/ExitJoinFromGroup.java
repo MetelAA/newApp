@@ -1,18 +1,17 @@
-package com.example.newapp.core;
+package com.example.newapp.core.db;
 
 
-import android.view.ViewGroup;
-import android.widget.EditText;
+
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 
+
+import com.example.newapp.core.User;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
+
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -28,15 +27,14 @@ public class ExitJoinFromGroup {
         this.callbackEvent = callbackEvent;
     }
 
-    public void joinGroup(ViewGroup mainElem, FirebaseFirestore fStore, String groupKey) {
-        final String[] status = {"error"};
+    public void joinGroup(FirebaseFirestore fStore, String groupKey) {
+
 
         fStore.collection("groups").whereEqualTo("groupKey", groupKey).get()
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                        callbackEvent.callback(status[0]);
+                        callbackEvent.throwError(e.getMessage());
                     }
                 })
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -60,36 +58,31 @@ public class ExitJoinFromGroup {
                                 batch.commit().addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                        callbackEvent.callback(status[0]);
+                                        callbackEvent.throwError(e.getMessage());
                                     }
                                 })
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(task.isSuccessful()){
-                                                    status[0] = "ok";
+                                                    callbackEvent.requestStatus("ok");
                                                 }else{
-                                                    Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                                                    callbackEvent.throwError(task.getException().getMessage());
                                                 }
-                                                callbackEvent.callback(status[0]);
                                             }
                                         });
                             } else {
-                                status[0] = "no such group";
-                                callbackEvent.callback(status[0]);
+                                callbackEvent.requestStatus("No such group");
                             }
                         } else {
-                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                            callbackEvent.callback(status[0]);
+                            callbackEvent.throwError(task.getException().getMessage());
                         }
                     }
                 });
     }
 
 
-    public void exitGroup(ViewGroup mainElem, FirebaseFirestore fStore) {
-        final String[] status = {"error"};
+    public void exitGroup(FirebaseFirestore fStore) {
 
         WriteBatch batch = fStore.batch();
 
@@ -103,19 +96,17 @@ public class ExitJoinFromGroup {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                        callbackEvent.callback(status[0]);
+                        callbackEvent.throwError(e.getMessage());
                     }
                 })
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            status[0] = "ok";
+                            callbackEvent.requestStatus("ok");
                         }else{
-                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
+                            callbackEvent.throwError(task.getException().getMessage());
                         }
-                        callbackEvent.callback(status[0]);
                     }
                 });
     }

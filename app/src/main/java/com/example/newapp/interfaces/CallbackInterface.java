@@ -1,5 +1,6 @@
 package com.example.newapp.interfaces;
 
 public interface CallbackInterface {
-    void callback(String status);
+    void requestStatus(String status);
+    void throwError(String error);
 }

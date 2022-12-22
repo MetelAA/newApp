@@ -17,7 +17,7 @@ import android.widget.RadioGroup;
 
 import com.example.newapp.MainActivity;
 import com.example.newapp.R;
-import com.example.newapp.core.UpdateUserData;
+import com.example.newapp.core.db.UpdateUserData;
 import com.example.newapp.core.User;
 import com.example.newapp.databinding.ActivityRegistrationBinding;
 import com.example.newapp.interfaces.CallbackInterface;
@@ -91,7 +91,7 @@ public class Registration extends AppCompatActivity {
                     return;
                 }
 
-                if (password.length() < 8) {
+                if (Integer.parseInt(password) < 8) {
                     editTextPassword.setError("Пароль должен быть длинее 8 символов");
                     return;
                 }
@@ -174,7 +174,7 @@ public class Registration extends AppCompatActivity {
         final String[] groupName = new String[1];
         String groupKey = UUID.randomUUID().toString().substring(0, 8);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View customView = getLayoutInflater().inflate(R.layout.custom_alert_dialog_register, null);
+        View customView = getLayoutInflater().inflate(R.layout.alert_dialog_register, null);
 
         EditText inputForNameGroupTextInAlertDialog = customView.findViewById(R.id.inputForNameGroupTextInAlertDialog);
         Button submitButton = customView.findViewById(R.id.submitButtonForAlertDialog);
@@ -269,18 +269,19 @@ public class Registration extends AppCompatActivity {
     private void checkUser() { //хз мб както изменить тк эта хуйня повторяется уже дважды но хз
         UpdateUserData upData = new UpdateUserData(new CallbackInterface() {
             @Override
-            public void callback(String status) {
-                switch (status) {
-                    case "ok":
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        finish();
-                        break;
-                    case "error":
+            public void requestStatus(String status) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            }
 
-                        break;
+            @Override
+            public void throwError(String error) {
+                if(TextUtils.equals("Not sigh up", error)){
+                    return;
                 }
+                Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
             }
         });
-        upData.updateUserData(mainElem, fAuth, fStore);
+        upData.updateUserData(fAuth, fStore);
     }
 }

@@ -23,10 +23,6 @@ public class User {
 
     }
 
-
-
-
-
     public void create(String uid, String username, String Email, String Type) {
         UID = uid;
         name = username;

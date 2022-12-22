@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:background="@drawable/white_round_shape_background"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="top"
+        >
+        <EditText
+            android:id="@+id/lessonNumberEditTextChangeScheduleSchedule"
+            style="@style/simpleTextStyleRobotoLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_weight="2000000"
+            android:inputType="number"
+            android:hint="Номер урока" />
+
+        <ImageButton
+            android:id="@+id/deleteNewSubjectConstructorChangeScheduleSchedule"
+            android:scaleType="fitXY"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:layout_marginLeft="25dp"
+            app:srcCompat="@drawable/ic_baseline_delete"
+            app:tint="@color/btnRed" />
+
+
+    </LinearLayout>
+
+
+
+    <Spinner
+        android:id="@+id/spinnerCustomLayoutChangeScheduleSchedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+
+        />
+
+    <EditText
+        android:id="@+id/startTimeEditTextChangeScheduleSchedule"
+        style="@style/simpleTextStyleRobotoLight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:inputType="time"
+        android:hint="Время начала"
+        />
+
+    <EditText
+        android:id="@+id/endTimeEditTextChangeScheduleSchedule"
+        style="@style/simpleTextStyleRobotoLight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:inputType="time"
+        android:hint="Время конца"
+
+        />
+
+    <EditText
+        android:id="@+id/cabinetNumberEditTextChangeScheduleSchedule"
+        style="@style/simpleTextStyleRobotoLight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:inputType="number"
+        android:hint="Кабинет"
+        />
+
+</LinearLayout>

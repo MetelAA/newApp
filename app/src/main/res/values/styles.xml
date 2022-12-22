@@ -44,4 +44,12 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
+    <style name="simpleTextStyleRobotoLight">
+        <item name="fontFamily">@font/roboto_light</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+
+
 </resources>

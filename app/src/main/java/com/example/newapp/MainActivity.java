@@ -14,12 +14,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseAuth fAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
-        fAuth = FirebaseAuth.getInstance();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

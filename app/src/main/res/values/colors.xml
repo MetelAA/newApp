@@ -14,4 +14,5 @@
     <color name="btnBluePrimary">#007BFF</color>
     <color name="btnGreen">#28A745</color>
     <color name="btnRed">#D70000</color>
+    <color name="lightGrey">#F6F6F6</color>
 </resources>
