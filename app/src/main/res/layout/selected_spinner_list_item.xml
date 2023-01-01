@@ -6,9 +6,8 @@
 
     <TextView
         android:id="@+id/lessonNameTextInSelectedListItemForSpinner"
+        style="@style/simpleTextStyleRobotoLight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Русский язык"
-        style="@style/simpleTextStyleRobotoLight"
-        />
+        android:text="Русский язык" />
 </RelativeLayout>

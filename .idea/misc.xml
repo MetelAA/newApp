@@ -21,9 +21,13 @@
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/dfsdfggdg.xml" value="0.243" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/divider_for_lin_lay_in_scroll_view.xml" value="0.244" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/fdsa.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/grey_gradient.xml" value="0.2335" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/grey_gradient_2.xml" value="0.2335" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/grey_gradient_3.xml" value="0.2335" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_____________.xml" value="0.1695" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_arrow_right.xml" value="0.243" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_add.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_attach_file.xml" value="0.2335" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_change.xml" value="0.2875" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_check.xml" value="0.243" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.243" />
@@ -42,17 +46,24 @@
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_news.xml" value="0.2915" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_profile.xml" value="0.2915" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_schedule.xml" value="0.2915" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_send_msg.xml" value="0.2335" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_circle_interface_essential_40.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_single_interface_essential_40.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_undo.xml" value="0.243" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/round.xml" value="0.2905" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/round_corners.xml" value="0.2905" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/white_round_shape_background.xml" value="0.5" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/white_round_shape_black_cornres_background.xml" value="0.233" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/white_round_shape_black_stroke_background.xml" value="0.1135" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_group_settings.xml" value="0.5" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_login.xml" value="0.5090634441087614" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_registration.xml" value="0.67" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_sign_in.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/alert_dialog_exit.xml" value="0.42777777777777776" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/alert_dialog_join_group.xml" value="0.54921875" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/alert_dialog_recycler_view.xml" value="0.55" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/alert_dialog_register.xml" value="0.54921875" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_exit.xml" value="0.5" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_join_group.xml" value="0.8243559718969555" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_list_view.xml" value="0.54765625" />
@@ -71,6 +82,8 @@
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_list_item_with_two_vertical_fields_and_btn.xml" value="0.5" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_view_item_for_change_schedule.xml" value="0.9" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/dsa.xml" value="0.55" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/empty_message_rec_view.xml" value="0.4791666666666667" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_change_schedule_screen_for_schedule.xml" value="0.54375" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_chat.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_evaluations.xml" value="0.54140625" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_news.xml" value="0.54140625" />
@@ -78,7 +91,9 @@
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_schedule.xml" value="0.5" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/layout_for_change_shcedule.xml" value="0.33" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/list_item_with_two_vertical_fields_and_btn.xml" value="0.55" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/recycler_view_screen.xml" value="0.54375" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/selected_spinner_list_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/show_schedule_list_item.xml" value="0.4641025641025641" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/spinner_list_item.xml" value="0.5088607594936709" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/artem/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/auto_complete_list.xml" value="0.4125" />

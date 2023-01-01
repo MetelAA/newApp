@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.scheduleFragment">
+    tools:context=".ui.scheduleFragment"
+    android:background="@color/white"
+    >
 
 
     <ImageButton
@@ -15,52 +17,14 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_baseline_settings"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        />
-
-    <ImageButton
-        android:id="@+id/undoChangesScheduleBtnSchedule"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_undo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
-        />
-
-
-    <ImageButton
-        android:id="@+id/changeBtnSchedule"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:visibility="visible"
-        android:src="@drawable/ic_edit"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <ImageButton
-        android:id="@+id/changesHasDoneChangeScheduleBtm"
-        android:src="@drawable/ic_baseline_done"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/linearLayout4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="1dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,39 +32,21 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/showPreviousDayBtnSchedule"
-                android:layout_width="50sp"
-                android:layout_height="30sp"
-                android:background="@null"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_arrow_left" />
 
             <TextView
                 android:id="@+id/textDaySchedule"
                 style="@style/titleTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:text="TextView"
                 android:textSize="25sp" />
 
-            <ImageButton
-                android:id="@+id/showNextDayBtnSchedule"
-                android:layout_width="50sp"
-                android:layout_height="30sp"
-                android:background="@null"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_arrow_right"
-
-                />
         </LinearLayout>
 
         <TextView
@@ -109,62 +55,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text=""
             android:textSize="16sp" />
+
+
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/scrollViewForChangeSchedule"
+
+    <ImageButton
+        android:id="@+id/changeBtnSchedule"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_edit"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.viewpager2.widget.ViewPager2
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
-        android:visibility="gone"
+        android:layout_marginTop="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        android:layout_margin="8dp"
+        android:id="@+id/viewpagerForShowSchedule"
         >
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/linearLayoutForChangeInScrollViewSchedule"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:showDividers="middle"
-                android:divider="@drawable/divider_for_lin_lay_in_scroll_view"
-                android:animateLayoutChanges="true"
-                >
 
 
-            </LinearLayout>
-
-            <ImageButton
-                android:id="@+id/addDayInLinearLayoutSchedule"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="@null"
-                android:scaleType="fitXY"
-                android:src="@drawable/ic_baseline_add"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutForChangeInScrollViewSchedule" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </ScrollView>
-
-
+    </androidx.viewpager2.widget.ViewPager2>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

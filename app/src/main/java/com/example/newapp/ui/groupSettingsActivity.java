@@ -3,10 +3,14 @@ package com.example.newapp.ui;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -17,7 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.newapp.R;
-import com.example.newapp.adapters.customAdapterListLessonsDescription;
+import com.example.newapp.adapters.AdapterListLessonsDescription;
 import com.example.newapp.core.LessonForScheduleSettings;
 import com.example.newapp.core.db.addDeleteLessonDescriptionToDB;
 import com.example.newapp.core.db.getLessonDescription;
@@ -148,7 +152,7 @@ public class groupSettingsActivity extends AppCompatActivity {
 
 
     private void showLessonsInListView(ArrayList<LessonForScheduleSettings> listLessons){
-        customAdapterListLessonsDescription adapter = new customAdapterListLessonsDescription(getApplicationContext(), listLessons);
+        AdapterListLessonsDescription adapter = new AdapterListLessonsDescription(getApplicationContext(), listLessons);
 
         ListViewForListOfLessonsDescriptionScheduleSettings.setAdapter(adapter);
 
@@ -172,6 +176,28 @@ public class groupSettingsActivity extends AppCompatActivity {
                 builder.setView(customView);
 
                 AlertDialog alertDialog = builder.create();
+
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        View customViewForAnim = alertDialog.getWindow().getDecorView();
+                        int height = customViewForAnim.getHeight();
+                        int width = customViewForAnim.getWidth();
+
+                        Animator animation =  ViewAnimationUtils.createCircularReveal(
+                                customViewForAnim,
+                                width / 2,
+                                height / 2,
+                                1F,
+                                Math.max(width, height)
+                        );
+
+                        animation.setDuration(600);
+                        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                        animation.start();
+                    }
+                });
+
                 alertDialog.show();
 
                 buttonConfirm.setOnClickListener(new View.OnClickListener() {

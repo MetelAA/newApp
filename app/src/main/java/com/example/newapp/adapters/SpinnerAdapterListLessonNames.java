@@ -17,8 +17,8 @@ import com.example.newapp.core.LessonForScheduleSettings;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-public class customAdapterListLessonNamesForSpinner extends ArrayAdapter<LessonForScheduleSettings> {
-    public customAdapterListLessonNamesForSpinner(Context context, ArrayList<LessonForScheduleSettings> lessons){
+public class SpinnerAdapterListLessonNames extends ArrayAdapter<LessonForScheduleSettings> {
+    public SpinnerAdapterListLessonNames(Context context, ArrayList<LessonForScheduleSettings> lessons){
         super(context, R.layout.selected_spinner_list_item, lessons);
     }
 

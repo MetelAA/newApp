@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.example.newapp.R;
 
-import com.example.newapp.adapters.customAdapterListUsers;
+import com.example.newapp.adapters.AdapterListUsers;
 import com.example.newapp.core.db.ExitJoinFromGroup;
 import com.example.newapp.core.db.UpdateUserData;
 import com.example.newapp.core.User;
@@ -343,7 +343,7 @@ public class profileFragment extends Fragment {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                View customListViewInALDialog = getLayoutInflater().inflate(R.layout.alert_dialog_recycler_view, null);
+                View customListViewInALDialog = getLayoutInflater().inflate(R.layout.recycler_view_screen, null);
 
                 builder.setView(customListViewInALDialog);
 
@@ -354,7 +354,7 @@ public class profileFragment extends Fragment {
                 getDeleteUsers getDeleteUsers = new getDeleteUsers(new CallbackInterfaceWithList() {
                     @Override
                     public void requestResult(ArrayList list) {
-                        RecyclerView recyclerView = customListViewInALDialog.findViewById(R.id.RecyclerViewInAlertDialog);
+                        RecyclerView recyclerView = customListViewInALDialog.findViewById(R.id.RecyclerViewInCustomScreen);
                         showListOfUsers(list, recyclerView);
                     }
                     @Override
@@ -380,7 +380,7 @@ public class profileFragment extends Fragment {
                                 Math.max(width, height)
                         );
 
-                        animation.setDuration(500);
+                        animation.setDuration(600);
                         animation.setInterpolator(new AccelerateDecelerateInterpolator());
                         animation.start();
                     }
@@ -395,7 +395,7 @@ public class profileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        customAdapterListUsers adapter = new customAdapterListUsers(listUsers);
+        AdapterListUsers adapter = new AdapterListUsers(listUsers);
         recyclerView.setAdapter(adapter);
     }
 

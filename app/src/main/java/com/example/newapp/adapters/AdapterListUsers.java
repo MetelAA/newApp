@@ -22,11 +22,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 
-public class customAdapterListUsers extends RecyclerView.Adapter<customAdapterListUsers.customViewHolder> {
+public class AdapterListUsers extends RecyclerView.Adapter<AdapterListUsers.customViewHolder> {
 
     private ArrayList<GroupUserForListView> listUsers;
 
-    public customAdapterListUsers(ArrayList<GroupUserForListView> listUsers) {
+    public AdapterListUsers(ArrayList<GroupUserForListView> listUsers) {
         this.listUsers = listUsers;
     }
 
@@ -37,13 +37,11 @@ public class customAdapterListUsers extends RecyclerView.Adapter<customAdapterLi
     public customViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_with_two_vertical_fields_and_btn, parent, false);
         return new customViewHolder(view);
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull customViewHolder holder, int position) {
         holder.bind(listUsers.get(position));
-
     }
 
     @Override

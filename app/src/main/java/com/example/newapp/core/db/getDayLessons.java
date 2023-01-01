@@ -2,7 +2,7 @@ package com.example.newapp.core.db;
 
 import androidx.annotation.NonNull;
 
-import com.example.newapp.core.LessonForSchedule;
+import com.example.newapp.core.LessonForShowSchedule;
 import com.example.newapp.core.User;
 import com.example.newapp.interfaces.CallbackInterfaceWithList;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,12 +36,12 @@ public class getDayLessons {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
-                            ArrayList<LessonForSchedule> resultList = new ArrayList<>();
+                            ArrayList<LessonForShowSchedule> resultList = new ArrayList<>();
 
                             QuerySnapshot querySnapshot = task.getResult();
                             List<DocumentSnapshot> listSnapshot = querySnapshot.getDocuments();
                             for (DocumentSnapshot docSnapshot:listSnapshot) {
-                                resultList.add(new LessonForSchedule(
+                                resultList.add(new LessonForShowSchedule(
                                         docSnapshot.get("numberLesson").toString(),
                                         docSnapshot.get("timeStart").toString(),
                                         docSnapshot.get("timeEnd").toString(),

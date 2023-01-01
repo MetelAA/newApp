@@ -18,9 +18,9 @@ import com.example.newapp.core.LessonForScheduleSettings;
 
 import java.util.ArrayList;
 
-public class customAdapterListLessonsDescription extends ArrayAdapter<LessonForScheduleSettings> {
+public class AdapterListLessonsDescription extends ArrayAdapter<LessonForScheduleSettings> {
 
-    public customAdapterListLessonsDescription(Context context, ArrayList<LessonForScheduleSettings> dataAdapter){
+    public AdapterListLessonsDescription(Context context, ArrayList<LessonForScheduleSettings> dataAdapter){
         super(context, R.layout.list_item_with_two_vertical_fields_and_btn, dataAdapter);
     }
 

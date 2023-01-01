@@ -15,12 +15,16 @@
         android:id="@+id/scheduleFragment"
         android:name="com.example.newapp.ui.scheduleFragment"
         android:label="fragment_schedule"
-        tools:layout="@layout/fragment_schedule" />
+        tools:layout="@layout/fragment_schedule" >
+        <action
+            android:id="@+id/action_scheduleFragment_to_changeScheduleScreenForScheduleFragment"
+            app:destination="@id/changeScheduleScreenForScheduleFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.newapp.ui.chatFragment"
+        android:name="com.example.newapp.ui.showChatsFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/show_chats_fragment" />
     <fragment
         android:id="@+id/newsFragment"
         android:name="com.example.newapp.ui.newsFragment"
@@ -31,6 +35,19 @@
         android:name="com.example.newapp.ui.evaluationsFragment"
         android:label="fragment_evaluations"
         tools:layout="@layout/fragment_evaluations" />
+    <fragment
+        android:id="@+id/changeScheduleScreenForScheduleFragment"
+        android:name="com.example.newapp.ui.screenForSchedule.changeScheduleScreenForScheduleFragment"
+        android:label="fragment_change_schedule_screen_for_schedule"
+        tools:layout="@layout/fragment_change_schedule_screen_for_schedule" >
+    <argument
+        android:name="dayOfWeek"
+        app:argType="string"
+        android:defaultValue="Понедельник" />
+        <action
+            android:id="@+id/action_changeScheduleScreenForScheduleFragment_to_scheduleFragment2"
+            app:destination="@id/scheduleFragment" />
+    </fragment>
 
 
 </navigation>
