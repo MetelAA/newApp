@@ -35,7 +35,6 @@ public class AdapterListLessonsDescription extends ArrayAdapter<LessonForSchedul
 
         TextView subject = convertView.findViewById(R.id.nameTextInCustomListViewWithTwoTextFieldsAndBtn);
         TextView teacherName = convertView.findViewById(R.id.emailTextInCustomListViewWithTwoTextFieldsAndBtn);
-        (convertView.findViewById(R.id.hideUIDInCustomListViewWithTwoTextFieldsAndBtn)).setVisibility(View.GONE);
 
         ImageView imageViewInCustomListView = convertView.findViewById(R.id.imageViewInCustomListViewWithTwoTextFieldsAndBtn);
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_delete);
@@ -43,7 +42,6 @@ public class AdapterListLessonsDescription extends ArrayAdapter<LessonForSchedul
 
         subject.setText(lesson.subjectName);
         teacherName.setText(lesson.teacherName);
-
 
         return convertView;
 

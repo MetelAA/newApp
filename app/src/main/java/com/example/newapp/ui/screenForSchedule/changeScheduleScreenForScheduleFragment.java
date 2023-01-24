@@ -22,6 +22,7 @@ import com.example.newapp.R;
 import com.example.newapp.adapters.SpinnerAdapterListLessonNames;
 import com.example.newapp.core.LessonForShowSchedule;
 import com.example.newapp.core.LessonForScheduleSettings;
+import com.example.newapp.core.constants;
 import com.example.newapp.core.db.addDayLessons;
 import com.example.newapp.core.db.getDayLessons;
 import com.example.newapp.core.db.getLessonDescription;
@@ -75,7 +76,7 @@ public class changeScheduleScreenForScheduleFragment extends Fragment {
         linearLayoutForChangeInScrollViewSchedule = binding.linearLayoutForChangeInScrollViewSchedule;
 
 
-        mainElem = binding.getRoot();
+        mainElem = binding.mainElemChangeScheduleDesc;
 
         dayOfWeek = getArguments().getString("dayOfWeek");
 
@@ -141,7 +142,7 @@ public class changeScheduleScreenForScheduleFragment extends Fragment {
                 callbackInterface.callback("error");
             }
         });
-        getLessonDescription.getLessonsFromDB(fStore);
+        getLessonDescription.getLessonsDescriptionFromDB(fStore);
     }
 
     private void checkDayLessonExist(localCallbackInterface callbackInterface) {
@@ -227,12 +228,12 @@ public class changeScheduleScreenForScheduleFragment extends Fragment {
                 cabinetNumber.setError("Ввидте номер кабинета");
                 return;
             }
-            lesson.put("numberLesson", lessonNumber.getText().toString());
-            lesson.put("timeStart", startTime.getText().toString());
-            lesson.put("timeEnd", endTime.getText().toString());
-            lesson.put("studyRoom", cabinetNumber.getText().toString());
-            lesson.put("teacher", ((LessonForScheduleSettings) spinner.getSelectedItem()).teacherName);
-            lesson.put("subject", ((LessonForScheduleSettings) spinner.getSelectedItem()).subjectName);
+            lesson.put(constants.KEY_LESSON_NUMBER_LESSONS , lessonNumber.getText().toString());
+            lesson.put(constants.KEY_LESSON_START_TIME, startTime.getText().toString());
+            lesson.put(constants.KEY_LESSON_END_TIME, endTime.getText().toString());
+            lesson.put(constants.KEY_LESSON_STUDY_ROOM, cabinetNumber.getText().toString());
+            lesson.put(constants.KEY_LESSON_DESCRIPTION_TEACHER_NAME, ((LessonForScheduleSettings) spinner.getSelectedItem()).teacherName);
+            lesson.put(constants.KEY_LESSON_DESCRIPTION_SUBJECT_NAME, ((LessonForScheduleSettings) spinner.getSelectedItem()).subjectName);
 
             dayLessonList.add(lesson);
         }

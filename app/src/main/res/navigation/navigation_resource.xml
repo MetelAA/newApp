@@ -20,11 +20,7 @@
             android:id="@+id/action_scheduleFragment_to_changeScheduleScreenForScheduleFragment"
             app:destination="@id/changeScheduleScreenForScheduleFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/chatFragment"
-        android:name="com.example.newapp.ui.showChatsFragment"
-        android:label="fragment_chat"
-        tools:layout="@layout/show_chats_fragment" />
+
     <fragment
         android:id="@+id/newsFragment"
         android:name="com.example.newapp.ui.newsFragment"
@@ -49,5 +45,24 @@
             app:destination="@id/scheduleFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/createNewChatFragment"
+        android:name="com.example.newapp.ui.screensForChat.createNewChatFragment"
+        android:label="fragment_create_new_chat"
+        tools:layout="@layout/fragment_create_new_chat" >
+        <action
+            android:id="@+id/action_createNewChatFragment_to_fragment_show_chats2"
+            app:destination="@id/fragment_show_chats" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_show_chats"
+        android:name="com.example.newapp.ui.showChatsFragment"
+        android:label="fragment_show_chats"
+        tools:layout="@layout/fragment_show_chats" >
+        <action
+            android:id="@+id/action_fragment_show_chats_to_createNewChatFragment2"
+            app:destination="@id/createNewChatFragment" />
+    </fragment>
 
 </navigation>

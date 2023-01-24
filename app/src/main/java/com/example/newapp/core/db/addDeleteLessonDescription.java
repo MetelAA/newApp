@@ -4,6 +4,7 @@ package com.example.newapp.core.db;
 import androidx.annotation.NonNull;
 
 import com.example.newapp.core.User;
+import com.example.newapp.core.constants;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -12,17 +13,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
 
-public class addDeleteLessonDescriptionToDB {
+public class addDeleteLessonDescription {
 
     CallbackInterface callbackInterface;
 
-    public addDeleteLessonDescriptionToDB(CallbackInterface callbackInterface) {
+    public addDeleteLessonDescription(CallbackInterface callbackInterface) {
         this.callbackInterface = callbackInterface;
     }
 
 
     public void addLesson(FirebaseFirestore fStore, Map<String, String> lessonData){
-        fStore.collection("groups").document(User.getUser().getGroupKey()).collection("lessonsInformation").document("lessonDescription").collection("lessonDescription").document(lessonData.get("subjectName")).set(lessonData)
+        fStore.collection(constants.KEY_GROUP_COLLECTION)
+                .document(User.getUser().getGroupKey())
+                .collection(constants.KEY_GROUP_SCHEDULE_COLLECTION)
+                .document(constants.KEY_GROUP_LESSONS_DESCRIPTION_COLLECTION6DOCUMENT)
+                .collection(constants.KEY_GROUP_LESSONS_DESCRIPTION_COLLECTION6DOCUMENT)
+                .document(lessonData.get(constants.KEY_LESSON_DESCRIPTION_SUBJECT_NAME))
+                .set(lessonData)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -42,7 +49,12 @@ public class addDeleteLessonDescriptionToDB {
     }
 
     public void deleteLesson(FirebaseFirestore fStore, String subjectName){
-        fStore.collection("groups").document(User.getUser().getGroupKey()).collection("lessonsInformation").document("lessonDescription").collection("lessonDescription").document(subjectName).delete()
+        fStore.collection(constants.KEY_GROUP_COLLECTION)
+                .document(User.getUser().getGroupKey())
+                .collection(constants.KEY_GROUP_SCHEDULE_COLLECTION)
+                .document(constants.KEY_GROUP_LESSONS_DESCRIPTION_COLLECTION6DOCUMENT)
+                .collection(constants.KEY_GROUP_LESSONS_DESCRIPTION_COLLECTION6DOCUMENT)
+                .document(subjectName).delete()
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {

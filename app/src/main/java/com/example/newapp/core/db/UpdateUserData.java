@@ -2,11 +2,11 @@ package com.example.newapp.core.db;
 
 
 import android.text.TextUtils;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
 import com.example.newapp.core.User;
+import com.example.newapp.core.constants;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -18,7 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class UpdateUserData{
     CallbackInterface callbackEvent;
 
-
     public UpdateUserData(CallbackInterface callbackEvent) {
         this.callbackEvent = callbackEvent;
     }
@@ -27,7 +26,7 @@ public class UpdateUserData{
             if(fAuth.getUid() != null){
                 String UID = fAuth.getUid();
 
-                fStore.collection("users").document(UID).get()
+                fStore.collection(constants.KEY_USER_COLLECTION).document(UID).get()
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
@@ -40,10 +39,17 @@ public class UpdateUserData{
                                 if(task.isSuccessful()){
                                     DocumentSnapshot userData = task.getResult();
 
-                                    User.getUser().create(UID, userData.get("Name").toString(), userData.get("Email").toString(), userData.get("Type").toString());
-                                    User.getUser().setGroupKey(userData.get("GroupKey").toString());
-                                    if(!(TextUtils.equals(userData.get("GroupKey").toString(), ""))){
-                                        fStore.collection("groups").document(userData.get("GroupKey").toString()).get()
+                                    User.getUser().create(
+                                            UID,
+                                            userData.get(constants.KEY_USER_NAME).toString(),
+                                            userData.get(constants.KEY_USER_EMAIL).toString(),
+                                            userData.get(constants.KEY_USER_TYPE).toString()
+                                    );
+                                    String GroupKey = userData.get(constants.KEY_USER_GROUP_KEY).toString();
+                                    User.getUser().setGroupKey(GroupKey);
+
+                                    if(!(TextUtils.equals(GroupKey, ""))){
+                                        fStore.collection(constants.KEY_GROUP_COLLECTION).document(GroupKey).get()
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
@@ -55,8 +61,8 @@ public class UpdateUserData{
                                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                         if(task.isSuccessful()){
                                                             DocumentSnapshot groupData = task.getResult();
-                                                            User.getUser().setGroupName(groupData.get("nameGroup").toString());
-                                                            User.getUser().setNumberUsers((long) groupData.get("numberUsers"));
+                                                            User.getUser().setGroupName(groupData.get(constants.KEY_GROUP_NAME).toString());
+                                                            User.getUser().setNumberUsers((long) groupData.get(constants.KEY_GROUP_USER_COUNT));
                                                             callbackEvent.requestStatus("ok");
                                                         }else{
                                                             callbackEvent.throwError(task.getException().getMessage());

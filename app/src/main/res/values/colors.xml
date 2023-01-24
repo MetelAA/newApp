@@ -8,11 +8,17 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="blue">#0000FF</color>
+    <color  name="textStrongGrey">#464646</color>
+
     <color name="grey">#808080</color>
-    <color name="liteGrey">#A5A5A5</color>
+    <color name="lightGrey">#F6F6F6</color>
     <color name="btnBluePrimary">#007BFF</color>
     <color name="btnGreen">#28A745</color>
     <color name="btnRed">#D70000</color>
-    <color name="lightGrey">#F6F6F6</color>
+
+    <color name="darkerBluePrimary">#0055FF</color>
+    <color name="backgroundPrimary">#FBFAFA</color>
+    <color name="backgroundForIconsLightBlue">#2AABEE</color>
+
+    <color name="mainStrokeColor">#A5A5A5</color>
 </resources>

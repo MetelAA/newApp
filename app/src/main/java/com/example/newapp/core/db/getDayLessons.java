@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.newapp.core.LessonForShowSchedule;
 import com.example.newapp.core.User;
+import com.example.newapp.core.constants;
 import com.example.newapp.interfaces.CallbackInterfaceWithList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,8 +24,10 @@ public class getDayLessons {
     }
 
     public void getLessons(FirebaseFirestore fStore, String dayOfWeek){
-        fStore.collection("groups").document(User.getUser().getGroupKey())
-                .collection("lessonsInformation").document("lessons")
+        fStore.collection(constants.KEY_GROUP_COLLECTION)
+                .document(User.getUser().getGroupKey())
+                .collection(constants.KEY_GROUP_SCHEDULE_COLLECTION)
+                .document(constants.KEY_GROUP_DAY_OF_WEEK_SCHEDULE_DOCUMENT)
                 .collection(dayOfWeek).get()
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -42,12 +45,12 @@ public class getDayLessons {
                             List<DocumentSnapshot> listSnapshot = querySnapshot.getDocuments();
                             for (DocumentSnapshot docSnapshot:listSnapshot) {
                                 resultList.add(new LessonForShowSchedule(
-                                        docSnapshot.get("numberLesson").toString(),
-                                        docSnapshot.get("timeStart").toString(),
-                                        docSnapshot.get("timeEnd").toString(),
-                                        docSnapshot.get("studyRoom").toString(),
-                                        docSnapshot.get("teacher").toString(),
-                                        docSnapshot.get("subject").toString()
+                                        docSnapshot.get(constants.KEY_LESSON_NUMBER_LESSONS).toString(),
+                                        docSnapshot.get(constants.KEY_LESSON_START_TIME).toString(),
+                                        docSnapshot.get(constants.KEY_LESSON_END_TIME).toString(),
+                                        docSnapshot.get(constants.KEY_LESSON_STUDY_ROOM).toString(),
+                                        docSnapshot.get(constants.KEY_LESSON_DESCRIPTION_TEACHER_NAME).toString(),
+                                        docSnapshot.get(constants.KEY_LESSON_DESCRIPTION_SUBJECT_NAME).toString()
                                 ));
                             }
                             callback.requestResult(resultList);

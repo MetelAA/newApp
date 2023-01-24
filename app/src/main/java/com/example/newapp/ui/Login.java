@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.example.newapp.MainActivity;
 import com.example.newapp.R;
 import com.example.newapp.core.User;
+import com.example.newapp.core.constants;
 import com.example.newapp.databinding.ActivityLoginBinding;
 import com.example.newapp.ui.Registration;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -101,7 +102,7 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             String UID = fAuth.getUid();
-                            fStore.collection("users").document(UID).get()
+                            fStore.collection(constants.KEY_USER_COLLECTION).document(UID).get()
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
@@ -114,10 +115,14 @@ public class Login extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                             if(task.isSuccessful()){
                                                 DocumentSnapshot userData = task.getResult();
-                                                User.getUser().create(UID, userData.get("Name").toString(), userData.get("Email").toString(), userData.get("Type").toString());
-                                                User.getUser().setGroupKey(userData.get("GroupKey").toString());
-                                                if(!(TextUtils.isEmpty(userData.get("GroupKey").toString()))){
-                                                    fStore.collection("groups").document(userData.get("GroupKey").toString()).get()
+                                                User.getUser().create(UID,
+                                                        userData.get(constants.KEY_USER_NAME).toString(),
+                                                        userData.get(constants.KEY_USER_EMAIL).toString(),
+                                                        userData.get(constants.KEY_USER_TYPE).toString()
+                                                        );
+                                                User.getUser().setGroupKey(userData.get(constants.KEY_USER_GROUP_KEY).toString());
+                                                if(!(TextUtils.isEmpty(userData.get(constants.KEY_USER_GROUP_KEY).toString()))){
+                                                    fStore.collection(constants.KEY_GROUP_COLLECTION).document(userData.get(constants.KEY_USER_GROUP_KEY).toString()).get()
                                                             .addOnFailureListener(new OnFailureListener() {
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
@@ -130,7 +135,7 @@ public class Login extends AppCompatActivity {
                                                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                                     if(task.isSuccessful()){
                                                                         DocumentSnapshot groupData = task.getResult();
-                                                                        User.getUser().setGroupName(groupData.get("nameGroup").toString());
+                                                                        User.getUser().setGroupName(groupData.get(constants.KEY_GROUP_NAME).toString());
                                                                     }else{
                                                                         fAuth.signOut();
                                                                         Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();

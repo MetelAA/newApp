@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainElemChangeScheduleDesc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screenForSchedule.changeScheduleScreenForScheduleFragment"
     android:background="@color/white"
-    >
+    tools:context=".ui.screenForSchedule.changeScheduleScreenForScheduleFragment">
 
 
     <ImageButton
@@ -16,14 +16,14 @@
         android:background="@null"
         android:scaleType="fitXY"
         android:src="@drawable/ic_undo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:visibility="visible"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textDayChangeScheduleScreen"
         style="@style/titleTextStyle"
+        android:textColor="@color/grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -36,15 +36,14 @@
 
     <ImageButton
         android:id="@+id/changesHasDoneChangeScheduleBtm"
-        android:src="@drawable/ic_baseline_done"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@null"
         android:scaleType="fitXY"
+        android:src="@drawable/ic_baseline_done"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
         android:id="@+id/scrollViewForChangeSchedule"
@@ -58,8 +57,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/undoChangesScheduleBtnSchedule"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/undoChangesScheduleBtnSchedule">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
@@ -69,14 +68,13 @@
                 android:id="@+id/linearLayoutForChangeInScrollViewSchedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:divider="@drawable/divider_for_lin_lay_in_scroll_view"
                 android:orientation="vertical"
+                android:showDividers="middle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:showDividers="middle"
-                android:divider="@drawable/divider_for_lin_lay_in_scroll_view"
-                android:animateLayoutChanges="true"
-                >
+                app:layout_constraintTop_toTopOf="parent">
 
 
             </LinearLayout>

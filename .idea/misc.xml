@@ -44,26 +44,36 @@
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_five.xml" value="0.1695" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.262" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_news.xml" value="0.2915" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_person_add.xml" value="0.2335" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_profile.xml" value="0.2915" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_schedule.xml" value="0.2915" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_send_msg.xml" value="0.2335" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_circle_interface_essential_40.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_streamlinehq_interface_user_single_interface_essential_40.xml" value="0.1" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/ic_undo.xml" value="0.243" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/incoming_message_background.xml" value="0.238" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/light_blue_circle_for_btn.xml" value="0.237" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/light_bluecircle_for_btn.xml" value="0.237" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/message_background.xml" value="0.238" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/no_profile_photo_icon.xml" value="0.2335" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/outgoing_message_background.xml" value="0.238" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/round.xml" value="0.2905" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/round_corners.xml" value="0.2905" />
-        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/white_round_shape_background.xml" value="0.5" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/shape_with_bottom_stroke.xml" value="0.25" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/white_round_shape_background.xml" value="0.22" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/white_round_shape_black_cornres_background.xml" value="0.233" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/drawable/white_round_shape_black_stroke_background.xml" value="0.1135" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_chat.xml" value="0.33" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_group_settings.xml" value="0.5" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_login.xml" value="0.5090634441087614" />
-        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_main.xml" value="0.67" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_registration.xml" value="0.67" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/activity_sign_in.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/alert_dialog_exit.xml" value="0.42777777777777776" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/alert_dialog_join_group.xml" value="0.54921875" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/alert_dialog_recycler_view.xml" value="0.55" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/alert_dialog_register.xml" value="0.54921875" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/button_for_recycler_view.xml" value="0.2578125" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_exit.xml" value="0.5" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_join_group.xml" value="0.8243559718969555" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/custom_alert_dialog_list_view.xml" value="0.54765625" />
@@ -84,15 +94,20 @@
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/dsa.xml" value="0.55" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/empty_message_rec_view.xml" value="0.4791666666666667" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_change_schedule_screen_for_schedule.xml" value="0.54375" />
-        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_chat.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_chat.xml" value="0.75" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_create_new_chat.xml" value="0.8243559718969555" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_evaluations.xml" value="0.54140625" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_news.xml" value="0.54140625" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_profile.xml" value="0.5" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_schedule.xml" value="0.5" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/fragment_show_chats.xml" value="0.25" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/layout_for_change_shcedule.xml" value="0.33" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/layout_for_show_list_chats_rec_view.xml" value="0.75" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/layout_for_text_message.xml" value="0.25" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/list_item_with_two_vertical_fields_and_btn.xml" value="0.55" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/recycler_view_screen.xml" value="0.54375" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/selected_spinner_list_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/show_chats_fragment.xml" value="0.36302083333333335" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/show_schedule_list_item.xml" value="0.4641025641025641" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/layout/spinner_list_item.xml" value="0.5088607594936709" />
         <entry key="..\:/Users/artem/AndroidStudioProjects/newApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />

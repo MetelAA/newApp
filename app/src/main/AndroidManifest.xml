@@ -14,20 +14,22 @@
         android:theme="@style/Theme.NewApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.groupSettingsActivity"
+            android:name=".chatActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:label="@string/title_activity_chat"
+            android:theme="@style/Theme.NewApp.NoActionBar" />
+        <activity
+            android:name=".ui.screenForSchedule.groupSettingsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.Login"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.Registration"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            >
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,8 +39,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            ></activity>
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

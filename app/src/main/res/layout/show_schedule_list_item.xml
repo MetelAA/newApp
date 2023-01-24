@@ -2,10 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/white_round_shape_black_stroke_background"
+    android:background="@drawable/white_round_shape_background"
     android:layout_marginTop="15dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +32,7 @@
                 android:layout_height="match_parent"
                 android:text="aboba"
                 android:fontFamily="@font/montserrat_light"
-                android:textColor="@color/grey"
+                android:textColor="@color/textStrongGrey"
                 android:textSize="18sp"
                 />
         </LinearLayout>
@@ -44,7 +42,7 @@
             android:layout_height="wrap_content"
             android:text="aboba"
             android:fontFamily="@font/montserrat_light"
-            android:textColor="@color/grey"
+            android:textColor="@color/textStrongGrey"
             android:textSize="18sp"
             />
 

@@ -18,6 +18,14 @@
         <item name="colorControlHighlight">#000000</item>
 
 
-
     </style>
+
+    <style name="Theme.NewApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.NewApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.NewApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -1,0 +1,122 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    >
+
+<LinearLayout
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp"
+    android:paddingLeft="15dp"
+    android:paddingTop="10dp"
+    android:paddingRight="15dp"
+    android:paddingBottom="10dp"
+    android:layout_weight="6"
+    android:id="@+id/layoutForIncomingMessage"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/incoming_message_background"
+    >
+    <LinearLayout
+        android:layout_weight="10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/messageSenderNameTextViewIncomingMessage"
+            style="@style/simpleTextStyleMontserrat"
+            android:textSize="16sp"
+            android:textColor="@color/darkerBluePrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="text"
+            />
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/messageTextTextViewIncomingMessage"
+            style="@style/simpleTextStyleMontserrat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="msg"
+            />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/messageSentTimeTextViewIncomingMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/simpleTextStyleMontserrat"
+        android:textSize="14sp"
+        android:textColor="@color/grey"
+        android:text="12:12"
+        android:layout_gravity="bottom"
+        />
+    </LinearLayout>
+
+
+<View
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_weight="5"
+    />
+
+
+    <LinearLayout
+        android:id="@+id/layoutForOutgoingMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_weight="6"
+        android:background="@drawable/outgoing_message_background"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/messageSenderNameTextViewOutgoingMessage"
+                style="@style/simpleTextStyleMontserrat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="text"
+                android:textColor="@color/darkerBluePrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/messageTextTextViewOutgoingMessage"
+                style="@style/simpleTextStyleMontserrat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/messageSentTimeTextViewOutgoingMessage"
+            style="@style/simpleTextStyleMontserrat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="12:12"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

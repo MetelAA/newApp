@@ -18,7 +18,9 @@ import android.widget.TextView;
 
 import com.example.newapp.R;
 import com.example.newapp.adapters.ViewPagerScheduleAdapter;
+
 import com.example.newapp.databinding.FragmentScheduleBinding;
+import com.example.newapp.ui.screenForSchedule.groupSettingsActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -57,7 +59,7 @@ public class scheduleFragment extends Fragment {
         textDaySchedule = binding.textDaySchedule;
 
         View v = binding.getRoot();
-        mainElem = binding.getRoot();
+        mainElem =  getActivity().findViewById(android.R.id.content);
         return v;
     }
 
@@ -94,14 +96,18 @@ public class scheduleFragment extends Fragment {
         int defaultDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2;
         if(calendar.get(Calendar.DAY_OF_WEEK) == 1){
             defaultDayOfWeek = 0;
+            calendar.add(Calendar.DATE, 1);
         }
         ViewPagerScheduleAdapter adapter = new ViewPagerScheduleAdapter(daysOfWeek, fStore);
 
         final int[] previousPosition = {defaultDayOfWeek};
+
+
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+
                 textDaySchedule.setText(daysOfWeek[position]);
                 if(position > previousPosition[0]){
                     calendar.add(Calendar.DAY_OF_WEEK, 1);
@@ -114,9 +120,15 @@ public class scheduleFragment extends Fragment {
         });
 
 
-
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(defaultDayOfWeek);
+
+        int finalDefaultDayOfWeek = defaultDayOfWeek;
+        viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                viewPager.setCurrentItem(finalDefaultDayOfWeek);
+            }
+        });
 
     }
 

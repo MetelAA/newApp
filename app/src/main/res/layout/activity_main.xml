@@ -29,14 +29,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backgroundTint="#FFFFFFFF"
+        style="@style/styleForBottomNavigation"
         app:itemIconTint="@drawable/bottom_nav_theme"
-        app:itemTextColor="#0000FF"
+        app:itemTextColor="@color/darkerBluePrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu"
-        
         />
 
 

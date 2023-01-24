@@ -1,4 +1,4 @@
-package com.example.newapp.ui;
+package com.example.newapp.ui.screenForSchedule;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +23,8 @@ import android.widget.TextView;
 import com.example.newapp.R;
 import com.example.newapp.adapters.AdapterListLessonsDescription;
 import com.example.newapp.core.LessonForScheduleSettings;
-import com.example.newapp.core.db.addDeleteLessonDescriptionToDB;
+import com.example.newapp.core.constants;
+import com.example.newapp.core.db.addDeleteLessonDescription;
 import com.example.newapp.core.db.getLessonDescription;
 import com.example.newapp.databinding.ActivityGroupSettingsBinding;
 import com.example.newapp.interfaces.CallbackInterface;
@@ -54,7 +55,7 @@ public class groupSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityGroupSettingsBinding.inflate(getLayoutInflater());
-        mainElem = binding.getRoot();
+        mainElem = binding.mainElemGroupSettings;
         fStore = FirebaseFirestore.getInstance();
 
         doneLessonDescriptionSettingsSchedule = binding.doneLessonDescriptionSettingsSchedule;
@@ -63,6 +64,7 @@ public class groupSettingsActivity extends AppCompatActivity {
         lessonNameEditTextScheduleSettings = binding.lessonNameEditTextScheduleSettings;
         teacherNameScheduleSettings = binding.teacherNameScheduleSettings;
         ListViewForListOfLessonsDescriptionScheduleSettings = binding.ListViewForListOfLessonsDescriptionScheduleSettings;
+
 
 
         binding.backToScheduleBtnScheduleSettings.setOnClickListener(new View.OnClickListener() {
@@ -93,14 +95,11 @@ public class groupSettingsActivity extends AppCompatActivity {
                             teacherNameScheduleSettings.setError("Введите текст");
                             return;
                         }
-
                         Map<String, String> lessonData = new HashMap<>();
-                        lessonData.put("subjectName", lessonName);
-                        lessonData.put("teacherName", teacherName);
+                        lessonData.put(constants.KEY_LESSON_DESCRIPTION_SUBJECT_NAME, lessonName);
+                        lessonData.put(constants.KEY_LESSON_DESCRIPTION_TEACHER_NAME, teacherName);
 
-
-
-                        addDeleteLessonDescriptionToDB addDeleteLessonDescriptionToDB = new addDeleteLessonDescriptionToDB(new CallbackInterface() {
+                        addDeleteLessonDescription addDeleteLessonDescription = new addDeleteLessonDescription(new CallbackInterface() {
                             @Override
                             public void requestStatus(String status) {
                                 Snackbar.make(mainElem, "Урок успешно добавлен", Snackbar.LENGTH_LONG).show();
@@ -121,7 +120,7 @@ public class groupSettingsActivity extends AppCompatActivity {
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-                        addDeleteLessonDescriptionToDB.addLesson(fStore, lessonData);
+                        addDeleteLessonDescription.addLesson(fStore, lessonData);
                     }
                 });
             }
@@ -144,8 +143,7 @@ public class groupSettingsActivity extends AppCompatActivity {
                 Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
             }
         });
-
-        getLessons.getLessonsFromDB(fStore);
+        getLessons.getLessonsDescriptionFromDB(fStore);
     }
 
 
@@ -155,7 +153,6 @@ public class groupSettingsActivity extends AppCompatActivity {
         AdapterListLessonsDescription adapter = new AdapterListLessonsDescription(getApplicationContext(), listLessons);
 
         ListViewForListOfLessonsDescriptionScheduleSettings.setAdapter(adapter);
-
 
         ListViewForListOfLessonsDescriptionScheduleSettings.setClickable(true);
         ListViewForListOfLessonsDescriptionScheduleSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -203,7 +200,7 @@ public class groupSettingsActivity extends AppCompatActivity {
                 buttonConfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        addDeleteLessonDescriptionToDB deleteLesson = new addDeleteLessonDescriptionToDB(new CallbackInterface() {
+                        addDeleteLessonDescription deleteLesson = new addDeleteLessonDescription(new CallbackInterface() {
                             @Override
                             public void requestStatus(String status) {
                                 //можеть быть только ок => проверок не требуется

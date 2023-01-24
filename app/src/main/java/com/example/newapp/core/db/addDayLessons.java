@@ -3,6 +3,7 @@ package com.example.newapp.core.db;
 
 import androidx.annotation.NonNull;
 
+import com.example.newapp.core.constants;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,16 +27,22 @@ public class addDayLessons {
         WriteBatch batch = fStore.batch();
 
         for (int i = 1; i <= 10; i++) {
-            batch.delete(fStore.collection("groups").document(User.getUser().getGroupKey())
-                    .collection("lessonsInformation").document("lessons")
-                    .collection(dayOfWeek).document(String.valueOf(i)));
+            batch.delete(fStore.collection(constants.KEY_GROUP_COLLECTION)
+                    .document(User.getUser().getGroupKey())
+                    .collection(constants.KEY_GROUP_SCHEDULE_COLLECTION)
+                    .document(constants.KEY_GROUP_DAY_OF_WEEK_SCHEDULE_DOCUMENT)
+                    .collection(dayOfWeek)
+                    .document(String.valueOf(i)));
         }
 
 
         for (Map<String, String> lesson:listLessons) {
-            batch.set(fStore.collection("groups").document(User.getUser().getGroupKey())
-                    .collection("lessonsInformation").document("lessons")
-                    .collection(dayOfWeek).document(lesson.get("numberLesson")), lesson);
+            batch.set(fStore.collection(constants.KEY_GROUP_COLLECTION)
+                    .document(User.getUser().getGroupKey())
+                    .collection(constants.KEY_GROUP_SCHEDULE_COLLECTION)
+                    .document(constants.KEY_GROUP_DAY_OF_WEEK_SCHEDULE_DOCUMENT)
+                    .collection(dayOfWeek)
+                    .document(lesson.get(constants.KEY_LESSON_NUMBER_LESSONS)), lesson);
         }
         batch.commit()
                 .addOnFailureListener(new OnFailureListener() {

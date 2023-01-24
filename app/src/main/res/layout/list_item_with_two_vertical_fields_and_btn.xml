@@ -40,14 +40,6 @@
             android:layout_height="wrap_content"
             android:text="text"
             />
-
-        <TextView
-            android:id="@+id/hideUIDInCustomListViewWithTwoTextFieldsAndBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            tools:visibility="gone" />
-
     </LinearLayout>
 
     <ImageView

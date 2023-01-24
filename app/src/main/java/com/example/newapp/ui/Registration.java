@@ -3,6 +3,7 @@ package com.example.newapp.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.example.newapp.MainActivity;
 import com.example.newapp.R;
 import com.example.newapp.core.db.UpdateUserData;
 import com.example.newapp.core.User;
+import com.example.newapp.core.db.createAcc;
 import com.example.newapp.databinding.ActivityRegistrationBinding;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,7 +42,7 @@ public class Registration extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
-    private ViewGroup mainElem;
+    private ConstraintLayout mainElem;
 
     private EditText editTextPersonName;
     private EditText editTextEmailAddress;
@@ -64,7 +66,7 @@ public class Registration extends AppCompatActivity {
         setContentView(view);
 
 
-        mainElem = binding.getRoot();
+        mainElem = binding.mainElemRegistrationAct;
         editTextPersonName = binding.editTextPersonNameReg;
         editTextEmailAddress = binding.editTextEmailAddressReg;
         editTextPassword = binding.editTextPasswordReg;
@@ -91,7 +93,7 @@ public class Registration extends AppCompatActivity {
                     return;
                 }
 
-                if (Integer.parseInt(password) < 8) {
+                if (password.length() < 8) {
                     editTextPassword.setError("Пароль должен быть длинее 8 символов");
                     return;
                 }
@@ -118,61 +120,24 @@ public class Registration extends AppCompatActivity {
 
 
     private void createUserAcc(String Name, String Password, String Email, String Type) {
-        fAuth.createUserWithEmailAndPassword(Email, Password)
+        createAcc createAcc = new createAcc(new CallbackInterface() {
+            @Override
+            public void requestStatus(String status) {
+                Snackbar.make(mainElem, "аккаунт успешно создан", Snackbar.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            }
 
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG);
-                    }
-                })
-
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            String UID = fAuth.getCurrentUser().getUid(); //не уверен что именно current (проверить)
-                            Map<String, String> data = new HashMap<>();
-                            data.put("Name", Name);
-                            data.put("Email", Email);
-                            data.put("Type", Type);
-                            data.put("GroupKey", "");
-                            fStore.collection("users").document(UID).set(data)
-
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                        }
-                                    })
-
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                User.getUser().create(UID, Name, Email, Type);
-                                                User.getUser().setGroupKey("");
-                                                User.getUser().setGroupName("");
-                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                finish();
-                                            } else {
-                                                fAuth.getCurrentUser().delete();
-                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
-                        } else {
-                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                });
+            @Override
+            public void throwError(String error) {
+                Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        createAcc.createUserProfile(fAuth, fStore, Name, Password, Email, Type);
     }
 
 
     private void createAdminAccAndGroup(String Name, String password, String Email, String Type, Context context) {
-
-        final String[] groupName = new String[1];
-        String groupKey = UUID.randomUUID().toString().substring(0, 8);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View customView = getLayoutInflater().inflate(R.layout.alert_dialog_register, null);
 
@@ -186,78 +151,24 @@ public class Registration extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                groupName[0] = inputForNameGroupTextInAlertDialog.getText().toString();
+                String groupName = inputForNameGroupTextInAlertDialog.getText().toString();
 
-                if (!TextUtils.isEmpty(groupName[0])) {
+                if (!TextUtils.isEmpty(groupName)) {
                     dialog.dismiss();
+                    createAcc createAcc = new createAcc(new CallbackInterface() {
+                        @Override
+                        public void requestStatus(String status) {
+                            Snackbar.make(mainElem, "аккаунт успешно создан", Snackbar.LENGTH_LONG).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
+                        }
 
-                    Map<String, String> userData = new HashMap<>();
-                    userData.put("Name", Name);
-                    userData.put("Email", Email);
-                    userData.put("Type", Type);
-                    userData.put("GroupKey", groupKey);
-                    //сделать индкатор загрузки
-                    fAuth.createUserWithEmailAndPassword(Email, password)
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) { //проверить куда выкидывать будет
-                                    Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                }
-                            })
-
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        String UID = fAuth.getCurrentUser().getUid();
-                                        WriteBatch batch = fStore.batch();
-
-                                        batch.set(fStore.collection("users").document(UID), userData);
-
-                                        Map<String, String> groupData = new HashMap<>();
-                                        groupData.put("nameGroup", groupName[0]);
-                                        groupData.put("groupKey", groupKey);
-                                        groupData.put("Admin", UID);
-                                        batch.set(fStore.collection("groups").document(groupKey), groupData);
-
-                                        Map<String, String> userGroupData = new HashMap<>();
-                                        userGroupData.put("UID", UID);
-                                        userGroupData.put("Name", Name);
-                                        userGroupData.put("Email", Email);
-                                        batch.set(fStore.collection("groups").document(groupKey).collection("groupUsers").document(UID), userGroupData);
-
-                                        batch.update(fStore.collection("groups").document(groupKey), "numberUsers", FieldValue.increment(1));
-
-
-                                        batch.commit()
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        fAuth.getCurrentUser().delete();
-                                                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                    }
-                                                })
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if (task.isSuccessful()){
-                                                            User.getUser().create(UID, Name, Email, Type);
-                                                            User.getUser().setGroupKey(groupKey);
-                                                            User.getUser().setGroupName(groupName[0]);
-                                                            Snackbar.make(mainElem, "Аккаунт успешно создан", Snackbar.LENGTH_LONG).show();
-                                                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                            finish();
-                                                        } else {
-                                                            fAuth.getCurrentUser().delete();
-                                                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                                        }
-                                                    }
-                                                });
-                                    } else {
-                                        Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
+                        @Override
+                        public void throwError(String error) {
+                            Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                    createAcc.createAdminAcc(fAuth, fStore, Name, password, Email, Type, groupName);
                 } else {
                     inputForNameGroupTextInAlertDialog.setError("Введите название");
                 }
