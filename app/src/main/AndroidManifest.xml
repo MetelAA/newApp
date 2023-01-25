@@ -14,11 +14,6 @@
         android:theme="@style/Theme.NewApp"
         tools:targetApi="31">
         <activity
-            android:name=".chatActivity"
-            android:exported="false"
-            android:label="@string/title_activity_chat"
-            android:theme="@style/Theme.NewApp.NoActionBar" />
-        <activity
             android:name=".ui.screenForSchedule.groupSettingsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />

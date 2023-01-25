@@ -67,12 +67,12 @@ public class createNewChatFragment extends Fragment {
     }
 
     private void showPossibleNewChats(ArrayList list){
-        AdapterShowListNewChats adapter = new AdapterShowListNewChats(list, );
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+//        AdapterShowListNewChats adapter = new AdapterShowListNewChats(list, );
+//
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.setAdapter(adapter);
     }
 
     private void creatingNewChat(String comradUID, String comradName){
