@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.core.GroupUser;
+import com.example.newapp.domain.models.oldModels.GroupUser;
 import com.example.newapp.interfaces.RecyclerViewOnClickCallback;
 
 import java.util.ArrayList;

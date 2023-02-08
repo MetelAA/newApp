@@ -13,13 +13,11 @@ import androidx.navigation.ui.NavigationUI;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 
-import com.example.newapp.core.db.setUserStatus;
+import com.example.newapp.data.setUserStatus;
 import com.example.newapp.interfaces.CallbackInterface;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;

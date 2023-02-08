@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.newapp.R;
-import com.example.newapp.core.LessonForScheduleSettings;
+import com.example.newapp.domain.models.oldModels.LessonForScheduleSettings;
 
 import java.util.ArrayList;
 

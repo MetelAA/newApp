@@ -1,17 +1,15 @@
 package com.example.newapp.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.core.chatInfoForShowChats;
+import com.example.newapp.domain.models.oldModels.chatInfoForShowChats;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

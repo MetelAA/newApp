@@ -11,9 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.core.User;
-import com.example.newapp.core.textMessagePersonChat;
-import com.example.newapp.interfaces.CallbackWithInt;
+import com.example.newapp.global.User;
+import com.example.newapp.domain.models.oldModels.textMessagePersonChat;
 import com.example.newapp.interfaces.MessageAdapterCallback;
 
 import java.text.SimpleDateFormat;

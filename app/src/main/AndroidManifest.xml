@@ -14,15 +14,15 @@
         android:theme="@style/Theme.NewApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.screenForSchedule.groupSettingsActivity"
+            android:name=".ui.schedule.groupScheduleSettingsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.Login"
+            android:name=".ui.login.Login"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.Registration"
+            android:name=".ui.registration.Registration"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>

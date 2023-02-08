@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.core.LessonForShowSchedule;
+import com.example.newapp.domain.models.oldModels.LessonForShowSchedule;
 
 import java.util.ArrayList;
 import java.util.List;

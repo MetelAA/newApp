@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.newapp.ui.profileFragment"
+        android:name="com.example.newapp.ui.profile.profileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/scheduleFragment"
-        android:name="com.example.newapp.ui.scheduleFragment"
+        android:name="com.example.newapp.ui.schedule.scheduleFragment"
         android:label="fragment_schedule"
         tools:layout="@layout/fragment_schedule" >
         <action
@@ -23,17 +23,17 @@
 
     <fragment
         android:id="@+id/newsFragment"
-        android:name="com.example.newapp.ui.newsFragment"
+        android:name="com.example.newapp.ui.news.newsFragment"
         android:label="fragment_news"
         tools:layout="@layout/fragment_news" />
     <fragment
         android:id="@+id/evaluationsFragment"
-        android:name="com.example.newapp.ui.evaluationsFragment"
+        android:name="com.example.newapp.ui.evaluations.evaluationsFragment"
         android:label="fragment_evaluations"
         tools:layout="@layout/fragment_evaluations" />
     <fragment
         android:id="@+id/changeScheduleScreenForScheduleFragment"
-        android:name="com.example.newapp.ui.screenForSchedule.changeScheduleScreenForScheduleFragment"
+        android:name="com.example.newapp.ui.schedule.changeScheduleScreenForScheduleFragment"
         android:label="fragment_change_schedule_screen_for_schedule"
         tools:layout="@layout/fragment_change_schedule_screen_for_schedule" >
     <argument
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/createNewChatFragment"
-        android:name="com.example.newapp.ui.screensForChat.createNewChatFragment"
+        android:name="com.example.newapp.ui.chat.createNewChatFragment"
         android:label="fragment_create_new_chat"
         tools:layout="@layout/fragment_create_new_chat" >
         <action
@@ -57,7 +57,7 @@
 
     <fragment
         android:id="@+id/fragment_show_chats"
-        android:name="com.example.newapp.ui.showChatsFragment"
+        android:name="com.example.newapp.ui.chat.showChatsFragment"
         android:label="fragment_show_chats"
         tools:layout="@layout/fragment_show_chats" >
         <action

@@ -12,9 +12,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.core.GroupUser;
-import com.example.newapp.core.User;
-import com.example.newapp.core.db.getDeleteGroupUsers;
+import com.example.newapp.domain.models.oldModels.GroupUser;
+import com.example.newapp.global.User;
+import com.example.newapp.data.getDeleteGroupUsers;
 import com.example.newapp.interfaces.CallbackInterfaceWithList;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;

@@ -1,7 +1,6 @@
 package com.example.newapp.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.newapp.R;
-import com.example.newapp.core.LessonForScheduleSettings;
-
-import org.w3c.dom.Text;
+import com.example.newapp.domain.models.oldModels.LessonForScheduleSettings;
 
 import java.util.ArrayList;
 public class SpinnerAdapterListLessonNames extends ArrayAdapter<LessonForScheduleSettings> {

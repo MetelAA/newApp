@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.core.LessonForShowSchedule;
-import com.example.newapp.core.db.getDayLessons;
-import com.example.newapp.interfaces.CallbackInterface;
+import com.example.newapp.domain.models.oldModels.LessonForShowSchedule;
+import com.example.newapp.data.getDayLessons;
 import com.example.newapp.interfaces.CallbackInterfaceWithList;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
