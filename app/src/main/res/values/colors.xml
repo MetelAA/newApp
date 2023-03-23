@@ -19,6 +19,6 @@
     <color name="darkerBluePrimary">#0055FF</color>
     <color name="backgroundPrimary">#FBFAFA</color>
     <color name="backgroundForIconsLightBlue">#2AABEE</color>
-
+    <color name="backgroundForIconsDarkerBlue">#0086D2</color>
     <color name="mainStrokeColor">#A5A5A5</color>
 </resources>

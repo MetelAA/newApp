@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.schedule.groupScheduleSettingsActivity"
+    tools:context=".ui.schedule.supportScreens.changeLessonsForSchedule"
     android:background="@color/white"
     android:id="@+id/mainElemGroupSettings"
     >
@@ -70,7 +70,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backToScheduleBtnScheduleSettings">
+            app:layout_constraintTop_toBottomOf="@+id/backToScheduleBtnScheduleSettings"
+            android:animateLayoutChanges="true"
+            >
 
             <TextView
                 android:id="@+id/textView3"

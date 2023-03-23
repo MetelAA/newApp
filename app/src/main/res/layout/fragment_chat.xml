@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.chat.chatFragment"
     android:id="@+id/mainElemChatFragment"
+    android:padding="5dp"
     >
 
     <LinearLayout
@@ -13,52 +14,59 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="@drawable/shape_with_bottom_stroke"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:paddingBottom="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <ImageButton
             android:id="@+id/backToShowChatsChat"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_undo" />
+            android:scaleType="fitCenter"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_left"
+            app:tint="@color/backgroundForIconsDarkerBlue" />
+
+        <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_profile"
+        android:layout_marginLeft="15dp"
+        />
+
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="left">
 
             <TextView
                 android:id="@+id/comradNameTextViewChat"
                 style="@style/simpleTextStyleMontserrat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
                 android:text="Cheburek"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/comradStatusTextViewChat"
                 style="@style/simpleTextStyleMontserrat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="online"
                 android:textColor="@color/btnGreen"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
 
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="5dp"
-            android:src="@drawable/ic_profile" />
+
     </LinearLayout>
 
 

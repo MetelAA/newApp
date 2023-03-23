@@ -1,5 +1,10 @@
 package com.example.newapp.domain.models.repository;
 
+
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.newapp.global.Response;
+
 public interface updateUserDataRepository {
-    void checkUser();
+    Response<String, String> checkUser();
 }

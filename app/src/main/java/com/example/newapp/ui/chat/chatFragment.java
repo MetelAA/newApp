@@ -18,8 +18,6 @@ import android.widget.TextView;
 import com.example.newapp.adapters.showPersonMessageRecViewAdapter;
 import com.example.newapp.data.chat.getMessages;
 import com.example.newapp.databinding.FragmentChatBinding;
-import com.example.newapp.interfaces.CallbackInterfaceWithList;
-import com.example.newapp.interfaces.MessageAdapterCallback;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -61,54 +59,48 @@ public class chatFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        showMessages();
+
     }
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-}
-
-    private getMessages getMessages;
-    private showPersonMessageRecViewAdapter adapter;
-
-    public void showMessages(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-        getMessages = new getMessages(fStore, "",
-                new CallbackInterfaceWithList() { //getNewMassageList
-                    @Override
-                    public void requestResult(ArrayList list) {
-                        adapter.addItemsToBack(list);
-                    }
-
-                    @Override
-                    public void throwError(String error) {
-                        Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
-                    }
-                },
-                new CallbackInterfaceWithList() { //setListener
-                        @Override
-                    public void requestResult(ArrayList list) {
-                        adapter.addItemToFirstPosition(list);
-                    }
-
-                    @Override
-                    public void throwError(String error) {
-                        Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
-                    }
-                });
-        getMessages.getListMessages(new Date(), 70, null);
-        getMessages.setRealTimesUpdates();
-        adapter = new showPersonMessageRecViewAdapter(new MessageAdapterCallback() {
-            @Override
-            public void callback(Date date) {
-                getMessages.getListMessages(date, 70, null);
-            }
-        });
-        showMsgRecyclerView.setLayoutManager(layoutManager);
-        showMsgRecyclerView.setAdapter(adapter);
-    }
+//    private getMessages getMessages;
+//    private showPersonMessageRecViewAdapter adapter;
+//
+//    public void showMessages(){
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+//
+//        getMessages = new getMessages(fStore, "",
+//                new CallbackInterfaceWithList() { //getNewMassageList
+//                    @Override
+//                    public void requestResult(ArrayList list) {
+//                        adapter.addItemsToBack(list);
+//                    }
+//
+//                    @Override
+//                    public void throwError(String error) {
+//                        Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
+//                    }
+//                },
+//                new CallbackInterfaceWithList() { //setListener
+//                        @Override
+//                    public void requestResult(ArrayList list) {
+//                        adapter.addItemToFirstPosition(list);
+//                    }
+//
+//                    @Override
+//                    public void throwError(String error) {
+//                        Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
+//                    }
+//                });
+//        getMessages.getListMessages(new Date(), 70, null);
+//        getMessages.setRealTimesUpdates();
+//        adapter = new showPersonMessageRecViewAdapter(new MessageAdapterCallback() {
+//            @Override
+//            public void callback(Date date) {
+//                getMessages.getListMessages(date, 70, null);
+//            }
+//        });
+//        showMsgRecyclerView.setLayoutManager(layoutManager);
+//        showMsgRecyclerView.setAdapter(adapter);
+//    }
 }

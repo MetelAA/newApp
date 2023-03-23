@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.newapp.R;
 import com.example.newapp.global.User;
 import com.example.newapp.domain.models.oldModels.textMessagePersonChat;
-import com.example.newapp.interfaces.MessageAdapterCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,11 +21,11 @@ import java.util.List;
 
 public class showPersonMessageRecViewAdapter extends RecyclerView.Adapter<showPersonMessageRecViewAdapter.viewHolder> {
 
-    MessageAdapterCallback callback;
-
-    public showPersonMessageRecViewAdapter(MessageAdapterCallback callback) {
-        this.callback = callback;
-    }
+//    MessageAdapterCallback callback;
+//
+//    public showPersonMessageRecViewAdapter(MessageAdapterCallback callback) {
+//        this.callback = callback;
+//    }
 
     LinkedList<textMessagePersonChat> messagesList = new LinkedList<>();
 
@@ -45,7 +44,7 @@ public class showPersonMessageRecViewAdapter extends RecyclerView.Adapter<showPe
         }else{
             holder.bindIncomingMessage(message);
         }
-        if(messagesList.size() >= position - 7) callback.callback(messagesList.getLast().sentTime);
+        //if(messagesList.size() >= position - 7) callback.callback(messagesList.getLast().sentTime);
 
     }
 

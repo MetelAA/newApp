@@ -1,11 +1,21 @@
 package com.example.newapp.interfaces;
 
+import android.net.Uri;
+
 public interface profileViewModel {
 
-    void updateProfileData();
+    void initProfileData();
+
     void getListGroupUsers();
-    void deleteGroupUser();
-    void joinGroup();
+
+    void kickGroupUser(String deleteUserUID);
+
+    void joinGroup(String groupKey);
+
     void exitGroup();
+
     void exitAcc();
+
+    void setUserProfileImage(Uri imageUri);
+
 }

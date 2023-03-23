@@ -1,7 +1,8 @@
 package com.example.newapp.adapters;
 
 
-
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.domain.models.oldModels.LessonForShowSchedule;
-import com.example.newapp.data.getDayLessons;
-import com.example.newapp.interfaces.CallbackInterfaceWithList;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.newapp.domain.models.arrayListForSchedule;
+import com.example.newapp.domain.models.lesson;
+import com.example.newapp.interfaces.adapterOnBindViewHolder;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -29,12 +29,14 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
     private String[] daysOfWeek;
     private FirebaseFirestore fStore;
 
-    private Map<String, ArrayList<LessonForShowSchedule>> weekLessonsList = new HashMap<>();
+    private adapterOnBindViewHolder callback;
+
+    private Map<String, arrayListForSchedule> weekLessonsList = new HashMap<>();
 
 
-    public ViewPagerScheduleAdapter(String[] daysOfWeek, FirebaseFirestore fStore) {
+    public ViewPagerScheduleAdapter(String[] daysOfWeek, adapterOnBindViewHolder callback) {
         this.daysOfWeek = daysOfWeek;
-        this.fStore = fStore;
+        this.callback = callback;
     }
 
     @NonNull
@@ -49,26 +51,18 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
 
     @Override
     public void onBindViewHolder(@NonNull PagerViewHolder holder, int position) {
-        if(weekLessonsList.get(daysOfWeek[position]) == null){
-            int fixedPosition = position;
-            getDayLessons getDayLessons = new getDayLessons(new CallbackInterfaceWithList() {
-                @Override
-                public void requestResult(ArrayList list) {
-                    if(list.isEmpty()){
-                        holder.showEmptyMessage();
-                    }else {
-                        weekLessonsList.put(daysOfWeek[fixedPosition], list);
-                        holder.bind(weekLessonsList.get(daysOfWeek[fixedPosition]));
-                    }
-                }
-                @Override
-                public void throwError(String error) {
-                    Snackbar.make(holder.recView, "Ошибка! Не удалось получить расписание", Snackbar.LENGTH_LONG).show();
-                }
-            });
-            getDayLessons.getLessons(fStore, daysOfWeek[fixedPosition]);
-        }else{
-            holder.bind(weekLessonsList.get(daysOfWeek[position]));
+        Log.d("Aboba", "bind");
+        if (weekLessonsList.get(daysOfWeek[position]) == null) {
+            Log.d("Aboba", "Запрос на получения по дню недели " + daysOfWeek[position]);
+            callback.callback(daysOfWeek[position]);
+            weekLessonsList.put(daysOfWeek[position], new arrayListForSchedule()); //затычка чтобы после вызова notifyDataSetChanged не вызвались заново вызовы бд
+        } else {
+            arrayListForSchedule lessonList = weekLessonsList.get(daysOfWeek[position]);
+            if (!lessonList.isEmpty()) {
+                holder.bind(lessonList);
+            } else {
+                holder.showEmptyMessage();
+            }
         }
     }
 
@@ -77,8 +71,14 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
         return daysOfWeek.length;
     }
 
+    public void addNewDayLessons(arrayListForSchedule lessons) {
+        weekLessonsList.put(lessons.getDayOfWeek(), lessons);
+        Log.d("Aboba", "добавление нового расписания на день недели " + lessons.getDayOfWeek() + "   со знач " + lessons.toString());
+        notifyDataSetChanged();
+    }
 
-    class PagerViewHolder extends RecyclerView.ViewHolder{
+
+    class PagerViewHolder extends RecyclerView.ViewHolder {
 
         private RecyclerView recView;
 
@@ -87,7 +87,7 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
             recView = itemView.findViewById(R.id.RecyclerViewInCustomScreen);
         }
 
-        public void bind(ArrayList<LessonForShowSchedule> list) {
+        public void bind(ArrayList<lesson> list) {
             RecAdapterListLessons adapter = new RecAdapterListLessons(list);
             LinearLayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
             recView.setLayoutManager(layoutManager);
@@ -95,7 +95,7 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
             recView.setAdapter(adapter);
         }
 
-        public void showEmptyMessage(){
+        public void showEmptyMessage() {
             showEmptyMessageRecViewAdapter adapter = new showEmptyMessageRecViewAdapter();
             recView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
             recView.setHasFixedSize(true);

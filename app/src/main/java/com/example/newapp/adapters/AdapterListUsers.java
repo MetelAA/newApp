@@ -1,36 +1,30 @@
 package com.example.newapp.adapters;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.domain.models.oldModels.GroupUser;
-import com.example.newapp.global.User;
-import com.example.newapp.data.getDeleteGroupUsers;
-import com.example.newapp.interfaces.CallbackInterfaceWithList;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.newapp.domain.models.groupUserData;
+import com.example.newapp.interfaces.adapterOnClickInterface;
+
 
 import java.util.ArrayList;
 
 
 public class AdapterListUsers extends RecyclerView.Adapter<AdapterListUsers.customViewHolder> {
 
-    private ArrayList<GroupUser> listUsers;
+    private ArrayList<groupUserData> listUsers;
+    private adapterOnClickInterface callback;
 
-    public AdapterListUsers(ArrayList<GroupUser> listUsers) {
+    public AdapterListUsers(ArrayList<groupUserData> listUsers, adapterOnClickInterface callback) {
         this.listUsers = listUsers;
+        this.callback = callback;
     }
-
-
 
     @NonNull
     @Override
@@ -49,74 +43,34 @@ public class AdapterListUsers extends RecyclerView.Adapter<AdapterListUsers.cust
         return listUsers.size();
     }
 
+    public void deleteGroupUserFromList(groupUserData deleteUser){
+        listUsers.remove(deleteUser);
+        notifyDataSetChanged();
+    }
     class customViewHolder extends RecyclerView.ViewHolder{
 
-        TextView nameTextInCustomListViewUsers;
-        TextView emailTextInCustomListViewUsers;
+        TextView nameText;
+        TextView emailText;
+        TextView userTypeText;
 
         public customViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextInCustomListViewUsers = itemView.findViewById(R.id.nameTextInCustomListViewWithTwoTextFieldsAndBtn);
-            emailTextInCustomListViewUsers = itemView.findViewById(R.id.emailTextInCustomListViewWithTwoTextFieldsAndBtn);
+            nameText = itemView.findViewById(R.id.nameTextInCustomListViewWithTwoTextFieldsAndBtn);
+            emailText = itemView.findViewById(R.id.emailTextInCustomListViewWithTwoTextFieldsAndBtn);
+            userTypeText = itemView.findViewById(R.id.userTypeTextInCustomListViewWithTwoTextFieldsAndBtn);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
-                    View view = LayoutInflater.from(itemView.getContext()).inflate(R.layout.alert_dialog_exit, null);
-
-                    TextView textView = view.findViewById(R.id.textCustomLogOutAlertDialog);
-                    Button submit = view.findViewById(R.id.buttonCustomLogOutAlertDialogConfirm);
-                    Button cancel = view.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
-
-                    String kickUID = listUsers.get(getAdapterPosition()).UID;
-
-                    if(TextUtils.equals(User.getUID(), kickUID)){
-                        textView.setText("Вы не можете выгнать себя");
-                        submit.setText("Выгнать");
-                        submit.setVisibility(View.GONE);
-                    }else{
-                        textView.setText("Вы уверены что хотите выгнать " + nameTextInCustomListViewUsers.getText() + "?");
-                        submit.setText("Выгнать");
-                    }
-                    cancel.setText("Отмена");
-                    builder.setView(view);
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-
-                    submit.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        getDeleteGroupUsers getDeleteGroupUsers = new getDeleteGroupUsers(new CallbackInterfaceWithList() {
-                            @Override
-                            public void requestResult(ArrayList list) {
-                                listUsers.remove(getAdapterPosition());
-                                notifyDataSetChanged();
-                                alertDialog.cancel();
-                            }
-
-                            @Override
-                            public void throwError(String error) {
-                                Snackbar.make(itemView, error, Snackbar.LENGTH_LONG).show();
-                            }
-                        });
-                        getDeleteGroupUsers.kickUser(FirebaseFirestore.getInstance(), kickUID);
-                        }
-                    });
-
-                    cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alertDialog.cancel();
-                        }
-                    });
+                    callback.callback(listUsers.get(getAdapterPosition()));
                 }
             });
         }
 
-        public void bind(GroupUser user){
-            nameTextInCustomListViewUsers.setText(user.name);
-            emailTextInCustomListViewUsers.setText(user.email);
+        public void bind(groupUserData user){
+            nameText.setText(user.userName);
+            emailText.setText(user.userEmail);
+            userTypeText.setText(user.userType);
         }
     }
 }

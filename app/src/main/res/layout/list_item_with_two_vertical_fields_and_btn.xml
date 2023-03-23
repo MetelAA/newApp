@@ -31,15 +31,23 @@
             />
 
         <TextView
-            android:layout_marginTop="1dp"
             android:id="@+id/emailTextInCustomListViewWithTwoTextFieldsAndBtn"
             android:fontFamily="@font/montserrat_light"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="text"
             />
+
+        <TextView
+            android:id="@+id/userTypeTextInCustomListViewWithTwoTextFieldsAndBtn"
+            android:fontFamily="@font/montserrat_light"
+            android:textColor="@color/grey"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="text" />
     </LinearLayout>
 
     <ImageView

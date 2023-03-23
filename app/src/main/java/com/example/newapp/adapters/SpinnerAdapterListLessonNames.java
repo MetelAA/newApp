@@ -11,18 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.newapp.R;
+import com.example.newapp.domain.models.lessonDescription;
 import com.example.newapp.domain.models.oldModels.LessonForScheduleSettings;
 
 import java.util.ArrayList;
-public class SpinnerAdapterListLessonNames extends ArrayAdapter<LessonForScheduleSettings> {
-    public SpinnerAdapterListLessonNames(Context context, ArrayList<LessonForScheduleSettings> lessons){
+public class SpinnerAdapterListLessonNames extends ArrayAdapter<lessonDescription> {
+    public SpinnerAdapterListLessonNames(Context context, ArrayList<lessonDescription> lessons){
         super(context, R.layout.selected_spinner_list_item, lessons);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LessonForScheduleSettings lesson = getItem(position);
+        lessonDescription lesson = getItem(position);
 
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.selected_spinner_list_item, parent, false);
@@ -37,7 +38,7 @@ public class SpinnerAdapterListLessonNames extends ArrayAdapter<LessonForSchedul
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.spinner_list_item, parent, false);
-        LessonForScheduleSettings lesson = getItem(position);
+        lessonDescription lesson = getItem(position);
 
 
         TextView subjectName = view.findViewById(R.id.lessonNameTextInListItemForSpinner);

@@ -1,21 +1,15 @@
 package com.example.newapp.data.repository;
 
-import android.app.Activity;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.newapp.domain.models.registerAdminData;
 import com.example.newapp.domain.models.registerUserData;
 import com.example.newapp.domain.models.repository.registerNewUserOrAdminRepository;
+import com.example.newapp.global.Response;
 import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
-import com.example.newapp.ui.registration.registrationViewModelImpl;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,32 +17,29 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Executor;
 
 public class registerNewUserOrAdminRepositoryImpl implements registerNewUserOrAdminRepository {
 
-    registrationViewModelImpl viewModel;
+    private FirebaseFirestore fStore;
+    private FirebaseAuth fAuth;
 
-    public registerNewUserOrAdminRepositoryImpl(registrationViewModelImpl viewModel) {
-        this.viewModel = viewModel;
+    public registerNewUserOrAdminRepositoryImpl(FirebaseFirestore fStore, FirebaseAuth fAuth) {
+        this.fStore = fStore;
+        this.fAuth = fAuth;
     }
 
-    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
-
     @Override
-    public void registerUser(registerUserData userData) {
-
+    public Response<String, String> registerUser(registerUserData userData) {
+        Response<String, String> response = new Response<>();
 
         fAuth.createUserWithEmailAndPassword(userData.email, userData.password)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        viewModel.onError(e.getMessage());
+                        response.setError(e.getMessage());
                     }
                 })
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -69,29 +60,33 @@ public class registerNewUserOrAdminRepositoryImpl implements registerNewUserOrAd
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             fAuth.getCurrentUser().delete();
-                                            viewModel.onError(e.getMessage());
+                                            response.setError(e.getMessage());
                                         }
                                     })
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                viewModel.onUserLogin(true);
+                                                User.getUser().create(UID, userData.name, userData.email, userData.type);
+                                                response.setData("ok");
                                             } else {
-                                                viewModel.onError(task.getException().getMessage());
+                                                response.setError(task.getException().getMessage());
                                                 fAuth.getCurrentUser().delete();
                                             }
                                         }
                                     });
                         } else {
-                            viewModel.onError(task.getException().getMessage());
+                            response.setError(task.getException().getMessage());
                         }
                     }
                 });
+        return response;
     }
 
     @Override
-    public void registerAdmin(registerAdminData adminData) {
+    public Response<String, String> registerAdmin(registerAdminData adminData) {
+        Response<String, String> response = new Response<>();
+
         String groupKey = UUID.randomUUID().toString().substring(0, 8);
         Map<String, String> userData = new HashMap<>();
 
@@ -104,7 +99,7 @@ public class registerNewUserOrAdminRepositoryImpl implements registerNewUserOrAd
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) { //проверить куда выкидывать будет
-                        viewModel.onError(e.getMessage());
+                        response.setError(e.getMessage());
                     }
                 })
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -127,6 +122,7 @@ public class registerNewUserOrAdminRepositoryImpl implements registerNewUserOrAd
                             userGroupData.put(constants.KEY_USER_UID, UID);
                             userGroupData.put(constants.KEY_USER_NAME, adminData.name);
                             userGroupData.put(constants.KEY_USER_EMAIL, adminData.email);
+                            userGroupData.put(constants.KEY_USER_TYPE, adminData.type);
 
                             batch.set(fStore.collection(constants.KEY_GROUP_COLLECTION)
                                     .document(groupKey)
@@ -140,7 +136,7 @@ public class registerNewUserOrAdminRepositoryImpl implements registerNewUserOrAd
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             fAuth.getCurrentUser().delete();
-                                            viewModel.onError(e.getMessage());
+                                            response.setError(e.getMessage());
                                         }
                                     })
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -149,17 +145,18 @@ public class registerNewUserOrAdminRepositoryImpl implements registerNewUserOrAd
                                             if (task.isSuccessful()) {
                                                 User.getUser().create(UID, adminData.name, adminData.email, adminData.type);
                                                 User.getUser().setGroupKey(groupKey);
-                                                viewModel.onUserLogin(true);
+                                                response.setData("ok");
                                             } else {
                                                 fAuth.getCurrentUser().delete();
-                                                viewModel.onError(task.getException().getMessage());
+                                                response.setError(task.getException().getMessage());
                                             }
                                         }
                                     });
                         } else {
-                            viewModel.onError(task.getException().getMessage());
+                            response.setError(task.getException().getMessage());
                         }
                     }
                 });
+        return response;
     }
 }

@@ -3,6 +3,8 @@ package com.example.newapp.ui.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +14,10 @@ import android.widget.EditText;
 
 import com.example.newapp.MainActivity;
 import com.example.newapp.databinding.ActivityLoginBinding;
+import com.example.newapp.domain.models.loginUserData;
 import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
+import com.example.newapp.ui.profile.profileViewModelImpl;
 import com.example.newapp.ui.registration.Registration;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,10 +29,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Login extends AppCompatActivity {
-
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-
     private ConstraintLayout mainElem;
 
     private EditText editTextEmail;
@@ -36,27 +36,44 @@ public class Login extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
 
+    private loginViewModelImpl viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(loginViewModelImpl.class);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
 
         setContentView(view);
-
-
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-
-
-
 
         mainElem = binding.getRoot();
         editTextEmail = binding.editTextEmailLog;
         editTextPassword = binding.editTextPasswordLog;
 
 
+        setListeners();
+        setObservers();
+    }
+
+    private void setObservers(){
+        viewModel.onErrorLiveData.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Snackbar.make(mainElem, s, Snackbar.ANIMATION_MODE_SLIDE).show();
+            }
+        });
+        viewModel.onUserLogin.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            }
+        });
+    }
+
+    private void setListeners(){
         binding.loginButtonLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,76 +102,8 @@ public class Login extends AppCompatActivity {
         });
     }
 
-
     private void loginUser(String Email, String Password){
-        fAuth.signInWithEmailAndPassword(Email, Password)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG);
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            String UID = fAuth.getUid();
-                            fStore.collection(constants.KEY_USER_COLLECTION).document(UID).get()
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                            fAuth.signOut();
-                                        }
-                                    })
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                DocumentSnapshot userData = task.getResult();
-                                                User.getUser().create(UID,
-                                                        userData.get(constants.KEY_USER_NAME).toString(),
-                                                        userData.get(constants.KEY_USER_EMAIL).toString(),
-                                                        userData.get(constants.KEY_USER_TYPE).toString()
-                                                        );
-                                                User.getUser().setGroupKey(userData.get(constants.KEY_USER_GROUP_KEY).toString());
-                                                if(!(TextUtils.isEmpty(userData.get(constants.KEY_USER_GROUP_KEY).toString()))){
-                                                    fStore.collection(constants.KEY_GROUP_COLLECTION).document(userData.get(constants.KEY_USER_GROUP_KEY).toString()).get()
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    fAuth.signOut();
-                                                                    Snackbar.make(mainElem, e.getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                }
-                                                            })
-                                                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                    if(task.isSuccessful()){
-                                                                        DocumentSnapshot groupData = task.getResult();
-                                                                        User.getUser().setGroupName(groupData.get(constants.KEY_GROUP_NAME).toString());
-                                                                    }else{
-                                                                        fAuth.signOut();
-                                                                        Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                                                    }
-                                                                }
-                                                            });
-                                                }else{
-                                                    User.getUser().setGroupName("");
-                                                }
-                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                finish();
-                                            }else{
-                                                fAuth.signOut();
-                                                Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
-                        }else{
-                            Snackbar.make(mainElem, task.getException().getMessage(), Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-                });
+        viewModel.loginUser(new loginUserData(Email, Password));
     }
 
 }

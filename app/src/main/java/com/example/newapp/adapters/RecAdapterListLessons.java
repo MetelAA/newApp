@@ -9,16 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.domain.models.oldModels.LessonForShowSchedule;
+import com.example.newapp.domain.models.lesson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecAdapterListLessons extends RecyclerView.Adapter<RecAdapterListLessons.ListLessonsViewHolder>{
 
-    private List<LessonForShowSchedule> lessonsForSchedule;
+    private List<lesson> lessonsForSchedule;
 
-    public RecAdapterListLessons(ArrayList<LessonForShowSchedule> list) {
+    public RecAdapterListLessons(ArrayList<lesson> list) {
         lessonsForSchedule = list;
     }
 
@@ -52,7 +52,7 @@ public class RecAdapterListLessons extends RecyclerView.Adapter<RecAdapterListLe
             studyRoom = itemView.findViewById(R.id.studyRoomShowScheduleItem);
         }
 
-        public void bind(LessonForShowSchedule lesson){
+        public void bind(lesson lesson){
             lessonName.setText(lesson.subject);
             time.setText(lesson.timeStart + " - " + lesson.timeEnd);
             teacher.setText(lesson.teacher);

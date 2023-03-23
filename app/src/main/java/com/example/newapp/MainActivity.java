@@ -1,5 +1,6 @@
 package com.example.newapp;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,32 +14,34 @@ import androidx.navigation.ui.NavigationUI;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 
-import com.example.newapp.data.setUserStatus;
-import com.example.newapp.interfaces.CallbackInterface;
+import com.canhub.cropper.CropImageContract;
+import com.canhub.cropper.CropImageContractOptions;
+import com.canhub.cropper.CropImageOptions;
+import com.canhub.cropper.CropImageView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    ConstraintLayout mainElem;
-    FirebaseFirestore fStore;
-
+    private ConstraintLayout mainElem;
+    private FirebaseFirestore fStore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         fStore = FirebaseFirestore.getInstance();
         mainElem = findViewById(R.id.mainElemMainAct);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_container);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
 
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
@@ -85,43 +88,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
-
 
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        setUserStatus setUserStatus = new setUserStatus(new CallbackInterface() {
-            @Override
-            public void requestStatus(String status) {
 
-            }
-
-            @Override
-            public void throwError(String error) {
-                Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
-            }
-        });
-        setUserStatus.setStatus(fStore, "offline");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUserStatus setUserStatus = new setUserStatus(new CallbackInterface() {
-            @Override
-            public void requestStatus(String status) {
 
-            }
-            @Override
-            public void throwError(String error) {
-                Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
-            }
-        });
-        setUserStatus.setStatus(fStore, "online");
     }
 }

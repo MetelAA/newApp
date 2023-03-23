@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:id="@+id/mainElemShowListPossibleChats"
+    android:padding="5dp"
+    >
+    <ImageView
+        android:padding="5dp"
+        android:id="@+id/imageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/ic_profile" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="5dp"
+        >
+
+        <TextView
+            android:id="@+id/comradNameShowPossibleChats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/simpleTextStyleMontserrat"
+            android:textSize="20sp"
+            android:text="Пользователь"
+            />
+        <TextView
+            android:id="@+id/comradStatusShowPossibleChats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/simpleTextStyleRoboto"
+            android:textSize="16sp"
+            android:text="online"
+            android:gravity="bottom"
+            android:layout_marginBottom="10dp"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

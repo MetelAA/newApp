@@ -14,20 +14,22 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.example.newapp.R;
-import com.example.newapp.domain.models.oldModels.LessonForScheduleSettings;
+import com.example.newapp.domain.models.lessonDescription;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class AdapterListLessonsDescription extends ArrayAdapter<LessonForScheduleSettings> {
+public class AdapterListLessonsDescription extends ArrayAdapter<lessonDescription> {
 
-    public AdapterListLessonsDescription(Context context, ArrayList<LessonForScheduleSettings> dataAdapter){
+    public AdapterListLessonsDescription(Context context, ArrayList<lessonDescription> dataAdapter){
         super(context, R.layout.list_item_with_two_vertical_fields_and_btn, dataAdapter);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LessonForScheduleSettings lesson = getItem(position);
+        lessonDescription lesson = getItem(position);
 
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_with_two_vertical_fields_and_btn, parent, false);
@@ -35,6 +37,7 @@ public class AdapterListLessonsDescription extends ArrayAdapter<LessonForSchedul
 
         TextView subject = convertView.findViewById(R.id.nameTextInCustomListViewWithTwoTextFieldsAndBtn);
         TextView teacherName = convertView.findViewById(R.id.emailTextInCustomListViewWithTwoTextFieldsAndBtn);
+        ((TextView) convertView.findViewById(R.id.userTypeTextInCustomListViewWithTwoTextFieldsAndBtn)).setVisibility(View.GONE);
 
         ImageView imageViewInCustomListView = convertView.findViewById(R.id.imageViewInCustomListViewWithTwoTextFieldsAndBtn);
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_delete);

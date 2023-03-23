@@ -22,6 +22,8 @@ import com.example.newapp.R;
 import com.example.newapp.databinding.ActivityRegistrationBinding;
 import com.example.newapp.domain.models.registerAdminData;
 import com.example.newapp.domain.models.registerUserData;
+import com.example.newapp.global.Response;
+import com.example.newapp.global.User;
 import com.example.newapp.ui.login.Login;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -68,12 +70,10 @@ public class Registration extends AppCompatActivity {
                 Snackbar.make(mainElem, s, Snackbar.ANIMATION_MODE_SLIDE).show();
             }
         });
-
-        viewModel.userStatus.observe(this, new Observer<Boolean>() {
+        viewModel.onUserLogInLiveData.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                if(aBoolean == true) {
-                    Log.d("Aboba", "Usercreated");
+                if(aBoolean == true){
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }
@@ -110,6 +110,8 @@ public class Registration extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     private void setListeners(){

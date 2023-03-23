@@ -1,15 +1,16 @@
 package com.example.newapp.data.repository;
 
 
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 
 import com.example.newapp.domain.models.repository.updateUserDataRepository;
+
+import com.example.newapp.global.Response;
 import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
-import com.example.newapp.ui.registration.registrationViewModelImpl;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -20,24 +21,26 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class updateUserDataRepositoryImpl implements updateUserDataRepository {
-    FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore fStore;
+    FirebaseAuth fAuth;
 
-    registrationViewModelImpl viewModel;
 
-    public updateUserDataRepositoryImpl(registrationViewModelImpl viewModel) {
-        this.viewModel = viewModel;
+    public updateUserDataRepositoryImpl(FirebaseFirestore fStore, FirebaseAuth fAuth) {
+        this.fStore = fStore;
+        this.fAuth = fAuth;
     }
 
     @Override
-    public void checkUser() {
+    public Response<String, String> checkUser() {
+        Response<String, String> response = new Response<>();
+
         if(fAuth.getUid() != null){
             String UID = fAuth.getUid();
             fStore.collection(constants.KEY_USER_COLLECTION).document(UID).get()
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            viewModel.onError(e.getMessage());
+                            response.setError(e.getMessage());
                         }
                     })
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -53,15 +56,28 @@ public class updateUserDataRepositoryImpl implements updateUserDataRepository {
                                 );
                                 String GroupKey = userData.get(constants.KEY_USER_GROUP_KEY).toString();
                                 User.getUser().setGroupKey(GroupKey);
-                                viewModel.onUserLogin(true);
+                                response.setData("ok");
                             }else{
-                                viewModel.onError(task.getException().getMessage());
+                                response.setError(task.getException().getMessage());
                             }
                         }
                     });
         }else {
-            viewModel.onUserLogin(false);
+            response.setData("User not sign in");
         }
+        return response;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

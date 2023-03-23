@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.chat.createNewChatFragment"
+    tools:context=".ui.chat.createNewChatDialogFragment"
     android:id="@+id/mainElemCreateNewChat"
     >
 
@@ -16,13 +16,14 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_undo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/btnBluePrimary" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCreateNewChat"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

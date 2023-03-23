@@ -6,53 +6,55 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.customPopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.canhub.cropper.CropImageContract;
+import com.canhub.cropper.CropImageContractOptions;
+import com.canhub.cropper.CropImageOptions;
+import com.canhub.cropper.CropImageView;
 import com.example.newapp.R;
 
 import com.example.newapp.adapters.AdapterListUsers;
-import com.example.newapp.data.ExitJoinToGroup;
-import com.example.newapp.data.UpdateUserData;
+import com.example.newapp.domain.models.groupUserData;
+import com.example.newapp.domain.models.profileGroupData;
 import com.example.newapp.global.User;
-import com.example.newapp.data.getDeleteGroupUsers;
 import com.example.newapp.databinding.FragmentProfileBinding;
-import com.example.newapp.interfaces.CallbackInterface;
-import com.example.newapp.interfaces.CallbackInterfaceWithList;
+import com.example.newapp.interfaces.adapterOnClickInterface;
 import com.example.newapp.ui.login.Login;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class profileFragment extends Fragment {
+public class profileFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
 
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
 
     private FragmentProfileBinding binding;
 
-    private ImageButton profileImg;
-    private ImageButton logOutBtn;
     private Button userOptionGroupBtn;
-    private Button groupUserListBtn;
+    private Button showGroupUsersListBtn;
 
     private ConstraintLayout mainElem;
 
@@ -61,102 +63,146 @@ public class profileFragment extends Fragment {
     private TextView profileNameGroupTextView;
     private TextView profileNumberGroupTextView;
 
+    private profileViewModelImpl viewModel;
+
+    private AdapterListUsers AdapterListUsers;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
-
         binding = FragmentProfileBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(this).get(profileViewModelImpl.class);
 
-        profileImg = binding.profileImageBtn;
-        logOutBtn = binding.logOutBtn;
 
         profileNameTextView = binding.profileNameTextView;
 
         userOptionGroupBtn = binding.btnProfileOptionGroup;
 
-        groupUserListBtn = binding.groupUserListProfileBtn;
+        showGroupUsersListBtn = binding.groupUserListProfileBtn;
         profileEmailTextView = binding.profileEmailTextView;
         profileNameGroupTextView = binding.profileNameGroupTextView;
         profileNumberGroupTextView = binding.profileNumberGroupTextView;
 
         mainElem = binding.mainElemProfile;
 
+        ((AppCompatActivity) getActivity()).setSupportActionBar(binding.profileToolbar);
+
+
+        binding.profileToolbarMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customPopupMenu popupMenu = new customPopupMenu(getContext(), view);
+                popupMenu.setOnMenuItemClickListener(profileFragment.this::onMenuItemClick);
+                popupMenu.inflate(R.menu.profile_toolbar_menu);
+                popupMenu.show();
+            }
+        });
         return binding.getRoot();
     }
+
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        Log.d("Aboba", item.toString());
+        switch (item.getItemId()){
+            case R.id.changeProfilePhotoOption:
+                doImageForUserProfile();
+                return true;
+            case R.id.logOutOption:
+                logOut();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        profileImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        logOutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logOut();
-            }
-        });
-
-        updateProfileData();
+        setObservers();
+        initProfile();
     }
 
+    private void doImageForUserProfile(){
+        CropImageOptions cropImageOptions = new CropImageOptions();
+        cropImageOptions.imageSourceIncludeGallery = true;
+        cropImageOptions.imageSourceIncludeCamera = true;
+        CropImageContractOptions cropImageContractOptions = new CropImageContractOptions(null, cropImageOptions);
+        cropImageOptions.fixAspectRatio = true;
+        cropImageOptions.outputRequestSizeOptions = CropImageView.RequestSizeOptions.RESIZE_FIT;
+        cropImageOptions.outputRequestWidth = 800;
+        cropImageOptions.outputRequestHeight = 800;
+        cropImageOptions.cropShape = CropImageView.CropShape.OVAL;
+        cropImage.launch(cropImageContractOptions);
+    }
+    ActivityResultLauncher<CropImageContractOptions> cropImage = registerForActivityResult(new CropImageContract(), result -> {
+        if (result.isSuccessful()) {
+            viewModel.setUserProfileImage(result.getUriContent());
+        }
+    });
 
-
-
-    private void updateProfileData() {
-        UpdateUserData upData = new UpdateUserData(new CallbackInterface() {
+    private void setObservers(){
+        viewModel.onGotProfileDataLiveData.observe(getViewLifecycleOwner(), new Observer<profileGroupData>() {
             @Override
-            public void requestStatus(String status) {
-                showProfileData();
-            }
-
-            @Override
-            public void throwError(String error) {
-                Snackbar.make(mainElem, error, Snackbar.LENGTH_LONG).show();
+            public void onChanged(profileGroupData profileGroupData) {
+                showProfileData(profileGroupData);
             }
         });
-        upData.updateUserData(fAuth, fStore);
+
+        viewModel.onCompleteNeedToUpdate.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                initProfile();
+            }
+        });
     }
 
-    private void showProfileData() {
+    private void initProfile() {
+        viewModel.initProfileData();
+    }
+
+    private void showProfileData(profileGroupData profileGroupData) {
         profileNameTextView.setText(User.getName());
         profileEmailTextView.setText(User.getEmail());
-        profileNameGroupTextView.setText(User.getUser().getGroupName());
-
 
         if (TextUtils.equals(User.getType(), "Учитель")) {
-            groupUserListBtn.setVisibility(View.VISIBLE);
+            showGroupUsersListBtn.setVisibility(View.VISIBLE);
             userOptionGroupBtn.setVisibility(View.INVISIBLE);
-            groupUserSettingsBtnListener();
+            groupUserManagement();
         } else {
-            groupUserListBtn.setVisibility(View.INVISIBLE);
+            showGroupUsersListBtn.setVisibility(View.INVISIBLE);
         }
 
         if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
-            Drawable drawableExit = getContext().getDrawable(R.drawable.btn_style_red);
-            userOptionGroupBtn.setText("Выйти из группы");
-            userOptionGroupBtn.setBackground(drawableExit);
-            exitGroupAlertDialogListener();
-            showNumberOfUsers();
+            showUserInGroupData(profileGroupData);
         } else {
-            profileNameGroupTextView.setText("");
-            Drawable drawableJoin = getContext().getDrawable(R.drawable.btn_style_blue_primary);
-            userOptionGroupBtn.setText("Присоединиться к группе");
-            userOptionGroupBtn.setBackground(drawableJoin);
-            profileNumberGroupTextView.setText("");
-            joinGroupAlertDialogListener();
+            showUserOutGroupData();
         }
     }
 
-    private void showNumberOfUsers(){
-        long numberOfUsers = User.getUser().getNumberUsers();
+    private void showUserInGroupData(profileGroupData profileGroupData){
+        profileNameGroupTextView.setText(profileGroupData.groupName);
+        Drawable drawableExit = getContext().getDrawable(R.drawable.btn_style_red);
+        userOptionGroupBtn.setText("Выйти из группы");
+        userOptionGroupBtn.setBackground(drawableExit);
+        exitGroupAlertDialogListener();
+        showNumberOfUsers(profileGroupData.countGroupUsers);
+    }
+
+    private void showUserOutGroupData(){
+        profileNameGroupTextView.setText("");
+        Drawable drawableJoin = getContext().getDrawable(R.drawable.btn_style_blue_primary);
+        userOptionGroupBtn.setText("Присоединиться к группе");
+        userOptionGroupBtn.setBackground(drawableJoin);
+        profileNumberGroupTextView.setText("");
+        joinGroupAlertDialogListener();
+    }
+
+    private void showNumberOfUsers(long numberOfUsers){
         if(numberOfUsers == 1){
             profileNumberGroupTextView.setText(numberOfUsers + " пользователь");
         }else if(numberOfUsers > 1 && numberOfUsers <=4){
@@ -168,34 +214,31 @@ public class profileFragment extends Fragment {
 
 
 
+    private void changeProfilePhoto(){
 
-    private void groupUserSettingsBtnListener() {
-        groupUserListBtn.setOnClickListener(new View.OnClickListener() {
+    }
+
+
+
+
+    private void groupUserManagement() {
+        showGroupUsersListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
                 View customListViewInALDialog = getLayoutInflater().inflate(R.layout.recycler_view_screen, null);
-
                 builder.setView(customListViewInALDialog);
-
                 AlertDialog alertDialog = builder.create();
+                RecyclerView recyclerView = customListViewInALDialog.findViewById(R.id.RecyclerViewInCustomScreen);
 
-                getDeleteGroupUsers getDeleteGroupUsers = new getDeleteGroupUsers(new CallbackInterfaceWithList() {
+                viewModel.getListGroupUsers();
+                viewModel.onGotListGroupUsesLiveData.observe(getViewLifecycleOwner(), new Observer<ArrayList<groupUserData>>() {
                     @Override
-                    public void requestResult(ArrayList list) {
-                        RecyclerView recyclerView = customListViewInALDialog.findViewById(R.id.RecyclerViewInCustomScreen);
-                        showListOfUsers(list, recyclerView);
-                    }
-
-                    @Override
-                    public void throwError(String error) {
-                        Snackbar.make(mainElem, "Ошибка! Не удалось получить список пользователей", Snackbar.LENGTH_LONG).show();
+                    public void onChanged(ArrayList<groupUserData> groupUserData) {
+                        showListOfUsers(groupUserData, recyclerView);
+                        viewModel.onGotListGroupUsesLiveData.removeObservers(getViewLifecycleOwner());
                     }
                 });
-
-                getDeleteGroupUsers.getListOfUsers(fStore);
 
                 alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
@@ -227,11 +270,61 @@ public class profileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        AdapterListUsers adapter = new AdapterListUsers(listUsers);
-        recyclerView.setAdapter(adapter);
+        AdapterListUsers = new AdapterListUsers(listUsers, new adapterOnClickInterface() {
+            @Override
+            public void callback(Object data) {
+                deleteGroupUser((groupUserData) data);
+            }
+        });
+        recyclerView.setAdapter(AdapterListUsers);
+
     }
 
 
+    private void deleteGroupUser(groupUserData deleteUser){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_exit, null);
+
+        TextView textView = view.findViewById(R.id.textCustomLogOutAlertDialog);
+        Button submit = view.findViewById(R.id.buttonCustomLogOutAlertDialogConfirm);
+        Button cancel = view.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
+
+
+        if(TextUtils.equals(User.getUID(), deleteUser.UserUID)){
+            textView.setText("Вы не можете выгнать себя");
+            submit.setText("Выгнать");
+            submit.setVisibility(View.GONE);
+        }else{
+            textView.setText("Вы уверены что хотите выгнать " + deleteUser.userName + "?");
+            submit.setText("Выгнать");
+        }
+        cancel.setText("Отмена");
+        builder.setView(view);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewModel.kickGroupUser(deleteUser.UserUID);
+                viewModel.onUserDeletedLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        viewModel.onGotListGroupUsesLiveData.removeObservers(getViewLifecycleOwner());
+                        AdapterListUsers.deleteGroupUserFromList(deleteUser);
+                        alertDialog.cancel();
+                        initProfile();
+                    }
+                });
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.cancel();
+                }
+        });
+    }
 
 
 
@@ -244,7 +337,6 @@ public class profileFragment extends Fragment {
                 builder.setView(customView);
 
                 AlertDialog alertDialog = builder.create();
-
 
                 Button dialogCancel = customView.findViewById(R.id.btnCustomJoinGroupAlertDialogCancel);
                 Button dialogSubmit = customView.findViewById(R.id.btnCustomJoinGroupAlertDialogSubmit);
@@ -277,27 +369,11 @@ public class profileFragment extends Fragment {
                 dialogSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String editTextGroupKey = editText.getText().toString();
-                        if (!TextUtils.isEmpty(editTextGroupKey)) {
-                            ExitJoinToGroup exitJoinFromGroup = new ExitJoinToGroup(new CallbackInterface() {
-                                @Override
-                                public void requestStatus(String status) {
-                                    switch (status) {
-                                        case "ok":
-                                            alertDialog.cancel();
-                                            updateProfileData();
-                                            break;
-                                        case "No such group":
-                                            editText.setError("Группы с таким названием не сущесвтует");
-                                            break;
-                                    }
-                                }
-                                @Override
-                                public void throwError(String error) {
-                                    Snackbar.make(mainElem, "Ошибка! Не удалось присоединиться к группе", Snackbar.LENGTH_LONG).show();
-                                }
-                            });
-                            exitJoinFromGroup.joinGroup(fStore, editTextGroupKey);
+                        dialogSubmit.setClickable(false);
+                        alertDialog.cancel();
+                        String groupKey = editText.getText().toString();
+                        if (!TextUtils.isEmpty(groupKey)) {
+                            viewModel.joinGroup(groupKey);
                         } else {
                             editText.setError("Введите код группы");
                         }
@@ -319,7 +395,6 @@ public class profileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
                 View customView = getLayoutInflater().inflate(R.layout.alert_dialog_exit, null);
                 builder.setView(customView);
 
@@ -357,20 +432,9 @@ public class profileFragment extends Fragment {
                 dialogConfirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ExitJoinToGroup exitJoinFromGroup = new ExitJoinToGroup(new CallbackInterface() {
-                            @Override
-                            public void requestStatus(String result) {
-                                alertDialog.cancel();
-                                updateProfileData();
-                            }
-
-                            @Override
-                            public void throwError(String error) {
-                                alertDialog.cancel();
-                                Snackbar.make(mainElem, "Ошибка! Не удалось выйти из группы", Snackbar.LENGTH_LONG).show();
-                            }
-                        });
-                        exitJoinFromGroup.exitGroup(fStore);
+                        dialogConfirm.setClickable(false);
+                        alertDialog.cancel();
+                        viewModel.exitGroup();
                     }
                 });
                 dialogCancel.setOnClickListener(new View.OnClickListener() {
@@ -382,31 +446,46 @@ public class profileFragment extends Fragment {
             }
         });
     }
-
-
-
     private void logOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
         View customView = getLayoutInflater().inflate(R.layout.alert_dialog_exit, null);
         builder.setView(customView);
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                View customViewForAnim = alertDialog.getWindow().getDecorView();
+                int height = customViewForAnim.getHeight();
+                int width = customViewForAnim.getWidth();
+                Animator animation = ViewAnimationUtils.createCircularReveal(
+                        customViewForAnim,
+                        width / 2,
+                        height / 2,
+                        1F,
+                        Math.max(width, height)
+                );
+
+                animation.setDuration(400);
+                animation.setInterpolator(new AccelerateDecelerateInterpolator());
+                animation.start();
+            }
+        });
+
+        alertDialog.show();
 
         Button dialogCancel = customView.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
         Button dialogConfirm = customView.findViewById(R.id.buttonCustomLogOutAlertDialogConfirm);
 
         dialogCancel.setText("Отмена");
         dialogConfirm.setText("Выйти");
-
         ((TextView) customView.findViewById(R.id.textCustomLogOutAlertDialog)).setText("Вы уверены, что хотите выйти из аккаунта?");
-
 
         dialogConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fAuth.signOut();
+                viewModel.exitAcc();
+                alertDialog.cancel();
                 startActivity(new Intent(getActivity(), Login.class));
                 getActivity().finish();
             }
@@ -414,7 +493,7 @@ public class profileFragment extends Fragment {
         dialogCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.cancel();
+                alertDialog.cancel();
             }
         });
     }

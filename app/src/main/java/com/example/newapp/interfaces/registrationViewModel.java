@@ -8,8 +8,4 @@ public interface registrationViewModel {
     void registerNewUser(registerUserData userData);
     void registerAdmin(registerAdminData adminData);
 
-    void onError(String error);
-
-    void onUserLogin(Boolean status);
-
 }
