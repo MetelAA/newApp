@@ -8,6 +8,7 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,51 +35,43 @@ public class joinExitGroupRepositoryImpl implements joinExitGroupRepository {
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot data = task.getResult();
-                            if (!data.isEmpty()) {
-                                WriteBatch batch = fStore.batch();
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            WriteBatch batch = fStore.batch();
 
-                                batch.update(fStore.collection(constants.KEY_USER_COLLECTION).document(User.getUID()), constants.KEY_USER_GROUP_KEY, groupKey);
+                            batch.update(fStore.collection(constants.KEY_USER_COLLECTION).document(User.getUID()), constants.KEY_USER_GROUP_KEY, groupKey);
 
-                                Map<String, String> userGroupData = new HashMap<>();
-                                userGroupData.put(constants.KEY_USER_UID, User.getUID());
-                                userGroupData.put(constants.KEY_USER_EMAIL, User.getEmail());
-                                userGroupData.put(constants.KEY_USER_NAME, User.getName());
-                                userGroupData.put(constants.KEY_USER_TYPE, User.getType());
+                            Map<String, String> userGroupData = new HashMap<>();
+                            userGroupData.put(constants.KEY_USER_UID, User.getUID());
+                            userGroupData.put(constants.KEY_USER_EMAIL, User.getEmail());
+                            userGroupData.put(constants.KEY_USER_NAME, User.getName());
+                            userGroupData.put(constants.KEY_USER_TYPE, User.getType());
 
-                                batch.set(fStore
-                                        .collection(constants.KEY_GROUP_COLLECTION)
-                                        .document(groupKey)
-                                        .collection(constants.KEY_GROUP_USERS_COLLECTION)
-                                        .document(User.getUID()), userGroupData);
+                            batch.set(fStore
+                                    .collection(constants.KEY_GROUP_COLLECTION)
+                                    .document(groupKey)
+                                    .collection(constants.KEY_GROUP_USERS_COLLECTION)
+                                    .document(User.getUID()), userGroupData);
 
-                                batch.update(fStore.collection(constants.KEY_GROUP_COLLECTION).document(groupKey), constants.KEY_GROUP_USER_COUNT, FieldValue.increment(1));
+                            batch.update(fStore.collection(constants.KEY_GROUP_COLLECTION).document(groupKey), constants.KEY_GROUP_USER_COUNT, FieldValue.increment(1));
 
-                                batch.commit().addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                response.setError(e.getMessage());
-                                            }
-                                        })
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful()){
-                                                    response.setData("ok");
-                                                }else{
-                                                    response.setError(task.getException().getMessage());
-                                                }
-                                            }
-                                        });
-                            } else {
-                                response.setError("No such group");
-                            }
+                            batch.commit().addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            response.setError(e.getMessage());
+                                        }
+                                    })
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            User.getUser().setGroupKey(groupKey);
+                                            response.setData("ok");
+                                        }
+                                    });
                         } else {
-                            response.setError(task.getException().getMessage());
+                            response.setError("No such group");
                         }
                     }
                 });
@@ -105,14 +98,11 @@ public class joinExitGroupRepositoryImpl implements joinExitGroupRepository {
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            response.setData("ok");
-                        }else{
-                            response.setError(task.getException().getMessage());
-                        }
+                    public void onSuccess(Void unused) {
+                        User.getUser().setGroupKey(null);
+                        response.setData("ok");
                     }
                 });
 

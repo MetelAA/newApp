@@ -11,6 +11,7 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -41,54 +42,45 @@ public class getPossibleNewChatsRepositoryImpl implements getPossibleNewChatsRep
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            ArrayList<String> usersUIDs = new ArrayList<>();
-                            ArrayList<String> usersNames = new ArrayList<>();
-                            for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        ArrayList<String> usersUIDs = new ArrayList<>();
+                        ArrayList<String> usersNames = new ArrayList<>();
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
 
-                                //Log.d("Aboba", "first onComplete " + document.getData());
-                                usersUIDs.add(document.get(constants.KEY_USER_UID).toString());
-                                usersNames.add(document.get(constants.KEY_USER_NAME).toString());
-                            }
-                            fStore.collection(constants.KEY_USER_COLLECTION)
-                                    .whereIn(FieldPath.documentId(), usersUIDs)
-                                    .get()
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            response.setError(e.getMessage());
-                                        }
-                                    })
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                ArrayList<chatInfoForNewChat> listPossibleChats = new ArrayList<>();
-                                                int i=0;
-                                                for (DocumentSnapshot document : task.getResult().getDocuments()) {
-                                                    //Log.d("Abob", "second onComplete   " + document.getData());
-                                                    listPossibleChats.add(new chatInfoForNewChat(
-                                                            usersUIDs.get(i),
-                                                            usersNames.get(i),
-                                                            document.get(constants.KEY_USER_STATUS).toString()
-                                                    ));
-                                                    if(TextUtils.equals(document.get(constants.KEY_USER_STATUS).toString(), constants.KEY_USER_STATUS_EQUALS_OFFLINE)){
-                                                        listPossibleChats.get(i).setLastTimeSeen(document.getDate(constants.KEY_USER_LAST_TIME_SEEN));
-                                                    }
-                                                    i++;
-                                                }
-                                                response.setData(listPossibleChats);
-                                            }else{
-                                                response.setError(task.getException().getMessage());
-                                            }
-                                        }
-                                    });
-                        } else {
-                            response.setError(task.getException().getMessage());
+                            //Log.d("Aboba", "first onComplete " + document.getData());
+                            usersUIDs.add(document.get(constants.KEY_USER_UID).toString());
+                            usersNames.add(document.get(constants.KEY_USER_NAME).toString());
                         }
+                        fStore.collection(constants.KEY_USER_COLLECTION)
+                                .whereIn(FieldPath.documentId(), usersUIDs)
+                                .get()
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        response.setError(e.getMessage());
+                                    }
+                                })
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        ArrayList<chatInfoForNewChat> listPossibleChats = new ArrayList<>();
+                                        int i=0;
+                                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                            listPossibleChats.add(new chatInfoForNewChat(
+                                                    usersUIDs.get(i),
+                                                    usersNames.get(i),
+                                                    document.get(constants.KEY_USER_STATUS).toString()
+                                            ));
+                                            if(TextUtils.equals(document.get(constants.KEY_USER_STATUS).toString(), constants.KEY_USER_STATUS_EQUALS_OFFLINE)){
+                                                listPossibleChats.get(i).setLastTimeSeen(document.getDate(constants.KEY_USER_LAST_TIME_SEEN));
+                                            }
+                                            i++;
+                                        }
+                                        response.setData(listPossibleChats);
+                                    }
+                                });
                     }
                 });
         return response;

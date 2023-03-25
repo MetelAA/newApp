@@ -40,13 +40,16 @@ import com.example.newapp.R;
 
 import com.example.newapp.adapters.AdapterListUsers;
 import com.example.newapp.domain.models.groupUserData;
-import com.example.newapp.domain.models.profileGroupData;
+import com.example.newapp.domain.models.profileDataAboutGroup;
 import com.example.newapp.global.User;
 import com.example.newapp.databinding.FragmentProfileBinding;
 import com.example.newapp.interfaces.adapterOnClickInterface;
 import com.example.newapp.ui.login.Login;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class profileFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
 
@@ -55,6 +58,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
 
     private Button userOptionGroupBtn;
     private Button showGroupUsersListBtn;
+    CircleImageView profileImageView;
 
     private ConstraintLayout mainElem;
 
@@ -75,6 +79,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         viewModel = new ViewModelProvider(this).get(profileViewModelImpl.class);
 
 
+        profileImageView = binding.profileImageView;
         profileNameTextView = binding.profileNameTextView;
 
         userOptionGroupBtn = binding.btnProfileOptionGroup;
@@ -122,7 +127,6 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setObservers();
         initProfile();
     }
@@ -146,10 +150,11 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
     });
 
     private void setObservers(){
-        viewModel.onGotProfileDataLiveData.observe(getViewLifecycleOwner(), new Observer<profileGroupData>() {
+        viewModel.onGotProfileDataLiveData.observe(getViewLifecycleOwner(), new Observer<profileDataAboutGroup>() {
             @Override
-            public void onChanged(profileGroupData profileGroupData) {
-                showProfileData(profileGroupData);
+            public void onChanged(profileDataAboutGroup profileDataAboutGroup) {
+
+                showProfileData(profileDataAboutGroup);
             }
         });
 
@@ -162,10 +167,10 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
     }
 
     private void initProfile() {
-        viewModel.initProfileData();
+        viewModel.initProfileGroupData();
     }
 
-    private void showProfileData(profileGroupData profileGroupData) {
+    private void showProfileData(profileDataAboutGroup profileDataAboutGroup) {
         profileNameTextView.setText(User.getName());
         profileEmailTextView.setText(User.getEmail());
 
@@ -177,23 +182,33 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
             showGroupUsersListBtn.setVisibility(View.INVISIBLE);
         }
 
+        if(User.getUser().getUserProfilePhotoUrl() != null){
+            Picasso.get()
+                    .load(User.getUser().getUserProfilePhotoUrl())
+                    .placeholder(R.drawable.ic_sync)
+                    .into(profileImageView);
+        }else{
+            Drawable drawable = getContext().getDrawable(R.drawable.ic_person);
+            profileImageView.setImageDrawable(drawable);
+        }
+
         if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
-            showUserInGroupData(profileGroupData);
+            showUserInGroupData(profileDataAboutGroup);
         } else {
-            showUserOutGroupData();
+            showUserWithOutGroupData();
         }
     }
 
-    private void showUserInGroupData(profileGroupData profileGroupData){
-        profileNameGroupTextView.setText(profileGroupData.groupName);
+    private void showUserInGroupData(profileDataAboutGroup profileDataAboutGroup){
+        profileNameGroupTextView.setText(profileDataAboutGroup.groupName);
         Drawable drawableExit = getContext().getDrawable(R.drawable.btn_style_red);
         userOptionGroupBtn.setText("Выйти из группы");
         userOptionGroupBtn.setBackground(drawableExit);
         exitGroupAlertDialogListener();
-        showNumberOfUsers(profileGroupData.countGroupUsers);
+        showNumberOfUsers(profileDataAboutGroup.countGroupUsers);
     }
 
-    private void showUserOutGroupData(){
+    private void showUserWithOutGroupData(){
         profileNameGroupTextView.setText("");
         Drawable drawableJoin = getContext().getDrawable(R.drawable.btn_style_blue_primary);
         userOptionGroupBtn.setText("Присоединиться к группе");
@@ -213,10 +228,6 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
     }
 
 
-
-    private void changeProfilePhoto(){
-
-    }
 
 
 

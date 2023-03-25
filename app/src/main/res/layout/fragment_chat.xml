@@ -34,7 +34,7 @@
         <ImageView
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/ic_profile"
+        android:src="@drawable/ic_menu_profile"
         android:layout_marginLeft="15dp"
         />
 

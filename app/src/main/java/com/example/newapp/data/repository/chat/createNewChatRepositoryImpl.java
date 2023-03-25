@@ -42,48 +42,40 @@ public class createNewChatRepositoryImpl implements createNewChatRepository {
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Map<String, Object> messageData = new HashMap<>();
-                            messageData.put(constants.KEY_CHAT_MESSAGE, newChatData.message.messageText);
-                            messageData.put(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs, Arrays.asList(User.getUID()));
-                            messageData.put(constants.KEY_CHAT_MESSAGE_SENDER_NAME, newChatData.message.senderName);
-                            messageData.put(constants.KEY_CHAT_MESSAGE_SENDER_UID, newChatData.message.senderUID);
-                            messageData.put(constants.KEY_CHAT_MSG_SENT_TIME, newChatData.message.messageSentTime);
-                            fStore.collection(constants.KEY_CHAT_COLLECTION).document(chatID).collection(constants.KEY_CHAT_CHAT_MESSAGES_COLLECTION).add(messageData)
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            response.setError(e.getMessage());
-                                        }
-                                    })
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            fStore.collection(constants.KEY_CHAT_COLLECTION).document(chatID).update(constants.KEY_CHAT_LAST_MESSAGE_REFERENCE, documentReference)
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            response.setError(e.getMessage());
-                                                        }
-                                                    })
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if(task.isSuccessful()){
-                                                                response.setData("ok");
-                                                            }else{
-                                                                response.setError(task.getException().getMessage());
-                                                            }
-                                                        }
-                                                    });
-                                        }
-                                    });
-                        }else{
-                            response.setError(task.getException().getMessage());
-                        }
+                    public void onSuccess(Void unused) {
+                        Map<String, Object> messageData = new HashMap<>();
+                        messageData.put(constants.KEY_CHAT_MESSAGE, newChatData.message.messageText);
+                        messageData.put(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs, Arrays.asList(User.getUID()));
+                        messageData.put(constants.KEY_CHAT_MESSAGE_SENDER_NAME, newChatData.message.senderName);
+                        messageData.put(constants.KEY_CHAT_MESSAGE_SENDER_UID, newChatData.message.senderUID);
+                        messageData.put(constants.KEY_CHAT_MSG_SENT_TIME, newChatData.message.messageSentTime);
+                        fStore.collection(constants.KEY_CHAT_COLLECTION).document(chatID).collection(constants.KEY_CHAT_CHAT_MESSAGES_COLLECTION).add(messageData)
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        response.setError(e.getMessage());
+                                    }
+                                })
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        fStore.collection(constants.KEY_CHAT_COLLECTION).document(chatID).update(constants.KEY_CHAT_LAST_MESSAGE_REFERENCE, documentReference)
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        response.setError(e.getMessage());
+                                                    }
+                                                })
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        response.setData("ok");
+                                                    }
+                                                });
+                                    }
+                                });
                     }
                 });
 

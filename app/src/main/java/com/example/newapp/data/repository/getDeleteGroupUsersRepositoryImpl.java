@@ -10,6 +10,7 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -38,29 +39,23 @@ public class getDeleteGroupUsersRepositoryImpl implements getDeleteGroupUsersRep
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            ArrayList<groupUserData> listUsers = new ArrayList<>();
-                            QuerySnapshot queryDocumentSnapshots = task.getResult();
-                            List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                            for (DocumentSnapshot document:documents) {
-                                listUsers.add(new groupUserData(
-                                        document.get(constants.KEY_USER_UID).toString(),
-                                        document.get(constants.KEY_USER_NAME).toString(),
-                                        document.get(constants.KEY_USER_EMAIL).toString(),
-                                        document.get(constants.KEY_USER_TYPE).toString()
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        ArrayList<groupUserData> listUsers = new ArrayList<>();
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot document:documents) {
+                            listUsers.add(new groupUserData(
+                                            document.get(constants.KEY_USER_UID).toString(),
+                                            document.get(constants.KEY_USER_NAME).toString(),
+                                            document.get(constants.KEY_USER_EMAIL).toString(),
+                                            document.get(constants.KEY_USER_TYPE).toString()
                                     )
-                                );
-                            }
-                            response.setData(listUsers);
-                        }else{
-                            response.setError(task.getException().getMessage());
+                            );
                         }
+                        response.setData(listUsers);
                     }
                 });
-
         return response;
     }
 
@@ -78,14 +73,10 @@ public class getDeleteGroupUsersRepositoryImpl implements getDeleteGroupUsersRep
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            response.setData("ok");
-                        }else{
-                            response.setError(task.getException().getMessage());
-                        }
+                    public void onSuccess(Void unused) {
+                        response.setData("ok");
                     }
                 });
         return response;

@@ -12,6 +12,7 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
@@ -64,17 +65,12 @@ public class addDayLessonsRepositoryImpl implements addDayLessonsRepository {
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            response.setData("ok");
-                        }else{
-                            response.setError(task.getException().getMessage());
-                        }
+                    public void onSuccess(Void unused) {
+                        response.setData("ok");
                     }
                 });
-
         return response;
     }
 }

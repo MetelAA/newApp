@@ -13,6 +13,7 @@ import com.example.newapp.global.constants;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -43,23 +44,23 @@ public class updateUserDataRepositoryImpl implements updateUserDataRepository {
                             response.setError(e.getMessage());
                         }
                     })
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.isSuccessful()){
-                                DocumentSnapshot userData = task.getResult();
-                                User.getUser().create(
-                                        UID,
-                                        userData.get(constants.KEY_USER_NAME).toString(),
-                                        userData.get(constants.KEY_USER_EMAIL).toString(),
-                                        userData.get(constants.KEY_USER_TYPE).toString()
-                                );
-                                String GroupKey = userData.get(constants.KEY_USER_GROUP_KEY).toString();
-                                User.getUser().setGroupKey(GroupKey);
-                                response.setData("ok");
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            User.getUser().create(
+                                    UID,
+                                    documentSnapshot.get(constants.KEY_USER_NAME).toString(),
+                                    documentSnapshot.get(constants.KEY_USER_EMAIL).toString(),
+                                    documentSnapshot.get(constants.KEY_USER_TYPE).toString()
+                            );
+                            String groupKey = documentSnapshot.get(constants.KEY_USER_GROUP_KEY).toString();
+                            User.getUser().setGroupKey(groupKey);
+                            if(!(documentSnapshot.get(constants.KEY_PROFILE_IMAGE) == null)){
+                                User.getUser().setUserProfilePhotoUrl(documentSnapshot.get(constants.KEY_PROFILE_IMAGE).toString());
                             }else{
-                                response.setError(task.getException().getMessage());
+                                User.getUser().setUserProfilePhotoUrl(null);
                             }
+                            response.setData("ok");
                         }
                     });
         }else {

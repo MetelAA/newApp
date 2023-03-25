@@ -60,7 +60,7 @@ public class constants {
     public static final String KEY_CHAT_MSG_TYPE_EQUALS_FILE = "file";
 
     public static final String KEY_CHAT_DOCUMENT_URL = "documentURL";
+    public static final String KEY_PROFILE_IMAGE = "profileImage";
 
-
-    public static final String KEY_STORAGE_PROFILE_IMAGE = "profileImages";
+    public static final String KEY_STORAGE_COLLECTION_PROFILE_IMAGEs = "profileImages";
 }

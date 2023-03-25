@@ -10,6 +10,7 @@ import com.example.newapp.global.Response;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,34 +50,29 @@ public class getAndObserveMessageRepositoryImpl implements getAndObserveMessages
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            ArrayList<chatMessage> chatMessagesListForShowing = new ArrayList<>();
-                            int i = 0;
-                            for (DocumentSnapshot document : task.getResult().getDocuments()) {
-                                chatMessagesListForShowing.add(new chatMessage(
-                                        document.getId(),
-                                        document.get(constants.KEY_CHAT_MESSAGE_SENDER_NAME).toString(),
-                                        document.get(constants.KEY_CHAT_MESSAGE_SENDER_UID).toString(),
-                                        document.get(constants.KEY_CHAT_MESSAGE).toString(),
-                                        document.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
-                                ));
-                                if(((ArrayList<String>) document.get(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs)).size() > 1){
-                                    chatMessagesListForShowing.get(i).setMessageStatus(constants.KEY_CHAT_MESSAGE_STATUS_READ);
-                                }else{
-                                    chatMessagesListForShowing.get(i).setMessageStatus(constants.KEY_CHAT_MESSAGE_STATUS_UNREAD);
-                                }
-                                i++;
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        ArrayList<chatMessage> chatMessagesListForShowing = new ArrayList<>();
+                        int i = 0;
+                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                            chatMessagesListForShowing.add(new chatMessage(
+                                    document.getId(),
+                                    document.get(constants.KEY_CHAT_MESSAGE_SENDER_NAME).toString(),
+                                    document.get(constants.KEY_CHAT_MESSAGE_SENDER_UID).toString(),
+                                    document.get(constants.KEY_CHAT_MESSAGE).toString(),
+                                    document.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
+                            ));
+                            if(((ArrayList<String>) document.get(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs)).size() > 1){
+                                chatMessagesListForShowing.get(i).setMessageStatus(constants.KEY_CHAT_MESSAGE_STATUS_READ);
+                            }else{
+                                chatMessagesListForShowing.get(i).setMessageStatus(constants.KEY_CHAT_MESSAGE_STATUS_UNREAD);
                             }
-                            response.setData(chatMessagesListForShowing);
-                        }else{
-                            response.setError(task.getException().getMessage());
+                            i++;
                         }
+                        response.setData(chatMessagesListForShowing);
                     }
                 });
-
         return response;
     }
     ListenerRegistration listener;

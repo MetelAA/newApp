@@ -10,6 +10,7 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,23 +38,18 @@ public class getLessonsDescriptionRepositoryImpl implements getLessonsDescriptio
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            QuerySnapshot Querysnapshot = task.getResult();
-                            List<DocumentSnapshot> listData = Querysnapshot.getDocuments();
-                            ArrayList<lessonDescription> listLessonsDescription = new ArrayList<>();
-                            for (DocumentSnapshot documentSnapshot:listData) {
-                                listLessonsDescription.add(new lessonDescription(
-                                        documentSnapshot.get(constants.KEY_LESSON_DESCRIPTION_SUBJECT_NAME).toString(),
-                                        documentSnapshot.get(constants.KEY_LESSON_DESCRIPTION_TEACHER_NAME).toString())
-                                );
-                            }
-                            response.setData(listLessonsDescription);
-                        }else{
-                            response.setError(task.getException().getMessage());
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> listData = queryDocumentSnapshots.getDocuments();
+                        ArrayList<lessonDescription> listLessonsDescription = new ArrayList<>();
+                        for (DocumentSnapshot documentSnapshot:listData) {
+                            listLessonsDescription.add(new lessonDescription(
+                                    documentSnapshot.get(constants.KEY_LESSON_DESCRIPTION_SUBJECT_NAME).toString(),
+                                    documentSnapshot.get(constants.KEY_LESSON_DESCRIPTION_TEACHER_NAME).toString())
+                            );
                         }
+                        response.setData(listLessonsDescription);
                     }
                 });
         return response;

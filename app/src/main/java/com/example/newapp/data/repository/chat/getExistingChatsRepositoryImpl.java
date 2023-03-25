@@ -1,6 +1,7 @@
 package com.example.newapp.data.repository.chat;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
@@ -108,26 +110,20 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
                                             response.setError(e.getMessage());
                                         }
                                     })
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                DocumentSnapshot snapshot = task.getResult();
-                                                chatInfosWithStatList.get(finalI).chatInfo.setMessage(new message(
-                                                                snapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_NAME).toString(),
-                                                                snapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_UID).toString(),
-                                                                snapshot.get(constants.KEY_CHAT_MESSAGE).toString(),
-                                                                snapshot.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
-                                                        )
-                                                );
-                                                onCompleteCounter++;
-                                                if(setDataResponseCounter == onCompleteCounter) response.setData(chatInfosWithStatList);
-                                            }else{
-                                                response.setError(task.getException().getMessage());
-                                            }
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            chatInfosWithStatList.get(finalI).chatInfo.setMessage(new message(
+                                                            documentSnapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_NAME).toString(),
+                                                            documentSnapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_UID).toString(),
+                                                            documentSnapshot.get(constants.KEY_CHAT_MESSAGE).toString(),
+                                                            documentSnapshot.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
+                                                    )
+                                            );
+                                            onCompleteCounter++;
+                                            if(setDataResponseCounter == onCompleteCounter) response.setData(chatInfosWithStatList);
                                         }
                                     });
-
                             fStore.collection(constants.KEY_CHAT_COLLECTION)
                                     .document(chatInfosWithStatList.get(finalI).chatInfo.chatID)
                                     .collection(constants.KEY_CHAT_CHAT_MESSAGES_COLLECTION)
@@ -135,39 +131,40 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
                                     .limit(999)
                                     .count()
                                     .get(AggregateSource.SERVER)
-                                    .addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
+                                    .addOnFailureListener(new OnFailureListener() {
                                         @Override
-                                        public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                final long[] msgCount = {task.getResult().getCount()};
-
-                                                fStore.collection(constants.KEY_CHAT_COLLECTION)
-                                                        .document(chatInfosWithStatList.get(finalI).chatInfo.chatID)
-                                                        .collection(constants.KEY_CHAT_CHAT_MESSAGES_COLLECTION)
-                                                        .orderBy(constants.KEY_CHAT_MSG_SENT_TIME, Query.Direction.DESCENDING)
-                                                        .limit(999)
-                                                        .whereArrayContainsAny(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs, Arrays.asList(User.getUID()))
-                                                        .count()
-                                                        .get(AggregateSource.SERVER)
-                                                        .addOnCompleteListener(new OnCompleteListener<AggregateQuerySnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<AggregateQuerySnapshot> task) {
-                                                                if(task.isSuccessful()){
-                                                                    chatInfosWithStatList.get(finalI).chatInfo.setUnreadMessageCount(msgCount[0] - task.getResult().getCount());
-                                                                    onCompleteCounter++;
-                                                                    if(setDataResponseCounter == onCompleteCounter) response.setData(chatInfosWithStatList);
-                                                                }else{
-                                                                    response.setError(task.getException().getMessage());
-                                                                }
-                                                            }
-                                                        });
-                                            }else{
-                                                response.setError(task.getException().getMessage());
-                                            }
+                                        public void onFailure(@NonNull Exception e) {
+                                            response.setError(e.getMessage());
+                                        }
+                                    })
+                                    .addOnSuccessListener(new OnSuccessListener<AggregateQuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(AggregateQuerySnapshot aggregateQuerySnapshot) {
+                                            long msgCount = aggregateQuerySnapshot.getCount();
+                                            fStore.collection(constants.KEY_CHAT_COLLECTION)
+                                                    .document(chatInfosWithStatList.get(finalI).chatInfo.chatID)
+                                                    .collection(constants.KEY_CHAT_CHAT_MESSAGES_COLLECTION)
+                                                    .orderBy(constants.KEY_CHAT_MSG_SENT_TIME, Query.Direction.DESCENDING)
+                                                    .limit(999)
+                                                    .whereArrayContainsAny(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs, Arrays.asList(User.getUID()))
+                                                    .count()
+                                                    .get(AggregateSource.SERVER)
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            response.setError(e.getMessage());
+                                                        }
+                                                    })
+                                                    .addOnSuccessListener(new OnSuccessListener<AggregateQuerySnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(AggregateQuerySnapshot aggregateQuerySnapshot) {
+                                                            chatInfosWithStatList.get(finalI).chatInfo.setUnreadMessageCount(msgCount - aggregateQuerySnapshot.getCount());
+                                                            onCompleteCounter++;
+                                                            if(setDataResponseCounter == onCompleteCounter) response.setData(chatInfosWithStatList);
+                                                        }
+                                                    });
                                         }
                                     });
-
-
                             i++;
                         }
                     }

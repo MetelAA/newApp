@@ -7,6 +7,7 @@ import com.example.newapp.domain.models.repository.loginUserRepository;
 import com.example.newapp.global.Response;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,14 +30,10 @@ public class loginUserRepositoryImpl implements loginUserRepository {
                         response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            response.setData("ok");
-                        }else{
-                            response.setData(task.getException().getMessage());
-                        }
+                    public void onSuccess(AuthResult authResult) {
+                        response.setData("ok");
                     }
                 });
        return response;

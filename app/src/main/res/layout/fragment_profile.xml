@@ -55,15 +55,14 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-
-        android:id="@+id/profileImageBtn"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginTop="96dp"
+        android:id="@+id/profileImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="150dp"
-        android:src="@drawable/ic_profile"
+        android:src="@drawable/ic_sync"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.183"
+        app:layout_constraintHorizontal_bias="0.18"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
@@ -75,9 +74,9 @@
         android:layout_marginTop="10dp"
         android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.30"
-        app:layout_constraintStart_toEndOf="@+id/profileImageBtn"
-        app:layout_constraintTop_toTopOf="@+id/profileImageBtn" />
+        app:layout_constraintHorizontal_bias="0.20"
+        app:layout_constraintStart_toEndOf="@+id/profileImageView"
+        app:layout_constraintTop_toTopOf="@+id/profileImageView" />
 
     <TextView
         android:id="@+id/profileEmailTextView"
@@ -99,7 +98,7 @@
         android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileImageBtn">
+        app:layout_constraintTop_toBottomOf="@+id/profileImageView">
 
         <TextView
             android:id="@+id/explanationTextView"

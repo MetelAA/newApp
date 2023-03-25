@@ -9,59 +9,63 @@ import com.example.newapp.domain.models.repository.setUserProfileImageRepository
 import com.example.newapp.global.Response;
 import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.nio.file.Path;
-
 public class setUserProfileImageRepositoryImpl implements setUserProfileImageRepository {
     StorageReference storageRef;
+    FirebaseFirestore fStore;
 
-    public setUserProfileImageRepositoryImpl(StorageReference storageRef) {
+    public setUserProfileImageRepositoryImpl(StorageReference storageRef, FirebaseFirestore fStore) {
         this.storageRef = storageRef;
+        this.fStore = fStore;
     }
 
     public Response<String, String> setUserProfileImage(Uri imageUri){
         Response<String, String> response = new Response<>();
-        StorageReference path = storageRef.child(constants.KEY_STORAGE_PROFILE_IMAGE).child(User.getUID());
-        path.putFile(imageUri).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                response.setError(e.getMessage());
-            }
-        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if(task.isSuccessful()){
-                    path.getDownloadUrl()
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                response.setError(e.getMessage());
-                            }
-                        })
-                        .addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if(task.isSuccessful()){
-                                response.setData("ok");
-                                Log.d("Aboba", task.getResult().toString());
-                            }else{
-                                response.setError(task.getException().getMessage());
-                            }
-                        }
-                        });
-                }else{
-                    response.setError(task.getException().getMessage());
-                }
-        }
-        });
+        StorageReference path = storageRef.child(constants.KEY_STORAGE_COLLECTION_PROFILE_IMAGEs).child(User.getUID());
+        path.putFile(imageUri)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        response.setError(e.getMessage());
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        path.getDownloadUrl()
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        response.setError(e.getMessage());
+                                    }
+                                })
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        fStore.collection(constants.KEY_USER_COLLECTION).document(User.getUID())
+                                                        .update(constants.KEY_PROFILE_IMAGE, uri.toString())
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    response.setError(e.getMessage());
+                                                                }
+                                                            })
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void unused) {
+                                                                    response.setData("ok");
+                                                                }
+                                                            });
+
+                                    }
+                                });
+                    }
+                });
         return response;
     }
 }

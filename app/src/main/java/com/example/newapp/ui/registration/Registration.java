@@ -74,6 +74,14 @@ public class Registration extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean == true){
+                    Log.d("Aboba", "User{" +
+                            "userUID='" + User.getUID() + '\'' +
+                            "userEmail='" + User.getEmail() + '\'' +
+                            "userName='" + User.getName() + '\'' +
+                            "userType='" + User.getType() + '\'' +
+                            "userGroupKey='" + User.getUser().getGroupKey() + '\'' +
+                            "userImageURL='" + User.getUser().getUserProfilePhotoUrl() + '\'');
+
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }

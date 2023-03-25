@@ -8,6 +8,7 @@ public class User {
     private static String email;
     private static String type;
     private String groupKey;
+    private String userProfilePhotoUrl;
 
 
 
@@ -22,12 +23,15 @@ public class User {
 
     }
 
+
+
     public void create(String uid, String username, String Email, String Type) {
         UID = uid;
         name = username;
         email = Email;
         type = Type;
     }
+
 
     public static String getUID() {
         return UID;
@@ -53,5 +57,11 @@ public class User {
         this.groupKey = group;
     }
 
+    public String getUserProfilePhotoUrl() {
+        return userProfilePhotoUrl;
+    }
 
+    public void setUserProfilePhotoUrl(String userProfilePhotoUrl) {
+        this.userProfilePhotoUrl = userProfilePhotoUrl;
+    }
 }

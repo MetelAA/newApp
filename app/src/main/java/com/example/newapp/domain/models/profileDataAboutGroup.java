@@ -1,10 +1,10 @@
 package com.example.newapp.domain.models;
 
-public class profileGroupData {
+public class profileDataAboutGroup {
     public String groupName;
     public long countGroupUsers;
 
-    public profileGroupData(String groupName, long countGroupUsers) {
+    public profileDataAboutGroup(String groupName, long countGroupUsers) {
         this.groupName = groupName;
         this.countGroupUsers = countGroupUsers;
     }

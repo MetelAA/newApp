@@ -12,6 +12,7 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +27,6 @@ public class getDayLessonsRepositoryImpl implements getDayLessonsRepository {
     }
     @Override
     public Response<arrayListForSchedule, String> getDayLessons(String dayOfWeek) {
-        Log.d("Aboba", "getDayLessons");
         Response<arrayListForSchedule, String> response = new Response<>();
 
         fStore.collection(constants.KEY_GROUP_COLLECTION)
@@ -40,19 +40,17 @@ public class getDayLessonsRepositoryImpl implements getDayLessonsRepository {
                        response.setError(e.getMessage());
                     }
                 })
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            arrayListForSchedule resultList = new arrayListForSchedule();
-                            QuerySnapshot querySnapshot = task.getResult();
-                            List<DocumentSnapshot> listSnapshot = querySnapshot.getDocuments();
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        arrayListForSchedule resultList = new arrayListForSchedule();
+                        List<DocumentSnapshot> listSnapshot = queryDocumentSnapshots.getDocuments();
 
-                            if(listSnapshot.isEmpty()){
-                                resultList.setDayOfWeek(dayOfWeek);
-                            }else{
-                                resultList.setDayOfWeek(dayOfWeek);
-                                for (DocumentSnapshot docSnapshot:listSnapshot) {
+                        if(listSnapshot.isEmpty()){
+                            resultList.setDayOfWeek(dayOfWeek);
+                        }else{
+                            resultList.setDayOfWeek(dayOfWeek);
+                            for (DocumentSnapshot docSnapshot:listSnapshot) {
                                 resultList.add(new lesson(
                                         docSnapshot.get(constants.KEY_LESSON_NUMBER_LESSON).toString(),
                                         docSnapshot.get(constants.KEY_LESSON_START_TIME).toString(),
@@ -61,13 +59,10 @@ public class getDayLessonsRepositoryImpl implements getDayLessonsRepository {
                                         docSnapshot.get(constants.KEY_LESSON_DESCRIPTION_TEACHER_NAME).toString(),
                                         docSnapshot.get(constants.KEY_LESSON_DESCRIPTION_SUBJECT_NAME).toString()
                                 ));
-                                }
                             }
-                            Log.d("Aboba", "response setData  result List по дню - " + resultList.getDayOfWeek() + "  стастус нахуй статус"  + "  со знач "  + resultList.toString());
-                            response.setData(resultList);
-                        }else{
-                            response.setError(task.getException().getMessage());
                         }
+                        Log.d("Aboba", "response setData  result List по дню - " + resultList.getDayOfWeek() + "  стастус нахуй статус"  + "  со знач "  + resultList.toString());
+                        response.setData(resultList);
                     }
                 });
         return response;

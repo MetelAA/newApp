@@ -78,6 +78,7 @@ public class showChatsListRecViewAdapter extends RecyclerView.Adapter<showChatsL
         }
 
         public void bind(chatInfo chatInfo){
+            Log.d("Aboba", "bind  -- " + chatInfo.toString());
             if(TextUtils.equals(chatInfo.chatType, constants.KEY_CHAT_TYPE_EQUALS_GROUP_CHAT)){
                 groupChatInfo groupChatInfo = (groupChatInfo) chatInfo;
                 chatName.setText(groupChatInfo.chatTitle);

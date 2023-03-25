@@ -4,7 +4,7 @@ import android.net.Uri;
 
 public interface profileViewModel {
 
-    void initProfileData();
+    void initProfileGroupData();
 
     void getListGroupUsers();
 
