@@ -7,6 +7,7 @@
     android:gravity="center_vertical"
     >
 
+
 <LinearLayout
     android:layout_marginTop="5dp"
     android:layout_marginLeft="5dp"
@@ -22,7 +23,7 @@
     android:background="@drawable/incoming_message_background"
     >
     <LinearLayout
-        android:layout_weight="10"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -50,23 +51,38 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/messageSentTimeTextViewIncomingMessage"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/simpleTextStyleMontserrat"
-        android:textSize="14sp"
-        android:textColor="@color/grey"
-        android:text="12:12"
-        android:layout_gravity="bottom"
-        />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/blue_circule"
+            />
+
+        <TextView
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:id="@+id/messageSentTimeTextViewIncomingMessage"
+            style="@style/simpleTextStyleMontserrat"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="12:12"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
     </LinearLayout>
+
+</LinearLayout>
 
 
 <View
     android:layout_width="0dp"
     android:layout_height="0dp"
-    android:layout_weight="5"
+    android:layout_weight="1"
     />
 
 

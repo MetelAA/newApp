@@ -39,10 +39,10 @@ import com.canhub.cropper.CropImageView;
 import com.example.newapp.R;
 
 import com.example.newapp.adapters.AdapterListUsers;
+import com.example.newapp.databinding.FragmentProfileBinding;
 import com.example.newapp.domain.models.groupUserData;
 import com.example.newapp.domain.models.profileDataAboutGroup;
 import com.example.newapp.global.User;
-import com.example.newapp.databinding.FragmentProfileBinding;
 import com.example.newapp.interfaces.adapterOnClickInterface;
 import com.example.newapp.ui.login.Login;
 import com.squareup.picasso.Picasso;
@@ -188,7 +188,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
                     .placeholder(R.drawable.ic_sync)
                     .into(profileImageView);
         }else{
-            Drawable drawable = getContext().getDrawable(R.drawable.ic_person);
+            Drawable drawable = getContext().getDrawable(R.drawable.ic_person_chat);
             profileImageView.setImageDrawable(drawable);
         }
 
@@ -508,4 +508,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
             }
         });
     }
+
+
+
 }

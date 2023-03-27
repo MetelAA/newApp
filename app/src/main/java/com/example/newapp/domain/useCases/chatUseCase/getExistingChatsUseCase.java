@@ -12,7 +12,7 @@ public class getExistingChatsUseCase {
     public getExistingChatsUseCase(com.example.newapp.domain.models.repository.chatRepository.getExistingChatsRepository getExistingChatsRepository) {
         this.getExistingChatsRepository = getExistingChatsRepository;
     }
-    public Response<ArrayList<chatInfoWithSnapshotStatus>, String> getExistingChat(){
+    public Response<chatInfoWithSnapshotStatus, String> getExistingChat(){
         return getExistingChatsRepository.getExistingChats();
     }
 }

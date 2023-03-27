@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.newapp.R;
 import com.example.newapp.global.User;
 import com.example.newapp.domain.models.oldModels.textMessagePersonChat;
+import com.example.newapp.interfaces.adapterOnClickInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,11 +22,11 @@ import java.util.List;
 
 public class showPersonMessageRecViewAdapter extends RecyclerView.Adapter<showPersonMessageRecViewAdapter.viewHolder> {
 
-//    MessageAdapterCallback callback;
-//
-//    public showPersonMessageRecViewAdapter(MessageAdapterCallback callback) {
-//        this.callback = callback;
-//    }
+    adapterOnClickInterface callback;
+
+    public showPersonMessageRecViewAdapter(adapterOnClickInterface callback) {
+        this.callback = callback;
+    }
 
     LinkedList<textMessagePersonChat> messagesList = new LinkedList<>();
 

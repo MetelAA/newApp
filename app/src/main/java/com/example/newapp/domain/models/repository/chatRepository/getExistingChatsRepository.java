@@ -6,6 +6,6 @@ import com.example.newapp.global.Response;
 import java.util.ArrayList;
 
 public interface getExistingChatsRepository {
-    Response<ArrayList<chatInfoWithSnapshotStatus>, String> getExistingChats();
+    Response<chatInfoWithSnapshotStatus, String> getExistingChats();
 
 }

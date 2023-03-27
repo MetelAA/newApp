@@ -30,7 +30,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:text=""
-                android:textColor="@color/btnBluePrimary" />
+                android:textColor="@color/bluePrimary" />
 
             <Button
                 android:id="@+id/buttonCustomLogOutAlertDialogConfirm"

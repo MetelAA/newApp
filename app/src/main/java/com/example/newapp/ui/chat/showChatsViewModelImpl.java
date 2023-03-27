@@ -21,15 +21,16 @@ public class showChatsViewModelImpl extends ViewModel implements showChatsViewMo
     private getExistingChatsUseCase getExistingChatsUseCase = new getExistingChatsUseCase(getExistingChatsRepository);
 
     public MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
-    public MutableLiveData<ArrayList<chatInfoWithSnapshotStatus>> gotListExitingChats = new MutableLiveData<>();
+    public MutableLiveData<chatInfoWithSnapshotStatus> gotListExitingChats = new MutableLiveData<>();
     public boolean isListenerActiveFlag = false;
 
+    public ArrayList<chatInfoWithSnapshotStatus> chatInfosList = new ArrayList<>();
 
 
     @Override
     public void getExistingChats() {
         isListenerActiveFlag = true;
-        Response<ArrayList<chatInfoWithSnapshotStatus>, String> response = getExistingChatsUseCase.getExistingChat();
+        Response<chatInfoWithSnapshotStatus, String> response = getExistingChatsUseCase.getExistingChat();
         response.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object o) {
@@ -37,8 +38,8 @@ public class showChatsViewModelImpl extends ViewModel implements showChatsViewMo
                     onErrorLiveData.postValue(response.getError());
                     return;
                 }
-
-                gotListExitingChats.postValue(response.getData());
+                chatInfosList.add(response.getData());
+                gotListExitingChats.setValue(response.getData());
             }
         });
     }

@@ -10,15 +10,20 @@
 
     <color  name="textStrongGrey">#464646</color>
 
-    <color name="grey">#808080</color>
-    <color name="lightGrey">#F6F6F6</color>
-    <color name="btnBluePrimary">#007BFF</color>
+
+
     <color name="btnGreen">#28A745</color>
     <color name="btnRed">#D70000</color>
 
-    <color name="darkerBluePrimary">#0055FF</color>
-    <color name="backgroundPrimary">#FBFAFA</color>
-    <color name="backgroundForIconsLightBlue">#2AABEE</color>
+    <color name="bluePrimary">#007BFF</color>
+    <color name="darkerBluePrimary">#5687A6</color>
+    <color name="backgroundForIconsLightBlue">#66ADD9</color>
     <color name="backgroundForIconsDarkerBlue">#0086D2</color>
-    <color name="mainStrokeColor">#A5A5A5</color>
+
+    <color name="middle_grey">#A5A5A5</color>
+    <color name="backgroundPrimary">#FBFAFA</color>
+    <color name="grey">#808080</color>
+    <color name="lightGrey">#F6F6F6</color>
+    <color name="fadedWhiteText">#CFE8FB</color>
+
 </resources>

@@ -7,6 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public interface getAndObserveMessagesRepository {
-    Response<ArrayList<chatMessage>, String> getPreviousMessages(Date startSearchDate);
-    Response<ArrayList<chatMessage>, String> getNewMessages(Date startObserveDate);
+    Response<ArrayList<chatMessage>, String> getPreviousMessages(Date startSearchDate, String chatUID);
+    Response<ArrayList<chatMessage>, String> getNewMessages(Date startSearchDate, String chatUID);
 }

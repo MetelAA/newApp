@@ -7,4 +7,13 @@ public class groupChatInfo extends chatInfo{
         super(chatType, chatID);
         this.chatTitle = chatTitle;
     }
+
+    @Override
+    public String toString() {
+        return "groupChatInfo{" +
+                "chatTitle='" + chatTitle + '\'' +
+                ", chatType='" + chatType + '\'' +
+                ", chatID='" + chatID + '\'' +
+                '}';
+    }
 }

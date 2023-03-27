@@ -53,7 +53,7 @@
             android:paddingRight="20dp"
             android:text="Добавить урок"
             android:textAllCaps="false"
-            android:textColor="@color/btnBluePrimary"
+            android:textColor="@color/bluePrimary"
             android:textSize="24sp"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"

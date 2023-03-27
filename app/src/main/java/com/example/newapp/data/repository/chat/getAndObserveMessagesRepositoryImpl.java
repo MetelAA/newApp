@@ -7,11 +7,10 @@ import com.example.newapp.domain.models.chatModels.chatMessage;
 
 import com.example.newapp.domain.models.repository.chatRepository.getAndObserveMessagesRepository;
 import com.example.newapp.global.Response;
+import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -24,17 +23,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class getAndObserveMessageRepositoryImpl implements getAndObserveMessagesRepository {
+public class getAndObserveMessagesRepositoryImpl implements getAndObserveMessagesRepository {
     private FirebaseFirestore fStore;
-    private String chatUID;
 
-    public getAndObserveMessageRepositoryImpl(FirebaseFirestore fStore, String chatUID) {
+    public getAndObserveMessagesRepositoryImpl(FirebaseFirestore fStore) {
         this.fStore = fStore;
-        this.chatUID = chatUID;
     }
 
     @Override
-    public Response<ArrayList<chatMessage>, String> getPreviousMessages(Date startSearchDate) {
+    public Response<ArrayList<chatMessage>, String> getPreviousMessages(Date startSearchDate, String chatUID) {
         Response<ArrayList<chatMessage>, String> response = new Response<>();
 
         fStore.collection(constants.KEY_CHAT_COLLECTION)
@@ -63,7 +60,7 @@ public class getAndObserveMessageRepositoryImpl implements getAndObserveMessages
                                     document.get(constants.KEY_CHAT_MESSAGE).toString(),
                                     document.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
                             ));
-                            if(((ArrayList<String>) document.get(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs)).size() > 1){
+                            if(((ArrayList<String>) document.get(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs)).contains(User.getUID())){
                                 chatMessagesListForShowing.get(i).setMessageStatus(constants.KEY_CHAT_MESSAGE_STATUS_READ);
                             }else{
                                 chatMessagesListForShowing.get(i).setMessageStatus(constants.KEY_CHAT_MESSAGE_STATUS_UNREAD);
@@ -77,7 +74,7 @@ public class getAndObserveMessageRepositoryImpl implements getAndObserveMessages
     }
     ListenerRegistration listener;
     @Override
-    public Response<ArrayList<chatMessage>, String> getNewMessages(Date startObserveDate) { //пока у нас можно только добавлять сообещения
+    public Response<ArrayList<chatMessage>, String> getNewMessages(Date startObserveDate, String chatUID) { //пока у нас можно только добавлять сообещения
         Response<ArrayList<chatMessage>, String> response = new Response<>();
 
          listener = fStore.collection(constants.KEY_CHAT_COLLECTION)

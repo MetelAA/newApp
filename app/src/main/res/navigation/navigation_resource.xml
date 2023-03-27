@@ -53,6 +53,9 @@
         <action
             android:id="@+id/action_fragment_show_chats_to_createNewChatDialogFragment"
             app:destination="@id/createNewChatDialogFragment" />
+        <action
+            android:id="@+id/action_fragment_show_chats_to_chatFragment"
+            app:destination="@id/chatFragment" />
     </fragment>
     <fragment
         android:id="@+id/createNewChatDialogFragment"
@@ -61,6 +64,16 @@
         tools:layout="@layout/fragment_create_new_chat" >
         <action
             android:id="@+id/action_createNewChatDialogFragment_to_fragment_show_chats"
+            app:destination="@id/fragment_show_chats" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.newapp.ui.chat.chatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat"
+        >
+        <action
+            android:id="@+id/action_chatFragment_to_fragment_show_chats"
             app:destination="@id/fragment_show_chats" />
     </fragment>
 

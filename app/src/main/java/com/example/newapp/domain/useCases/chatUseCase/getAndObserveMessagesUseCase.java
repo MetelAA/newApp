@@ -13,10 +13,10 @@ public class getAndObserveMessagesUseCase {
     public getAndObserveMessagesUseCase(com.example.newapp.domain.models.repository.chatRepository.getAndObserveMessagesRepository getAndObserveMessagesRepository) {
         this.getAndObserveMessagesRepository = getAndObserveMessagesRepository;
     }
-    public Response<ArrayList<chatMessage>, String> getPreviousMessages(Date startSearchDate){
-        return getAndObserveMessagesRepository.getPreviousMessages(startSearchDate);
+    public Response<ArrayList<chatMessage>, String> getPreviousMessages(Date startSearchDate, String chatUID){
+        return getAndObserveMessagesRepository.getPreviousMessages(startSearchDate, chatUID);
     }
-    public Response<ArrayList<chatMessage>, String> getNewMessages(Date startObserveDate){
-        return getAndObserveMessagesRepository.getNewMessages(startObserveDate);
+    public Response<ArrayList<chatMessage>, String> getNewMessages(Date startSearchDate, String chatUID){
+        return getAndObserveMessagesRepository.getNewMessages(startSearchDate, chatUID);
     }
 }
