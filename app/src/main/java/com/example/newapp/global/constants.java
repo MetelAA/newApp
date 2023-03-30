@@ -51,16 +51,16 @@ public class constants {
     public static final String KEY_CHAT_MESSAGE_SENDER_NAME = "msgSenderName";
     public static final String KEY_CHAT_MESSAGE_SENDER_UID = "msgSenderUID";
     public static final String KEY_CHAT_MESSAGE_READ_USERS_UIDs = "messageReadUsersUIDs";
-    public static final String KEY_CHAT_MESSAGE = "message";
+    public static final String KEY_CHAT_MESSAGE_TEXT = "messageText";
+    public static final String KEY_CHAT_MESSAGE_IMAGE_URL = "messagePhotoURL";
+
     public static final String KEY_CHAT_MESSAGE_ID = "messageID";
     public static final String KEY_CHAT_MESSAGE_STATUS_READ = "messageRead";
     public static final String KEY_CHAT_MESSAGE_STATUS_UNREAD = "messageUnread";
-    public static final String KEY_CHAT_MSG_TYPE = "msgType";
+    public static final String KEY_CHAT_MSG_TYPE = "messageType";
     public static final String KEY_CHAT_MSG_TYPE_EQUALS_TEXT = "text";
-    public static final String KEY_CHAT_MSG_TYPE_EQUALS_FILE = "file";
-
-    public static final String KEY_CHAT_DOCUMENT_URL = "documentURL";
+    public static final String KEY_CHAT_MSG_TYPE_EQUALS_IMAGE = "photo";
     public static final String KEY_PROFILE_IMAGE = "profileImage";
-
     public static final String KEY_STORAGE_COLLECTION_PROFILE_IMAGEs = "profileImages";
+    public static final String KEY_STORAGE_COLLECTION_CHAT_IMAGES = "chatImages";
 }

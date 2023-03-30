@@ -16,9 +16,9 @@ import java.util.Observer;
 
 public class showChatsViewModelImpl extends ViewModel implements showChatsViewModel {
 
-    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    private getExistingChatsRepositoryImpl getExistingChatsRepository = new getExistingChatsRepositoryImpl(fStore);
-    private getExistingChatsUseCase getExistingChatsUseCase = new getExistingChatsUseCase(getExistingChatsRepository);
+    private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    private final getExistingChatsRepositoryImpl getExistingChatsRepository = new getExistingChatsRepositoryImpl(fStore);
+    private final getExistingChatsUseCase getExistingChatsUseCase = new getExistingChatsUseCase(getExistingChatsRepository);
 
     public MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
     public MutableLiveData<chatInfoWithSnapshotStatus> gotListExitingChats = new MutableLiveData<>();

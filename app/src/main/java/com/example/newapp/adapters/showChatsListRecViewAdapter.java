@@ -3,6 +3,7 @@ package com.example.newapp.adapters;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,10 +92,10 @@ public class showChatsListRecViewAdapter extends RecyclerView.Adapter<showChatsL
             }else{
                 personChatInfo personChatInfo = (personChatInfo) chatInfo;
                 chatName.setText(personChatInfo.comradName);
-                Drawable drawable = AppCompatResources.getDrawable(context ,R.drawable.ic_person_show_chats);
+                //Drawable drawable = AppCompatResources.getDrawable(context ,R.drawable.ic_person_show_chats);
                 Picasso.get()
                         .load(personChatInfo.comradProfileImage)
-                        .placeholder(drawable)
+                        .placeholder(R.drawable.ic_sync)
                         .into(chatImageView);
             }
             if(chatInfo.getUnreadMessageCount() == 0){

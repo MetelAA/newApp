@@ -1,15 +1,13 @@
 package com.example.newapp.domain.models.chatModels;
 
-
 import java.io.Serializable;
 
 public class chatInfo implements Serializable {
     public String chatType, chatID;
 
     private static final long serialVersionUID = 1L;
-
     private long unreadMessageCount;
-    private message message;
+    private messageWithText message;
 
     public chatInfo(String chatType, String chatID) {
         this.chatType = chatType;
@@ -20,11 +18,11 @@ public class chatInfo implements Serializable {
         this.chatID = chatID;
     }
 
-    public void setMessage(message message) {
+    public void setMessage(messageWithText message) {
         this.message = message;
     }
 
-    public message getMessage() {
+    public messageWithText getMessage() {
         return message;
     }
 

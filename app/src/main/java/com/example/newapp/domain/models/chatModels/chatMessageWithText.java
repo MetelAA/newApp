@@ -2,12 +2,13 @@ package com.example.newapp.domain.models.chatModels;
 
 import java.util.Date;
 
-public class chatMessage extends message {
+public class chatMessageWithText extends message {
+    public String messageText, messageID;
     private String messageStatus;
-    public String messageID;
 
-    public chatMessage(String messageID, String senderName, String senderUID, String messageText, Date messageSentTime) {
+    public chatMessageWithText(String messageID, String senderName, String senderUID, String messageText, Date messageSentTime) {
         super(senderName, senderUID, messageSentTime);
+        this.messageText = messageText;
         this.messageID = messageID;
     }
 

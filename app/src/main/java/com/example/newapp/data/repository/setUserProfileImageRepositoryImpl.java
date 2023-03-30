@@ -16,8 +16,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 public class setUserProfileImageRepositoryImpl implements setUserProfileImageRepository {
-    StorageReference storageRef;
-    FirebaseFirestore fStore;
+    private StorageReference storageRef;
+    private FirebaseFirestore fStore;
 
     public setUserProfileImageRepositoryImpl(StorageReference storageRef, FirebaseFirestore fStore) {
         this.storageRef = storageRef;

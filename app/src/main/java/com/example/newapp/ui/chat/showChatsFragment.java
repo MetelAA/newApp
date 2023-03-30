@@ -108,7 +108,7 @@ public class showChatsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(showChatsAdapter);
+        recyclerView.setAdapter(showEmptyMessage);
 
         if(!viewModel.isListenerActiveFlag){
             viewModel.getExistingChats();
@@ -122,9 +122,11 @@ public class showChatsFragment extends Fragment {
             public void onChanged(chatInfoWithSnapshotStatus chatInfoWithSnapshotStatus) {
                 switch (chatInfoWithSnapshotStatus.changeType) {
                     case ADDED:
+                        //Log.d("Aboba", "added");
                         chatList.add(chatInfoWithSnapshotStatus.chatInfo);
                         break;
                     case MODIFIED:
+                        //Log.d("Aboba", "modified");
                         chatInfo changedChat = chatList.stream()
                                 .filter(chat -> chatInfoWithSnapshotStatus.chatInfo.chatID.equals(chat.chatID))
                                 .findAny()
@@ -132,11 +134,11 @@ public class showChatsFragment extends Fragment {
                         if(changedChat == null){
                             chatList.add(chatInfoWithSnapshotStatus.chatInfo);
                         }else{
-
                             chatList.set(chatList.indexOf(changedChat), chatInfoWithSnapshotStatus.chatInfo);
                         }
                         break;
                     case REMOVED:
+                        //Log.d("Aboba", "rewmoved");
                         chatInfo removingChat = chatList.stream()
                                 .filter(chat -> chatInfoWithSnapshotStatus.chatInfo.chatID.equals(chat.chatID))
                                 .findAny()
@@ -146,10 +148,9 @@ public class showChatsFragment extends Fragment {
                         break;
                 }
                 chatList.sort(new chatInfoComparator());
-                if(chatList.isEmpty()){
-                    recyclerView.setAdapter(showEmptyMessage);
-                }else{
-                    showChatsAdapter.notifyDataSetChanged();
+                Log.d("Aboba", chatList.toString());
+                if((!chatList.isEmpty()) && recyclerView.getAdapter() instanceof showEmptyMessageRecViewAdapter) {
+                    recyclerView.setAdapter(showChatsAdapter);
                 }
             }
         });

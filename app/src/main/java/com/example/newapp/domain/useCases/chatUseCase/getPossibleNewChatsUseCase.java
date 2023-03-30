@@ -1,6 +1,6 @@
 package com.example.newapp.domain.useCases.chatUseCase;
 
-import com.example.newapp.domain.models.chatModels.chatInfoForNewChat;
+import com.example.newapp.domain.models.chatModels.chatInfoForPossibleNewChat;
 import com.example.newapp.domain.models.repository.chatRepository.getPossibleNewChatsRepository;
 import com.example.newapp.global.Response;
 
@@ -13,7 +13,7 @@ public class getPossibleNewChatsUseCase {
         this.getPossibleNewChatsRepository = getPossibleNewChatsRepository;
     }
 
-    public Response<ArrayList<chatInfoForNewChat>, String> getPossibleNewChats(ArrayList<String> existingChatsMemberUID){
+    public Response<ArrayList<chatInfoForPossibleNewChat>, String> getPossibleNewChats(ArrayList<String> existingChatsMemberUID){
         return getPossibleNewChatsRepository.getPossibleNewChats(existingChatsMemberUID);
     }
 }

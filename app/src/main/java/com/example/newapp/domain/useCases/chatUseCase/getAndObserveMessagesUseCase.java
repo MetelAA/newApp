@@ -1,6 +1,7 @@
 package com.example.newapp.domain.useCases.chatUseCase;
 
 import com.example.newapp.domain.models.chatModels.chatMessage;
+import com.example.newapp.domain.models.chatModels.message;
 import com.example.newapp.domain.models.repository.chatRepository.getAndObserveMessagesRepository;
 import com.example.newapp.global.Response;
 
@@ -13,10 +14,17 @@ public class getAndObserveMessagesUseCase {
     public getAndObserveMessagesUseCase(com.example.newapp.domain.models.repository.chatRepository.getAndObserveMessagesRepository getAndObserveMessagesRepository) {
         this.getAndObserveMessagesRepository = getAndObserveMessagesRepository;
     }
-    public Response<ArrayList<chatMessage>, String> getPreviousMessages(Date startSearchDate, String chatUID){
-        return getAndObserveMessagesRepository.getPreviousMessages(startSearchDate, chatUID);
+    public Response<ArrayList<message>, String> getPreviousMessages(Date startSearchDate){
+        return getAndObserveMessagesRepository.getPreviousMessages(startSearchDate);
     }
-    public Response<ArrayList<chatMessage>, String> getNewMessages(Date startSearchDate, String chatUID){
-        return getAndObserveMessagesRepository.getNewMessages(startSearchDate, chatUID);
+    public Response<ArrayList<message>, String> getNewMessages(Date startSearchDate){
+        return getAndObserveMessagesRepository.getNewMessages(startSearchDate);
+    }
+
+    public void removeListeners(){
+        getAndObserveMessagesRepository.removeListener();
+    }
+    public void setChatID(String chatID){
+        getAndObserveMessagesRepository.setChatID(chatID);
     }
 }

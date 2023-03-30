@@ -26,6 +26,8 @@ import com.canhub.cropper.CropImageContract;
 import com.canhub.cropper.CropImageContractOptions;
 import com.canhub.cropper.CropImageOptions;
 import com.canhub.cropper.CropImageView;
+import com.example.newapp.global.User;
+import com.example.newapp.global.constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -101,12 +103,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
+        fStore.collection(constants.KEY_USER_COLLECTION).document(User.getUID()).update(constants.KEY_USER_STATUS, constants.KEY_USER_STATUS_EQUALS_OFFLINE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        fStore.collection(constants.KEY_USER_COLLECTION).document(User.getUID()).update(constants.KEY_USER_STATUS, constants.KEY_USER_STATUS_EQUALS_ONLINE);
     }
 }

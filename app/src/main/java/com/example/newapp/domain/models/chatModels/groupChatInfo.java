@@ -1,5 +1,7 @@
 package com.example.newapp.domain.models.chatModels;
 
+import java.io.Serializable;
+
 public class groupChatInfo extends chatInfo{
     public String chatTitle;
 

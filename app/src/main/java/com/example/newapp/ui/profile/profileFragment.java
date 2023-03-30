@@ -122,8 +122,6 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         }
     }
 
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

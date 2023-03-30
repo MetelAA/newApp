@@ -1,6 +1,7 @@
 package com.example.newapp.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,24 +10,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newapp.R;
-import com.example.newapp.domain.models.chatModels.chatInfoForNewChat;
+import com.example.newapp.domain.models.chatModels.chatInfoForPossibleNewChat;
 import com.example.newapp.interfaces.adapterOnClickInterface;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class showListNewChatsAdapter extends RecyclerView.Adapter<showListNewChatsAdapter.viewHolder> {
 
-    private ArrayList<chatInfoForNewChat> list;
+    private ArrayList<chatInfoForPossibleNewChat> list;
     private adapterOnClickInterface callback;
 
     private Context context;
 
-    public showListNewChatsAdapter(ArrayList<chatInfoForNewChat> list, adapterOnClickInterface callback) {
+    public showListNewChatsAdapter(ArrayList<chatInfoForPossibleNewChat> list, adapterOnClickInterface callback) {
         this.list = list;
         this.callback = callback;
     }
@@ -50,6 +55,8 @@ public class showListNewChatsAdapter extends RecyclerView.Adapter<showListNewCha
     }
 
     class viewHolder extends RecyclerView.ViewHolder{
+
+        CircleImageView comradProfileImage;
         TextView comradName;
         TextView comradStatus;
         LinearLayout mainElem;
@@ -59,6 +66,7 @@ public class showListNewChatsAdapter extends RecyclerView.Adapter<showListNewCha
             mainElem = itemView.findViewById(R.id.mainElemShowListPossibleChats);
             comradName = itemView.findViewById(R.id.comradNameShowPossibleChats);
             comradStatus = itemView.findViewById(R.id.comradStatusShowPossibleChats);
+            comradProfileImage = itemView.findViewById(R.id.comradProfileImageShowPossibleNewChats);
             mainElem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -67,15 +75,24 @@ public class showListNewChatsAdapter extends RecyclerView.Adapter<showListNewCha
             });
         }
 
-        public void bind(chatInfoForNewChat newChatData){
-            Log.d("Aboba", newChatData.toString());
-            comradName.setText(newChatData.Name);
-            if(newChatData.getLastTimeSeen() == null){
+        public void bind(chatInfoForPossibleNewChat newChatData){
+            comradName.setText(newChatData.comradName);
+            if(newChatData.comradProfileMessageURL != null){
+                Log.d("Aboba", newChatData.comradProfileMessageURL);
+                Picasso.get()
+                        .load(newChatData.comradProfileMessageURL)
+                        .placeholder(R.drawable.ic_sync)
+                        .into(comradProfileImage);
+            }else{
+                Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.ic_person_show_chats);
+                comradProfileImage.setImageDrawable(drawable);
+            }
+            if(newChatData.getComradLastTimeSeen() == null){
                 comradStatus.setTextColor(ContextCompat.getColor(context, R.color.btnGreen));
-                comradStatus.setText(newChatData.Status);
+                comradStatus.setText(newChatData.comradStatus);
             }else{
                 comradStatus.setTextColor(ContextCompat.getColor(context, R.color.textStrongGrey));
-                comradStatus.setText("был(а) в " + new SimpleDateFormat("HH:mm").format(newChatData.getLastTimeSeen()));
+                comradStatus.setText("был(а) в " + new SimpleDateFormat("HH:mm").format(newChatData.getComradLastTimeSeen()));
             }
         }
     }

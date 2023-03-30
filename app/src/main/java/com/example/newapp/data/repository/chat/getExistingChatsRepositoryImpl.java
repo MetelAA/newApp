@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import com.example.newapp.domain.models.chatModels.chatInfo;
 import com.example.newapp.domain.models.chatModels.chatInfoWithSnapshotStatus;
 import com.example.newapp.domain.models.chatModels.groupChatInfo;
-import com.example.newapp.domain.models.chatModels.message;
+import com.example.newapp.domain.models.chatModels.messageWithText;
 import com.example.newapp.domain.models.chatModels.personChatInfo;
 import com.example.newapp.domain.models.repository.chatRepository.getExistingChatsRepository;
 import com.example.newapp.global.Response;
@@ -20,7 +20,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
 import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,7 +58,7 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
                         if(snapshots == null){
                             return;
                         }
-
+                        Log.d("Aboba", String.valueOf(snapshots.getDocuments().size()) + "get existings chats ");
                         for (DocumentChange change : snapshots.getDocumentChanges()) {
                             DocumentSnapshot chatDocumentReferense = change.getDocument();
                             //Log.d("Aboba", chatDocumentReferense.getData().toString());
@@ -146,13 +145,25 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        chatInfoWithStat.chatInfo.setMessage(new message(
-                                        documentSnapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_NAME).toString(),
-                                        documentSnapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_UID).toString(),
-                                        documentSnapshot.get(constants.KEY_CHAT_MESSAGE).toString(),
-                                        documentSnapshot.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
-                                )
-                        );
+                        //Log.d("Aboba", "/////////////// " + documentSnapshot.getData());
+                        if(TextUtils.equals(documentSnapshot.get(constants.KEY_CHAT_MSG_TYPE).toString(), constants.KEY_CHAT_MSG_TYPE_EQUALS_TEXT)){
+                            chatInfoWithStat.chatInfo.setMessage(new messageWithText(
+                                            documentSnapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_NAME).toString(),
+                                            documentSnapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_UID).toString(),
+                                            documentSnapshot.get(constants.KEY_CHAT_MESSAGE_TEXT).toString(),
+                                            documentSnapshot.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
+                                    )
+                            );
+                        }else{
+                            chatInfoWithStat.chatInfo.setMessage(new messageWithText(
+                                            documentSnapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_NAME).toString(),
+                                            documentSnapshot.get(constants.KEY_CHAT_MESSAGE_SENDER_UID).toString(),
+                                            "Photo",
+                                            documentSnapshot.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
+                                    )
+                            );
+                        }
+
                         onCompleteCounter[0]++;
                        // Log.d("Aboba",  "onCompleteCounter - " + onCompleteCounter[0] + "     setDataResponseCounter - " + setDataResponseCounter + "         finalI - " + finalI);
                         if(setDataResponseCounter == onCompleteCounter[0]){

@@ -1,5 +1,7 @@
 package com.example.newapp.domain.models.chatModels;
 
+import java.io.Serializable;
+
 public class personChatInfo extends chatInfo{
     public String comradUID, comradName, comradProfileImage;
 

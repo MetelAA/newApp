@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.newapp.data.repository.chat.getPossibleNewChatsRepositoryImpl;
-import com.example.newapp.domain.models.chatModels.chatInfoForNewChat;
+import com.example.newapp.domain.models.chatModels.chatInfoForPossibleNewChat;
 import com.example.newapp.domain.useCases.chatUseCase.getPossibleNewChatsUseCase;
 import com.example.newapp.global.Response;
 import com.example.newapp.interfaces.createNewChatViewHolder;
@@ -21,10 +21,10 @@ public class createNewChatViewModelImpl extends ViewModel implements createNewCh
 
 
     MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
-    MutableLiveData<ArrayList<chatInfoForNewChat>> onGotPossibleChats = new MutableLiveData<>();
+    MutableLiveData<ArrayList<chatInfoForPossibleNewChat>> onGotPossibleChats = new MutableLiveData<>();
     @Override
     public void getPossibleNewChats(ArrayList<String> existingChatsMemberUID) {
-        Response<ArrayList<chatInfoForNewChat>, String> response = getPossibleNewChatsUseCase.getPossibleNewChats(existingChatsMemberUID);
+        Response<ArrayList<chatInfoForPossibleNewChat>, String> response = getPossibleNewChatsUseCase.getPossibleNewChats(existingChatsMemberUID);
         response.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object o) {
@@ -32,7 +32,8 @@ public class createNewChatViewModelImpl extends ViewModel implements createNewCh
                     onErrorLiveData.postValue(response.getError());
                     return;
                 }
-                onGotPossibleChats.postValue(response.getData());
+                //Log.d("Aboba", "response data - " + response.getData());
+                onGotPossibleChats.setValue(response.getData());
             }
         });
     }

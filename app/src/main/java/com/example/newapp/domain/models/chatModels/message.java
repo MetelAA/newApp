@@ -3,13 +3,12 @@ package com.example.newapp.domain.models.chatModels;
 import java.util.Date;
 
 public class message {
-    public String senderName, senderUID, messageText;
+    public String senderName, senderUID;
     public Date messageSentTime;
 
-    public message(String senderName, String senderUID, String messageText, Date messageSentTime) {
+    public message(String senderName, String senderUID, Date messageSentTime) {
         this.senderName = senderName;
         this.senderUID = senderUID;
-        this.messageText = messageText;
         this.messageSentTime = messageSentTime;
     }
 
@@ -18,7 +17,6 @@ public class message {
         return "message{" +
                 "senderName='" + senderName + '\'' +
                 ", senderUID='" + senderUID + '\'' +
-                ", messageText='" + messageText + '\'' +
                 ", messageSentTime=" + messageSentTime +
                 '}';
     }

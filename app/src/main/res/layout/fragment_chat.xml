@@ -32,6 +32,7 @@
             app:tint="@color/white" />
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chatImageTitleImageView"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_person_chat"
@@ -47,7 +48,7 @@
             >
 
             <TextView
-                android:id="@+id/comradNameTextViewChat"
+                android:id="@+id/chatTitleTextViewChat"
                 style="@style/simpleTextStyleMontserrat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,6 +73,8 @@
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

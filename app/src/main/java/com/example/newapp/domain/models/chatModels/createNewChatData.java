@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class createNewChatData {
-    public List<String> chatMembersUID, chatMembersNames;
+    public List<String> chatMembersUID;
     public String chatType;
-    public message message;
 
-    public createNewChatData(List<String> chatMembersUID, List<String> chatMembersNames, String chatType, com.example.newapp.domain.models.chatModels.message message) {
+    public createNewChatData( String chatType, List<String> chatMembersUID) {
         this.chatMembersUID = chatMembersUID;
-        this.chatMembersNames = chatMembersNames;
         this.chatType = chatType;
-        this.message = message;
     }
 }
