@@ -45,7 +45,7 @@ public class chatViewModelImpl extends ViewModel implements chatViewModel {
 
     public MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
     public MutableLiveData<userStatus> comradStatus = new MutableLiveData<>();
-    public MutableLiveData<ArrayList<message>> newMessages = new MutableLiveData<>();
+    public MutableLiveData<message> newMessages = new MutableLiveData<>();
     public MutableLiveData<ArrayList<message>> previousMessages = new MutableLiveData<>();
     public MutableLiveData<String> onChatCreated = new MutableLiveData<>();
 
@@ -68,7 +68,7 @@ public class chatViewModelImpl extends ViewModel implements chatViewModel {
 
     @Override
     public void getNewMessages(Date startSearchDate) {
-        Response<ArrayList<message>, String> response = getAndObserveMessagesUseCase.getNewMessages(startSearchDate);
+        Response<message, String> response = getAndObserveMessagesUseCase.getNewMessages(startSearchDate);
         response.addObserver(new Observer() {
             @Override
             public void update(Observable o, Object arg) {

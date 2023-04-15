@@ -77,7 +77,6 @@ public class getAndObserveMessagesRepositoryImpl implements getAndObserveMessage
                                         document.get(constants.KEY_CHAT_MESSAGE_TEXT).toString(),
                                         document.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
                                 );
-                                textMessage.setMessageStatus(getStatus((ArrayList<String>) document.get(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs)));
                                 chatMessagesList.add(textMessage);
                             } else {
                                 chatMessageWithImage imageMessage = new chatMessageWithImage(
@@ -87,7 +86,6 @@ public class getAndObserveMessagesRepositoryImpl implements getAndObserveMessage
                                         document.get(constants.KEY_CHAT_MESSAGE_IMAGE_URL).toString(),
                                         document.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
                                 );
-                                imageMessage.setMessageStatus(getStatus((ArrayList<String>) document.get(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs)));
                                 chatMessagesList.add(imageMessage);
                             }
 
@@ -97,20 +95,11 @@ public class getAndObserveMessagesRepositoryImpl implements getAndObserveMessage
                 });
         return response;
     }
-
-    private String getStatus(ArrayList<String> msgReadUsers) {
-        if (msgReadUsers.contains(User.getUID())) {
-            return constants.KEY_CHAT_MESSAGE_STATUS_READ;
-        } else {
-            return constants.KEY_CHAT_MESSAGE_STATUS_UNREAD;
-        }
-    }
-
     ListenerRegistration listener;
 
     @Override
-    public Response<ArrayList<message>, String> getNewMessages(Date startObserveDate) { //пока у нас можно только добавлять сообещения
-        Response<ArrayList<message>, String> response = new Response<>();
+    public Response<message, String> getNewMessages(Date startObserveDate) { //пока у нас можно только добавлять сообещения
+        Response<message, String> response = new Response<>();
 
         listener = fStore.collection(constants.KEY_CHAT_COLLECTION)
                 .document(chatID)
@@ -126,7 +115,6 @@ public class getAndObserveMessagesRepositoryImpl implements getAndObserveMessage
                         if (snapshots == null) {
                             return;
                         }
-                        ArrayList<message> chatMessagesList = new ArrayList<>();
 
 
                         for (DocumentChange documentChange : snapshots.getDocumentChanges()) {
@@ -139,8 +127,7 @@ public class getAndObserveMessagesRepositoryImpl implements getAndObserveMessage
                                         document.get(constants.KEY_CHAT_MESSAGE_TEXT).toString(),
                                         document.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
                                 );
-                                textMessage.setMessageStatus(getStatus((ArrayList<String>) document.get(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs)));
-                                chatMessagesList.add(textMessage);
+                                response.setData(textMessage);
                             } else {
                                 chatMessageWithImage imageMessage = new chatMessageWithImage(
                                         document.getId(),
@@ -149,17 +136,19 @@ public class getAndObserveMessagesRepositoryImpl implements getAndObserveMessage
                                         document.get(constants.KEY_CHAT_MESSAGE_IMAGE_URL).toString(),
                                         document.getDate(constants.KEY_CHAT_MSG_SENT_TIME)
                                 );
-                                imageMessage.setMessageStatus(getStatus((ArrayList<String>) document.get(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs)));
-                                chatMessagesList.add(imageMessage);
+
+                                response.setData(imageMessage);
                             }
                         }
-                        response.setData(chatMessagesList);
+
                     }
                 });
         return response;
     }
 
     public void removeListener() {
-        listener.remove();
+        if(listener != null){
+            listener.remove();
+        }
     }
 }

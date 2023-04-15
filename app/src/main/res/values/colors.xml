@@ -13,6 +13,7 @@
 
 
     <color name="btnGreen">#28A745</color>
+    <color name="backGroundGreen">#32B67A</color>
     <color name="btnRed">#D70000</color>
 
     <color name="bluePrimary">#007BFF</color>

@@ -80,22 +80,6 @@
             style="@style/simpleTextStyleMontserrat"
             android:layout_gravity="right"
             />
-
-        <TextView
-            android:id="@+id/messageStatusShowListChats"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="5"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:textColor="@color/white"
-            style="@style/simpleTextStyleRoboto"
-            android:background="@drawable/blue_circule"
-            android:layout_marginBottom="5dp"
-            />
     </LinearLayout>
 
 

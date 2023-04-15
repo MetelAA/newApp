@@ -27,7 +27,6 @@ import java.util.Map;
 public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerScheduleAdapter.PagerViewHolder> {
 
     private String[] daysOfWeek;
-    private FirebaseFirestore fStore;
 
     private adapterOnBindViewHolder callback;
 
@@ -51,7 +50,7 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
 
     @Override
     public void onBindViewHolder(@NonNull PagerViewHolder holder, int position) {
-        Log.d("Aboba", "bind");
+        Log.d("Aboba", "bind day " + daysOfWeek[position]);
         if (weekLessonsList.get(daysOfWeek[position]) == null) {
             Log.d("Aboba", "Запрос на получения по дню недели " + daysOfWeek[position]);
             callback.callback(daysOfWeek[position]);
@@ -73,7 +72,7 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
 
     public void addNewDayLessons(arrayListForSchedule lessons) {
         weekLessonsList.put(lessons.getDayOfWeek(), lessons);
-        Log.d("Aboba", "добавление нового расписания на день недели " + lessons.getDayOfWeek() + "   со знач " + lessons.toString());
+        //Log.d("Aboba", "добавление нового расписания на день недели " + lessons.getDayOfWeek() + "   со знач " + lessons.toString());
         notifyDataSetChanged();
     }
 

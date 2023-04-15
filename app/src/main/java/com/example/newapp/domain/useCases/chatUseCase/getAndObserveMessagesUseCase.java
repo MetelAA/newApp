@@ -17,7 +17,7 @@ public class getAndObserveMessagesUseCase {
     public Response<ArrayList<message>, String> getPreviousMessages(Date startSearchDate){
         return getAndObserveMessagesRepository.getPreviousMessages(startSearchDate);
     }
-    public Response<ArrayList<message>, String> getNewMessages(Date startSearchDate){
+    public Response<message, String> getNewMessages(Date startSearchDate){
         return getAndObserveMessagesRepository.getNewMessages(startSearchDate);
     }
 

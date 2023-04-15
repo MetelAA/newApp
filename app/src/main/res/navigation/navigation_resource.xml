@@ -59,7 +59,7 @@
     </fragment>
     <fragment
         android:id="@+id/createNewChatDialogFragment"
-        android:name="com.example.newapp.ui.chat.createNewChatDialogFragment"
+        android:name="com.example.newapp.ui.chat.createNewChatFragment"
         android:label="fragment_create_new_chat"
         tools:layout="@layout/fragment_create_new_chat" >
         <action

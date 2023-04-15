@@ -53,7 +53,9 @@ public class getAndObserveUserStatusRepositoryImpl implements getAndObserveUserS
     }
 
     public void removeListener(){
-        listener.remove();
+        if(listener != null){
+            listener.remove();
+        }
     }
 }
 

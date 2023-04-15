@@ -56,6 +56,7 @@ public class joinExitGroupRepositoryImpl implements joinExitGroupRepository {
                                     .document(User.getUID()), userGroupData);
 
                             batch.update(fStore.collection(constants.KEY_GROUP_COLLECTION).document(groupKey), constants.KEY_GROUP_USER_COUNT, FieldValue.increment(1));
+                            batch.update(fStore.collection(constants.KEY_CHAT_COLLECTION).document(groupKey), constants.KEY_CHAT_MEMBERS_UIDs, FieldValue.arrayUnion(User.getUID()));
 
                             batch.commit().addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -67,11 +68,11 @@ public class joinExitGroupRepositoryImpl implements joinExitGroupRepository {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             User.getUser().setGroupKey(groupKey);
-                                            response.setData("ok");
+                                            response.setData("user joined group");
                                         }
                                     });
                         } else {
-                            response.setError("No such group");
+                            response.setData("No such group");
                         }
                     }
                 });
@@ -85,11 +86,13 @@ public class joinExitGroupRepositoryImpl implements joinExitGroupRepository {
 
         WriteBatch batch = fStore.batch();
 
+        String groupKey = User.getUser().getGroupKey();
+
         batch.update(fStore.collection(constants.KEY_USER_COLLECTION).document(User.getUID()), constants.KEY_USER_GROUP_KEY, "");
 
-        batch.delete(fStore.collection(constants.KEY_GROUP_COLLECTION).document(User.getUser().getGroupKey()).collection(constants.KEY_GROUP_USERS_COLLECTION).document(User.getUID()));
+        batch.delete(fStore.collection(constants.KEY_GROUP_COLLECTION).document(groupKey).collection(constants.KEY_GROUP_USERS_COLLECTION).document(User.getUID()));
 
-        batch.update(fStore.collection(constants.KEY_GROUP_COLLECTION).document(User.getUser().getGroupKey()), constants.KEY_GROUP_USER_COUNT, FieldValue.increment(-1));
+        batch.update(fStore.collection(constants.KEY_GROUP_COLLECTION).document(groupKey), constants.KEY_GROUP_USER_COUNT, FieldValue.increment(-1));
 
         batch.commit()
                 .addOnFailureListener(new OnFailureListener() {
@@ -102,7 +105,7 @@ public class joinExitGroupRepositoryImpl implements joinExitGroupRepository {
                     @Override
                     public void onSuccess(Void unused) {
                         User.getUser().setGroupKey(null);
-                        response.setData("ok");
+                        response.setData("user exit group");
                     }
                 });
 

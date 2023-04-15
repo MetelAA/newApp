@@ -22,7 +22,6 @@ import com.example.newapp.R;
 import com.example.newapp.databinding.ActivityRegistrationBinding;
 import com.example.newapp.domain.models.registerAdminData;
 import com.example.newapp.domain.models.registerUserData;
-import com.example.newapp.global.Response;
 import com.example.newapp.global.User;
 import com.example.newapp.ui.login.Login;
 import com.google.android.material.snackbar.Snackbar;
@@ -57,6 +56,7 @@ public class Registration extends AppCompatActivity {
         radioGroup = binding.radioGroupReg;
 
 
+        Log.d("Aboba", User.getName() + " user name");
         setListeners();
         addLiveDataObservers();
         checkUser();
@@ -70,7 +70,7 @@ public class Registration extends AppCompatActivity {
                 Snackbar.make(mainElem, s, Snackbar.ANIMATION_MODE_SLIDE).show();
             }
         });
-        viewModel.onUserLogInLiveData.observe(this, new Observer<Boolean>() {
+        viewModel.onGotUserData.observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if(aBoolean == true){
@@ -128,10 +128,10 @@ public class Registration extends AppCompatActivity {
             public void onClick(View v) {
                 RadioButton selectedBtn = findViewById(radioGroup.getCheckedRadioButtonId());
                 String textPersonName, password, textEmailAddress, Type;
-                textPersonName = editTextPersonName.getText().toString();
-                password = editTextPassword.getText().toString();
-                textEmailAddress = editTextEmailAddress.getText().toString();
-                Type = selectedBtn.getText().toString();
+                textPersonName = editTextPersonName.getText().toString().trim();
+                password = editTextPassword.getText().toString().trim();
+                textEmailAddress = editTextEmailAddress.getText().toString().trim();
+                Type = selectedBtn.getText().toString().trim();
 
                 if (TextUtils.isEmpty(textPersonName)) {
                     editTextPersonName.setError("Введите имя");
@@ -150,7 +150,6 @@ public class Registration extends AppCompatActivity {
 
                 if (Type.equals("Учитель")) {
                     createAdminAccAndGroup(textPersonName, password, textEmailAddress, Type, v.getContext());
-
                 } else {
                     createUserAcc(textPersonName, password, textEmailAddress, Type);
                 }

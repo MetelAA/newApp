@@ -1,7 +1,6 @@
 package com.example.newapp.data.repository.chat;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,25 +16,20 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.AggregateQuerySnapshot;
-import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class getExistingChatsRepositoryImpl implements getExistingChatsRepository {
     FirebaseFirestore fStore;
     ListenerRegistration listener;
 
-   private int  setDataResponseCounter = 2;  //то число которого надо достичь чтобы сделать setData
     int i = 0;
     chatInfoWithSnapshotStatus chatInfoWithStat;
     Response<chatInfoWithSnapshotStatus, String> response = new Response<>();
@@ -58,7 +52,6 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
                         if(snapshots == null){
                             return;
                         }
-                        Log.d("Aboba", String.valueOf(snapshots.getDocuments().size()) + "get existings chats ");
                         for (DocumentChange change : snapshots.getDocumentChanges()) {
                             DocumentSnapshot chatDocumentReferense = change.getDocument();
                             //Log.d("Aboba", chatDocumentReferense.getData().toString());
@@ -86,7 +79,7 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
                                         ),
                                         change.getType()
                                 );
-                                getLastMessageAndMessagesCount(chatDocumentReferense, chatInfoWithStat);
+                                getLastMessage(chatDocumentReferense, chatInfoWithStat);
                             }else{
                                 List<String> chatMembersUIDs = (List<String>) chatDocumentReferense.get(constants.KEY_CHAT_MEMBERS_UIDs);
                                 String comradUID = "";
@@ -118,7 +111,7 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
                                                         ),
                                                         change.getType()
                                                 );
-                                                getLastMessageAndMessagesCount(chatDocumentReferense, chatInfoWithStat);
+                                                getLastMessage(chatDocumentReferense, chatInfoWithStat);
                                             }
                                         });
                             }
@@ -130,10 +123,8 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
     }
 
 
-    private void getLastMessageAndMessagesCount(DocumentSnapshot chatDocumentRef, chatInfoWithSnapshotStatus chatInfoWithStat){
-        int finalI = i;
-        final int[] onCompleteCounter = {0};
-       // Log.d("Aboba", "getLastMessageAndMessagesCount " +  "onCompleteCounter - " + onCompleteCounter[0] + "     setDataResponseCounter - " + setDataResponseCounter);
+    private void getLastMessage(DocumentSnapshot chatDocumentRef, chatInfoWithSnapshotStatus chatInfoWithStat){
+        // Log.d("Aboba", "getLastMessageAndMessagesCount " +  "onCompleteCounter - " + onCompleteCounter[0] + "     setDataResponseCounter - " + setDataResponseCounter);
         //Log.d("Aboba", "onCompCounter = 0   " + onCompleteCounter[0]);
         chatDocumentRef.getDocumentReference(constants.KEY_CHAT_LAST_MESSAGE_REFERENCE).get()
                 .addOnFailureListener(new OnFailureListener() {
@@ -163,58 +154,10 @@ public class getExistingChatsRepositoryImpl implements getExistingChatsRepositor
                                     )
                             );
                         }
+                        // Log.d("Aboba",  "onCompleteCounter - " + onCompleteCounter[0] + "     setDataResponseCounter - " + setDataResponseCounter + "         finalI - " + finalI);
 
-                        onCompleteCounter[0]++;
-                       // Log.d("Aboba",  "onCompleteCounter - " + onCompleteCounter[0] + "     setDataResponseCounter - " + setDataResponseCounter + "         finalI - " + finalI);
-                        if(setDataResponseCounter == onCompleteCounter[0]){
-                           // Log.d("Aboba", "setResponseValue");
-                            response.setData(chatInfoWithStat);
-                        }
-                    }
-                });
-        fStore.collection(constants.KEY_CHAT_COLLECTION)
-                .document(chatInfoWithStat.chatInfo.chatID)
-                .collection(constants.KEY_CHAT_CHAT_MESSAGES_COLLECTION)
-                .orderBy(constants.KEY_CHAT_MSG_SENT_TIME, Query.Direction.DESCENDING)
-                .limit(999)
-                .count()
-                .get(AggregateSource.SERVER)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        response.setError(e.getMessage());
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<AggregateQuerySnapshot>() {
-                    @Override
-                    public void onSuccess(AggregateQuerySnapshot aggregateQuerySnapshot) {
-                        long msgCount = aggregateQuerySnapshot.getCount();
-                        fStore.collection(constants.KEY_CHAT_COLLECTION)
-                                .document(chatInfoWithStat.chatInfo.chatID)
-                                .collection(constants.KEY_CHAT_CHAT_MESSAGES_COLLECTION)
-                                .orderBy(constants.KEY_CHAT_MSG_SENT_TIME, Query.Direction.DESCENDING)
-                                .limit(999)
-                                .whereArrayContainsAny(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs, Arrays.asList(User.getUID()))
-                                .count()
-                                .get(AggregateSource.SERVER)
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        response.setError(e.getMessage());
-                                    }
-                                })
-                                .addOnSuccessListener(new OnSuccessListener<AggregateQuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(AggregateQuerySnapshot aggregateQuerySnapshot) {
-                                        chatInfoWithStat.chatInfo.setUnreadMessageCount(msgCount - aggregateQuerySnapshot.getCount());
-                                        onCompleteCounter[0]++;
-                                        //Log.d("Aboba",  "onCompleteCounter - " + onCompleteCounter[0] + "     setDataResponseCounter - " + setDataResponseCounter + "         finalI - " + finalI);
-                                        if(setDataResponseCounter == onCompleteCounter[0]){
-                                           //Log.d("Aboba", "setResponseValue");
-                                            response.setData(chatInfoWithStat);
-                                        }
-                                    }
-                                });
+                        // Log.d("Aboba", "setResponseValue");
+                        response.setData(chatInfoWithStat);
                     }
                 });
     }

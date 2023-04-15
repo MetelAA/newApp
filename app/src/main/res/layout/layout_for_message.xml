@@ -28,8 +28,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
+                android:textColor="#2571A1"
                 style="@style/simpleTextStyleRoboto"
                 android:textSize="13sp"
+                android:maxLines="1"
                 />
 
             <TextView
@@ -47,8 +49,9 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_launcher_background"
                 android:scaleType="centerCrop"
-                android:maxHeight="300dp"
-                android:maxWidth="300dp"
+                android:maxHeight="450dp"
+                android:maxWidth="400dp"
+                android:adjustViewBounds="true"
                 />
             <TextView
                 android:id="@+id/incomingMessageSentTime"
@@ -57,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:layout_marginEnd="5dp"
                 android:text="22:28"
                 android:textColor="@color/grey"
                 />
@@ -95,6 +99,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
+                android:maxLines="1"
+                android:textColor="#2571A1"
                 style="@style/simpleTextStyleRoboto"
                 android:textSize="13sp"
                 android:layout_marginStart="10dp"
@@ -104,7 +110,7 @@
                 android:id="@+id/outgoingMessageText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="msg"
+                android:text="msgaaaaaaaaaaaaaaa"
                 style="@style/simpleTextStyleRoboto"
                 android:textSize="12sp"
                 />
@@ -115,33 +121,22 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_launcher_background"
                 android:scaleType="centerCrop"
-                android:maxHeight="300dp"
-                android:maxWidth="300dp"
+                android:maxHeight="450dp"
+                android:maxWidth="400dp"
+                android:adjustViewBounds="true"
                 />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="right|center"
-                >
-                <TextView
-                    android:id="@+id/outgoingMessageSentTime"
-                    style="@style/simpleTextStyleRoboto"
-                    android:textSize="12sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="22:28"
-                    android:textColor="@color/grey"
-                    />
-                <View
-                    android:id="@+id/outgoingMessageStatus"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:background="@drawable/blue_circule"
-                    />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/outgoingMessageSentTime"
+                style="@style/simpleTextStyleRoboto"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="22:28"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/grey"
+                />
+
         </LinearLayout>
 
 

@@ -15,7 +15,9 @@
         <activity
             android:name=".ui.schedule.supportScreens.changeLessonsForSchedule"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/Theme.NewApp.NoActionBar"
+            />
 
 
         <activity

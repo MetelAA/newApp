@@ -103,12 +103,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("Aboba", User.getName() + "   " + User.getUID() + "   " + User.getUser().getGroupKey());
         fStore.collection(constants.KEY_USER_COLLECTION).document(User.getUID()).update(constants.KEY_USER_STATUS, constants.KEY_USER_STATUS_EQUALS_OFFLINE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("Aboba", User.getName() + "   " + User.getUID() + "   " + User.getUser().getGroupKey());
         fStore.collection(constants.KEY_USER_COLLECTION).document(User.getUID()).update(constants.KEY_USER_STATUS, constants.KEY_USER_STATUS_EQUALS_ONLINE);
     }
 }

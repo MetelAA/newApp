@@ -58,6 +58,7 @@ public class setUserProfileImageRepositoryImpl implements setUserProfileImageRep
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void unused) {
+                                                                    User.getUser().setUserProfilePhotoUrl(uri.toString());
                                                                     response.setData("ok");
                                                                 }
                                                             });

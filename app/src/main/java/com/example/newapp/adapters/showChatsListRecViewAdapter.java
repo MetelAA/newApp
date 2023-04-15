@@ -1,7 +1,6 @@
 package com.example.newapp.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,6 +48,7 @@ public class showChatsListRecViewAdapter extends RecyclerView.Adapter<showChatsL
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
+        Log.d("Aboba", "bind   " + list.toString());
         holder.bind(list.get(position));
     }
 
@@ -73,7 +73,6 @@ public class showChatsListRecViewAdapter extends RecyclerView.Adapter<showChatsL
             chatName = itemView.findViewById(R.id.comradNameShowListChats);
             lastMessage = itemView.findViewById(R.id.lastMessageShowListChats);
             lastMessageTime = itemView.findViewById(R.id.lastMessageTimeShowListChats);
-            messageStatus = itemView.findViewById(R.id.messageStatusShowListChats);
             lastMessageSenderName = itemView.findViewById(R.id.lastMessageSenderNameShowListChats);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,7 +87,7 @@ public class showChatsListRecViewAdapter extends RecyclerView.Adapter<showChatsL
             if(TextUtils.equals(chatInfo.chatType, constants.KEY_CHAT_TYPE_EQUALS_GROUP_CHAT)){
                 groupChatInfo groupChatInfo = (groupChatInfo) chatInfo;
                 chatName.setText(groupChatInfo.chatTitle);
-                chatImageView.setImageDrawable(AppCompatResources.getDrawable(context ,R.drawable.ic_group));
+                chatImageView.setImageDrawable(AppCompatResources.getDrawable(context ,R.drawable.ic_group_show_chats));
             }else{
                 personChatInfo personChatInfo = (personChatInfo) chatInfo;
                 chatName.setText(personChatInfo.comradName);
@@ -97,12 +96,6 @@ public class showChatsListRecViewAdapter extends RecyclerView.Adapter<showChatsL
                         .load(personChatInfo.comradProfileImage)
                         .placeholder(R.drawable.ic_sync)
                         .into(chatImageView);
-            }
-            if(chatInfo.getUnreadMessageCount() == 0){
-                messageStatus.setVisibility(View.INVISIBLE);
-            }else{
-                messageStatus.setVisibility(View.VISIBLE);
-                messageStatus.setText(String.valueOf(chatInfo.getUnreadMessageCount()));
             }
 
 

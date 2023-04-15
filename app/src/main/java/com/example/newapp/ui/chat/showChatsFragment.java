@@ -39,15 +39,14 @@ import java.util.ArrayList;
 
 public class showChatsFragment extends Fragment {
 
-    ConstraintLayout mainElem;
-    FragmentShowChatsBinding binding;
-    showChatsViewModelImpl viewModel;
-    RecyclerView recyclerView;
+    private ConstraintLayout mainElem;
+    private FragmentShowChatsBinding binding;
+    private showChatsViewModelImpl viewModel;
+    private RecyclerView recyclerView;
 
-    ImageButton addNewChats;
+    private ImageButton addNewChats;
 
-    createNewChatDialogFragment dialogFragment;
-
+    private showChatsListRecViewAdapter showChatsAdapter;
     ArrayList<chatInfo> chatList = new ArrayList<>();
 
     @Override
@@ -95,42 +94,45 @@ public class showChatsFragment extends Fragment {
 
 
     private void showChats(){
-        showChatsListRecViewAdapter showChatsAdapter = new showChatsListRecViewAdapter(chatList, new adapterOnClickInterface() {
-            @Override
-            public void callback(Object data) {
-                chatInfo chatInfo = (chatInfo) data;
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("chatInfo" ,chatInfo);
-                Navigation.findNavController(mainElem).navigate(R.id.action_fragment_show_chats_to_chatFragment, bundle);
-            }
-        });
-        showEmptyMessageRecViewAdapter showEmptyMessage = new showEmptyMessageRecViewAdapter();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(showEmptyMessage);
 
         if(!viewModel.isListenerActiveFlag){
             viewModel.getExistingChats();
+            showChatsAdapter = new showChatsListRecViewAdapter(chatList, new adapterOnClickInterface() {
+                @Override
+                public void callback(Object data) {
+                    chatInfo chatInfo = (chatInfo) data;
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("chatInfo" ,chatInfo);
+                    Navigation.findNavController(mainElem).navigate(R.id.action_fragment_show_chats_to_chatFragment, bundle);
+                }
+            });
+            showEmptyMessageRecViewAdapter showEmptyMessage = new showEmptyMessageRecViewAdapter();
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(showEmptyMessage);
         }
 
         for (int i = 0; i < viewModel.chatInfosList.size() - 1; i++) {
-            chatList.add(viewModel.chatInfosList.get(i).chatInfo);
+            chatList.add(viewModel.chatInfosList.get(i));
         }
         viewModel.gotListExitingChats.observe(getViewLifecycleOwner(), new Observer<chatInfoWithSnapshotStatus>() {
             @Override
             public void onChanged(chatInfoWithSnapshotStatus chatInfoWithSnapshotStatus) {
+                Log.d("Aboba", "onChanged");
                 switch (chatInfoWithSnapshotStatus.changeType) {
                     case ADDED:
-                        //Log.d("Aboba", "added");
+                        Log.d("Aboba", "chat added " + chatInfoWithSnapshotStatus.chatInfo.chatID);
                         chatList.add(chatInfoWithSnapshotStatus.chatInfo);
+                        viewModel.chatInfosList.add(chatInfoWithSnapshotStatus.chatInfo);
                         break;
                     case MODIFIED:
-                        //Log.d("Aboba", "modified");
+                        Log.d("Aboba", "chat modified" + chatInfoWithSnapshotStatus.chatInfo.chatID);
                         chatInfo changedChat = chatList.stream()
                                 .filter(chat -> chatInfoWithSnapshotStatus.chatInfo.chatID.equals(chat.chatID))
                                 .findAny()
                                 .orElse(null);
+                        Log.d("Aboba", "changed chat - " + changedChat);
                         if(changedChat == null){
                             chatList.add(chatInfoWithSnapshotStatus.chatInfo);
                         }else{
@@ -138,7 +140,7 @@ public class showChatsFragment extends Fragment {
                         }
                         break;
                     case REMOVED:
-                        //Log.d("Aboba", "rewmoved");
+                        Log.d("Aboba", "chat rewmoved" + chatInfoWithSnapshotStatus.chatInfo.chatID);
                         chatInfo removingChat = chatList.stream()
                                 .filter(chat -> chatInfoWithSnapshotStatus.chatInfo.chatID.equals(chat.chatID))
                                 .findAny()
@@ -167,11 +169,19 @@ public class showChatsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("Aboba", "onDestroy");
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        Log.d("Aboba", "onStop");
         chatList.clear();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("Aboba", showChatsAdapter + "  adapter start");
     }
 }

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,6 @@ import com.example.newapp.adapters.showMessageRecViewAdapter;
 import com.example.newapp.databinding.FragmentChatBinding;
 import com.example.newapp.domain.models.chatModels.chatInfo;
 import com.example.newapp.domain.models.chatModels.chatInfoForPossibleNewChat;
-import com.example.newapp.domain.models.chatModels.chatMessage;
 import com.example.newapp.domain.models.chatModels.createNewChatData;
 import com.example.newapp.domain.models.chatModels.groupChatInfo;
 import com.example.newapp.domain.models.chatModels.imageMessageForSend;
@@ -43,13 +43,11 @@ import com.example.newapp.global.User;
 import com.example.newapp.global.constants;
 import com.example.newapp.interfaces.adapterOnClickInterface;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -58,7 +56,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class chatFragment extends Fragment {
 
     FragmentChatBinding binding;
-    private FirebaseFirestore fStore;
     private chatViewModelImpl viewModel;
     private TextView chatTitle;
     private TextView comradStatus;
@@ -72,11 +69,9 @@ public class chatFragment extends Fragment {
     private showMessageRecViewAdapter adapter;
     private ConstraintLayout mainElem;
 
-    private LinkedList<message> messagesList = new LinkedList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fStore = FirebaseFirestore.getInstance();
         binding = FragmentChatBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(chatViewModelImpl.class);
 
@@ -100,6 +95,7 @@ public class chatFragment extends Fragment {
             createNewChat();
         } else {
             chatInfo chatInfo = (chatInfo) getArguments().getSerializable("chatInfo");
+            //Log.d("Aboba", chatInfo.chatType);
             viewModel.setChatID(chatInfo.chatID); // устанавливаем ID чата для и отправки чтения сообщений
             if (TextUtils.equals(chatInfo.chatType, constants.KEY_CHAT_TYPE_EQUALS_GROUP_CHAT)) {
                 groupChatInfo groupChatInfo = (groupChatInfo) chatInfo;
@@ -157,6 +153,7 @@ public class chatFragment extends Fragment {
                 if (!TextUtils.isEmpty(messageText)) {
                     textMessageForSend message = new textMessageForSend(User.getName(), User.getUID(), new Date(), messageText);
                     viewModel.sendMessage(message);
+                    messageEditText.setText("");
                 }
             }
         });
@@ -234,16 +231,19 @@ public class chatFragment extends Fragment {
                 adapter.addItemToFirstPosition(messages);
             }
         });
-        viewModel.newMessages.observe(getViewLifecycleOwner(), new Observer<ArrayList<message>>() {
+        viewModel.newMessages.observe(getViewLifecycleOwner(), new Observer<message>() {
             @Override
-            public void onChanged(ArrayList<message> messages) {
-                adapter.addItemsToBack(messages);
+            public void onChanged(message msg) {
+                adapter.addItemsToBack(msg);
+                if(TextUtils.equals(msg.senderUID, User.getUID())){
+                    showMsgRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                }
             }
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         showMsgRecyclerView.setLayoutManager(layoutManager);
-        showMsgRecyclerView.setHasFixedSize(true);
+        showMsgRecyclerView.setHasFixedSize(false);
         showMsgRecyclerView.setAdapter(adapter);
     }
 

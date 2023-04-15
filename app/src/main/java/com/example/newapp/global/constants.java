@@ -6,6 +6,9 @@ public class constants {
     public static final String KEY_GROUP_COLLECTION = "Groups";
     public static final String KEY_CHAT_COLLECTION = "Chats";
     public static final String KEY_CHAT_CHAT_MESSAGES_COLLECTION = "messages";
+    public static final String KEY_GROUP_EVENTS_COLLECTION = "events";
+    public static final String KEY_GROUP_NEWS_MONTH_DAY_EVENTS = "dayEvents";
+
     public static final String KEY_GROUP_USERS_COLLECTION = "GroupUsers";
     public static final String KEY_GROUP_SCHEDULE_COLLECTION = "Schedule";
     public static final String KEY_GROUP_LESSONS_DESCRIPTION_COLLECTION6DOCUMENT = "lessonsDescription";
@@ -50,17 +53,19 @@ public class constants {
     public static final String KEY_CHAT_MSG_SENT_TIME = "msgSentTime";
     public static final String KEY_CHAT_MESSAGE_SENDER_NAME = "msgSenderName";
     public static final String KEY_CHAT_MESSAGE_SENDER_UID = "msgSenderUID";
-    public static final String KEY_CHAT_MESSAGE_READ_USERS_UIDs = "messageReadUsersUIDs";
     public static final String KEY_CHAT_MESSAGE_TEXT = "messageText";
     public static final String KEY_CHAT_MESSAGE_IMAGE_URL = "messagePhotoURL";
 
     public static final String KEY_CHAT_MESSAGE_ID = "messageID";
-    public static final String KEY_CHAT_MESSAGE_STATUS_READ = "messageRead";
-    public static final String KEY_CHAT_MESSAGE_STATUS_UNREAD = "messageUnread";
     public static final String KEY_CHAT_MSG_TYPE = "messageType";
     public static final String KEY_CHAT_MSG_TYPE_EQUALS_TEXT = "text";
     public static final String KEY_CHAT_MSG_TYPE_EQUALS_IMAGE = "photo";
     public static final String KEY_PROFILE_IMAGE = "profileImage";
     public static final String KEY_STORAGE_COLLECTION_PROFILE_IMAGEs = "profileImages";
     public static final String KEY_STORAGE_COLLECTION_CHAT_IMAGES = "chatImages";
+
+    public static final String KEY_GROUP_EVENTS_DAY_EVENT_START_TIME = "eventStartTime";
+    public static final String KEY_GROUP_EVENTS_DAY_EVENT_END_TIME = "eventEndTime";
+    public static final String KEY_GROUP_EVENTS_DAY_EVENT_TITLE = "eventTitle";
+    public static final String KEY_GROUP_EVENTS_DAY_EVENT_DESCRIPTION = "eventDescription";
 }

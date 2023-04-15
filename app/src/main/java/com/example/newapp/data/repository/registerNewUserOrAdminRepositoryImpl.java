@@ -14,10 +14,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -86,7 +89,7 @@ public class registerNewUserOrAdminRepositoryImpl implements registerNewUserOrAd
         userData.put(constants.KEY_USER_EMAIL, adminData.email);
         userData.put(constants.KEY_USER_TYPE, adminData.type);
         userData.put(constants.KEY_USER_GROUP_KEY, groupKey);
-        userData.put(constants.KEY_USER_STATUS, "");
+        userData.put(constants.KEY_USER_STATUS, constants.KEY_USER_STATUS_EQUALS_ONLINE);
         fAuth.createUserWithEmailAndPassword(adminData.email, adminData.password)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -119,6 +122,25 @@ public class registerNewUserOrAdminRepositoryImpl implements registerNewUserOrAd
                                 .document(groupKey)
                                 .collection(constants.KEY_GROUP_USERS_COLLECTION)
                                 .document(UID), userGroupData);
+
+                        Map<String, Object> chatData = new HashMap<>();
+                        String chatID = groupKey;
+                        chatData.put(constants.KEY_CHAT_CHAT_ID, chatID);
+                        chatData.put(constants.KEY_CHAT_MEMBERS_UIDs, Arrays.asList(UID));
+                        chatData.put(constants.KEY_CHAT_TYPE, constants.KEY_CHAT_TYPE_EQUALS_GROUP_CHAT);
+                        chatData.put(constants.KEY_CHAT_GROUP_CHAT_TITLE, adminData.groupName);
+                        batch.set(fStore.collection(constants.KEY_CHAT_COLLECTION).document(chatID), chatData);
+
+                        String messageID = UUID.randomUUID().toString().substring(0, 25);
+                        Map<String, Object> chatMessageData = new HashMap<>();
+                        chatMessageData.put(constants.KEY_CHAT_MESSAGE_SENDER_NAME, "SYSTEM");
+                        chatMessageData.put(constants.KEY_CHAT_MESSAGE_SENDER_UID, " ");
+                        chatMessageData.put(constants.KEY_CHAT_MSG_SENT_TIME, new Date());
+                        chatMessageData.put(constants.KEY_CHAT_MSG_TYPE, constants.KEY_CHAT_MSG_TYPE_EQUALS_TEXT);
+                        chatMessageData.put(constants.KEY_CHAT_MESSAGE_TEXT, "Чат " + adminData.groupName + " создан");
+                        DocumentReference documentReference = fStore.collection(constants.KEY_CHAT_COLLECTION).document(chatID).collection(constants.KEY_CHAT_CHAT_MESSAGES_COLLECTION).document(messageID);
+                        batch.set(documentReference, chatMessageData);
+                        batch.update(fStore.collection(constants.KEY_CHAT_COLLECTION).document(chatID), constants.KEY_CHAT_LAST_MESSAGE_REFERENCE, documentReference);
 
                         batch.update(fStore.collection(constants.KEY_GROUP_COLLECTION).document(groupKey), constants.KEY_GROUP_USER_COUNT, FieldValue.increment(1));
 

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.customPopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -45,11 +46,17 @@ import com.example.newapp.domain.models.profileDataAboutGroup;
 import com.example.newapp.global.User;
 import com.example.newapp.interfaces.adapterOnClickInterface;
 import com.example.newapp.ui.login.Login;
+import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Downloader;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class profileFragment extends Fragment implements PopupMenu.OnMenuItemClickListener {
 
@@ -58,7 +65,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
 
     private Button userOptionGroupBtn;
     private Button showGroupUsersListBtn;
-    CircleImageView profileImageView;
+    private CircleImageView profileImageView;
 
     private ConstraintLayout mainElem;
 
@@ -105,7 +112,12 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         });
         return binding.getRoot();
     }
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setObservers();
+        showProfileUserData();
+    }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -122,12 +134,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setObservers();
-        initProfile();
-    }
+
 
     private void doImageForUserProfile(){
         CropImageOptions cropImageOptions = new CropImageOptions();
@@ -143,34 +150,58 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
     }
     ActivityResultLauncher<CropImageContractOptions> cropImage = registerForActivityResult(new CropImageContract(), result -> {
         if (result.isSuccessful()) {
+            Log.d("Aboba", "viewModel.setUserProfileImage");
             viewModel.setUserProfileImage(result.getUriContent());
         }
     });
 
     private void setObservers(){
-        viewModel.onGotProfileDataLiveData.observe(getViewLifecycleOwner(), new Observer<profileDataAboutGroup>() {
-            @Override
-            public void onChanged(profileDataAboutGroup profileDataAboutGroup) {
-
-                showProfileData(profileDataAboutGroup);
-            }
-        });
-
-        viewModel.onCompleteNeedToUpdate.observe(getViewLifecycleOwner(), new Observer<String>() {
+        viewModel.onErrorLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                initProfile();
+                Snackbar.make(mainElem, s, Snackbar.ANIMATION_MODE_SLIDE).show();
+            }
+        });
+        viewModel.onGotProfileGroupDataLiveData.observe(getViewLifecycleOwner(), new Observer<profileDataAboutGroup>() {
+            @Override
+            public void onChanged(profileDataAboutGroup profileDataAboutGroup) {
+                showUserInGroupOptions(profileDataAboutGroup);
+            }
+        });
+        viewModel.userProfileImageSet.observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Log.d("Aboba", "onUpdate prfoileImage Fragment    user.getPhptpURL " + User.getUser().getUserProfilePhotoUrl());
+                showProfileUserData();
             }
         });
     }
 
-    private void initProfile() {
+    private void getProfileGroupData() {
         viewModel.initProfileGroupData();
     }
 
-    private void showProfileData(profileDataAboutGroup profileDataAboutGroup) {
+    private void showProfileUserData(){
         profileNameTextView.setText(User.getName());
         profileEmailTextView.setText(User.getEmail());
+        if(User.getUser().getUserProfilePhotoUrl() != null){
+            Picasso.get().setLoggingEnabled(true);
+            Picasso.get().cancelRequest(profileImageView);
+            Picasso.get().setIndicatorsEnabled(true);
+            Picasso.get()
+                    .load(User.getUser().getUserProfilePhotoUrl())
+                    .placeholder(R.drawable.ic_sync)
+                    .into(profileImageView);
+        }else{
+            Drawable drawable = AppCompatResources.getDrawable(getContext(), R.drawable.ic_person_show_chats);
+            profileImageView.setImageDrawable(drawable);
+        }
+
+        if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
+            getProfileGroupData();
+        } else {
+            showUserWithOutGroupOptions();
+        }
 
         if (TextUtils.equals(User.getType(), "Учитель")) {
             showGroupUsersListBtn.setVisibility(View.VISIBLE);
@@ -179,36 +210,20 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         } else {
             showGroupUsersListBtn.setVisibility(View.INVISIBLE);
         }
-
-        if(User.getUser().getUserProfilePhotoUrl() != null){
-            Picasso.get()
-                    .load(User.getUser().getUserProfilePhotoUrl())
-                    .placeholder(R.drawable.ic_sync)
-                    .into(profileImageView);
-        }else{
-            Drawable drawable = getContext().getDrawable(R.drawable.ic_person_chat);
-            profileImageView.setImageDrawable(drawable);
-        }
-
-        if (!TextUtils.isEmpty(User.getUser().getGroupKey())) {
-            showUserInGroupData(profileDataAboutGroup);
-        } else {
-            showUserWithOutGroupData();
-        }
     }
 
-    private void showUserInGroupData(profileDataAboutGroup profileDataAboutGroup){
+    private void showUserInGroupOptions(profileDataAboutGroup profileDataAboutGroup){
         profileNameGroupTextView.setText(profileDataAboutGroup.groupName);
-        Drawable drawableExit = getContext().getDrawable(R.drawable.btn_style_red);
+        Drawable drawableExit = AppCompatResources.getDrawable(getContext(), R.drawable.btn_style_red);
         userOptionGroupBtn.setText("Выйти из группы");
         userOptionGroupBtn.setBackground(drawableExit);
         exitGroupAlertDialogListener();
         showNumberOfUsers(profileDataAboutGroup.countGroupUsers);
     }
 
-    private void showUserWithOutGroupData(){
+    private void showUserWithOutGroupOptions(){
         profileNameGroupTextView.setText("");
-        Drawable drawableJoin = getContext().getDrawable(R.drawable.btn_style_blue_primary);
+        Drawable drawableJoin = AppCompatResources.getDrawable(getContext(), R.drawable.btn_style_blue_primary);
         userOptionGroupBtn.setText("Присоединиться к группе");
         userOptionGroupBtn.setBackground(drawableJoin);
         profileNumberGroupTextView.setText("");
@@ -275,7 +290,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         });
     }
 
-    private void showListOfUsers(ArrayList listUsers, RecyclerView recyclerView) {
+    private void showListOfUsers(ArrayList<groupUserData> listUsers, RecyclerView recyclerView) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -297,7 +312,6 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         TextView textView = view.findViewById(R.id.textCustomLogOutAlertDialog);
         Button submit = view.findViewById(R.id.buttonCustomLogOutAlertDialogConfirm);
         Button cancel = view.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
-
 
         if(TextUtils.equals(User.getUID(), deleteUser.UserUID)){
             textView.setText("Вы не можете выгнать себя");
@@ -322,7 +336,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
                         viewModel.onGotListGroupUsesLiveData.removeObservers(getViewLifecycleOwner());
                         AdapterListUsers.deleteGroupUserFromList(deleteUser);
                         alertDialog.cancel();
-                        initProfile();
+                        getProfileGroupData();
                     }
                 });
             }
@@ -355,21 +369,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
                 alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
-                        View customViewForAnim = alertDialog.getWindow().getDecorView();
-                        int height = customViewForAnim.getHeight();
-                        int width = customViewForAnim.getWidth();
-
-                        Animator animation = ViewAnimationUtils.createCircularReveal(
-                                customViewForAnim,
-                                width / 2,
-                                height / 2,
-                                1F,
-                                Math.max(width, height)
-                        );
-
-                        animation.setDuration(500);
-                        animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                        animation.start();
+                        showCircleAnim(alertDialog.getWindow().getDecorView());
                     }
                 });
 
@@ -379,10 +379,22 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
                     @Override
                     public void onClick(View v) {
                         dialogSubmit.setClickable(false);
-                        alertDialog.cancel();
                         String groupKey = editText.getText().toString();
                         if (!TextUtils.isEmpty(groupKey)) {
                             viewModel.joinGroup(groupKey);
+                            viewModel.userJoinGroup.observe(getViewLifecycleOwner(), new Observer<String>() {
+                                @Override
+                                public void onChanged(String s) {
+                                    dialogSubmit.setClickable(true);
+                                    if(TextUtils.equals(s, "user joined group")){
+                                        alertDialog.cancel();
+                                        showProfileUserData();
+                                    }else if (TextUtils.equals(s, "No such group")){
+                                        editText.setError("Такой группы не существует");
+                                    }
+                                    viewModel.userJoinGroup.removeObservers(getViewLifecycleOwner());
+                                }
+                            });
                         } else {
                             editText.setError("Введите код группы");
                         }
@@ -420,21 +432,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
                 alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialog) {
-                        View customViewForAnim = alertDialog.getWindow().getDecorView();
-                        int height = customViewForAnim.getHeight();
-                        int width = customViewForAnim.getWidth();
-
-                        Animator animation = ViewAnimationUtils.createCircularReveal(
-                                customViewForAnim,
-                                width / 2,
-                                height / 2,
-                                1F,
-                                Math.max(width, height)
-                        );
-
-                        animation.setDuration(500);
-                        animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                        animation.start();
+                        showCircleAnim(alertDialog.getWindow().getDecorView());
                     }
                 });
                 alertDialog.show();
@@ -442,8 +440,19 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
                     @Override
                     public void onClick(View v) {
                         dialogConfirm.setClickable(false);
-                        alertDialog.cancel();
                         viewModel.exitGroup();
+                        viewModel.userExitGroup.observe(getViewLifecycleOwner(), new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                dialogConfirm.setClickable(true);
+                                Log.d("Aboba", s);
+                                if(TextUtils.equals(s, "user exit group")){
+                                    alertDialog.cancel();
+                                    showProfileUserData();
+                                }
+                                viewModel.userJoinGroup.removeObservers(getViewLifecycleOwner());
+                            }
+                        });
                     }
                 });
                 dialogCancel.setOnClickListener(new View.OnClickListener() {
@@ -464,23 +473,9 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                View customViewForAnim = alertDialog.getWindow().getDecorView();
-                int height = customViewForAnim.getHeight();
-                int width = customViewForAnim.getWidth();
-                Animator animation = ViewAnimationUtils.createCircularReveal(
-                        customViewForAnim,
-                        width / 2,
-                        height / 2,
-                        1F,
-                        Math.max(width, height)
-                );
-
-                animation.setDuration(400);
-                animation.setInterpolator(new AccelerateDecelerateInterpolator());
-                animation.start();
+                showCircleAnim(alertDialog.getWindow().getDecorView());
             }
         });
-
         alertDialog.show();
 
         Button dialogCancel = customView.findViewById(R.id.buttonCustomLogOutAlertDialogCancel);
@@ -496,7 +491,7 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
                 viewModel.exitAcc();
                 alertDialog.cancel();
                 startActivity(new Intent(getActivity(), Login.class));
-                getActivity().finish();
+                requireActivity().finish();
             }
         });
         dialogCancel.setOnClickListener(new View.OnClickListener() {
@@ -507,6 +502,21 @@ public class profileFragment extends Fragment implements PopupMenu.OnMenuItemCli
         });
     }
 
+    private void showCircleAnim(View view){
+        int height = view.getHeight();
+        int width = view.getWidth();
 
+        Animator animation = ViewAnimationUtils.createCircularReveal(
+                view,
+                width / 2,
+                height / 2,
+                1F,
+                Math.max(width, height)
+        );
+
+        animation.setDuration(500);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.start();
+    }
 
 }

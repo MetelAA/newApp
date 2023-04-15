@@ -10,15 +10,14 @@ import com.example.newapp.data.repository.getDeleteGroupUsersRepositoryImpl;
 import com.example.newapp.data.repository.getGroupDataRepositryImpl;
 import com.example.newapp.data.repository.joinExitGroupRepositoryImpl;
 import com.example.newapp.data.repository.setUserProfileImageRepositoryImpl;
-import com.example.newapp.data.repository.updateUserDataRepositoryImpl;
 import com.example.newapp.domain.models.groupUserData;
 import com.example.newapp.domain.models.profileDataAboutGroup;
 import com.example.newapp.domain.useCases.getUserGroupDataUseCase;
 import com.example.newapp.domain.useCases.getListKickGroupUsersUseCase;
 import com.example.newapp.domain.useCases.joinExitGroupUseCase;
 import com.example.newapp.domain.useCases.setUserProfileImageUseCase;
-import com.example.newapp.domain.useCases.updateUserDataUseCase;
 import com.example.newapp.global.Response;
+import com.example.newapp.global.User;
 import com.example.newapp.interfaces.profileViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,27 +30,29 @@ import java.util.Observer;
 
 public class profileViewModelImpl extends ViewModel implements profileViewModel {
 
-    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    private FirebaseStorage fStorage = FirebaseStorage.getInstance();
+    private final FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    private final FirebaseStorage fStorage = FirebaseStorage.getInstance();
 
-    private getGroupDataRepositryImpl getProfileData = new getGroupDataRepositryImpl(fStore);
-    private getDeleteGroupUsersRepositoryImpl getDeleteGroupUsers = new getDeleteGroupUsersRepositoryImpl(fStore);
-    private joinExitGroupRepositoryImpl joinExitGroup = new joinExitGroupRepositoryImpl(fStore);
-    private setUserProfileImageRepositoryImpl setUserProfileImage = new setUserProfileImageRepositoryImpl(fStorage.getReference(), fStore);
-    private setUserProfileImageUseCase userProfileImageUseCase = new setUserProfileImageUseCase(setUserProfileImage);
-    private getUserGroupDataUseCase getUserGroupDataUseCase = new getUserGroupDataUseCase(getProfileData);
-    private getListKickGroupUsersUseCase getListKickGroupUsersUseCase = new getListKickGroupUsersUseCase(getDeleteGroupUsers);
-    private joinExitGroupUseCase joinExitGroupUseCase = new joinExitGroupUseCase(joinExitGroup);
+    private final getGroupDataRepositryImpl getProfileData = new getGroupDataRepositryImpl(fStore);
+    private final getDeleteGroupUsersRepositoryImpl getDeleteGroupUsers = new getDeleteGroupUsersRepositoryImpl(fStore);
+    private final joinExitGroupRepositoryImpl joinExitGroup = new joinExitGroupRepositoryImpl(fStore);
+    private final setUserProfileImageRepositoryImpl setUserProfileImage = new setUserProfileImageRepositoryImpl(fStorage.getReference(), fStore);
+    private final setUserProfileImageUseCase userProfileImageUseCase = new setUserProfileImageUseCase(setUserProfileImage);
+    private final getUserGroupDataUseCase getUserGroupDataUseCase = new getUserGroupDataUseCase(getProfileData);
+    private final getListKickGroupUsersUseCase getListKickGroupUsersUseCase = new getListKickGroupUsersUseCase(getDeleteGroupUsers);
+    private final joinExitGroupUseCase joinExitGroupUseCase = new joinExitGroupUseCase(joinExitGroup);
 
 
 
     MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
-    MutableLiveData<profileDataAboutGroup> onGotProfileDataLiveData = new MutableLiveData<>(); //если она будет обновленна это служит гарантией что апдейт тоже произошёл
+    MutableLiveData<profileDataAboutGroup> onGotProfileGroupDataLiveData = new MutableLiveData<>(); //если она будет обновленна это служит гарантией что апдейт тоже произошёл
     MutableLiveData<ArrayList<groupUserData>> onGotListGroupUsesLiveData = new MutableLiveData<>();
     MutableLiveData<String> onUserDeletedLiveData = new MutableLiveData<>();
-    MutableLiveData<String> onCompleteNeedToUpdate = new MutableLiveData<>();
 
+    MutableLiveData<String> userProfileImageSet = new MutableLiveData<>();
+    MutableLiveData<String> userJoinGroup = new MutableLiveData<>();
+    MutableLiveData<String> userExitGroup = new MutableLiveData<>();
 
     @Override
     public void initProfileGroupData() {
@@ -60,7 +61,7 @@ public class profileViewModelImpl extends ViewModel implements profileViewModel 
             @Override
             public void update(Observable o, Object arg) {
                 if(response.getError() == null){
-                    onGotProfileDataLiveData.postValue(response.getData());
+                    onGotProfileGroupDataLiveData.postValue(response.getData());
                 }else{
                     onErrorLiveData.postValue(response.getError());
                 }
@@ -78,11 +79,12 @@ public class profileViewModelImpl extends ViewModel implements profileViewModel 
             @Override
             public void update(Observable o, Object arg) {
                 if(response.getError() == null){
-                    onCompleteNeedToUpdate.postValue(response.getData());
+                    Log.d("Aboba", "on update profileImage viewModel");
+                    userProfileImageSet.postValue(response.getData());
                 }else{
                     onErrorLiveData.postValue(response.getError());
-                    response.deleteObservers();
                 }
+                response.deleteObservers();
             }
         });
     }
@@ -127,7 +129,7 @@ public class profileViewModelImpl extends ViewModel implements profileViewModel 
             @Override
             public void update(Observable observable, Object o) {
                 if(response.getError() == null){
-                    onCompleteNeedToUpdate.postValue("user join group");;
+                    userJoinGroup.postValue(response.getData());;
                 }else{
                     onErrorLiveData.postValue(response.getError());
                 }
@@ -143,7 +145,7 @@ public class profileViewModelImpl extends ViewModel implements profileViewModel 
             @Override
             public void update(Observable observable, Object o) {
                 if(response.getError() == null){
-                    onCompleteNeedToUpdate.postValue("user exit group");
+                    userExitGroup.postValue(response.getData());
                 }else{
                     onErrorLiveData.postValue(response.getError());
                 }

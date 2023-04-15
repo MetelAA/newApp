@@ -1,8 +1,6 @@
 package com.example.newapp.ui.registration;
 
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -14,7 +12,6 @@ import com.example.newapp.domain.models.registerUserData;
 import com.example.newapp.domain.useCases.registerUserUseCase;
 import com.example.newapp.domain.useCases.updateUserDataUseCase;
 import com.example.newapp.global.Response;
-import com.example.newapp.global.User;
 import com.example.newapp.interfaces.registrationViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,7 +29,7 @@ public class registrationViewModelImpl extends ViewModel implements registration
     private final updateUserDataUseCase updateUserDataUseCase = new updateUserDataUseCase(updateRepository);
     private final registerUserUseCase registerUserUseCase = new registerUserUseCase(registerRepository);
 
-    MutableLiveData<Boolean> onUserLogInLiveData = new MutableLiveData<>();
+    MutableLiveData<Boolean> onGotUserData = new MutableLiveData<>();
     MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
 
     @Override
@@ -45,7 +42,7 @@ public class registrationViewModelImpl extends ViewModel implements registration
                 if(response.getError() == null){
                     switch(response.getData()){
                         case "ok":
-                            onUserLogInLiveData.postValue(true);
+                            onGotUserData.postValue(true);
                         break;
                         case "User not sign in":
 
@@ -66,7 +63,7 @@ public class registrationViewModelImpl extends ViewModel implements registration
             @Override
             public void update(Observable observable, Object o) {
                 if(response.getError() == null){
-                    onUserLogInLiveData.postValue(true);
+                    onGotUserData.postValue(true);
                 }else{
                     onErrorLiveData.postValue(response.getError());
                 }
@@ -82,7 +79,7 @@ public class registrationViewModelImpl extends ViewModel implements registration
             @Override
             public void update(Observable observable, Object o) {
                 if(response.getError() == null){
-                    onUserLogInLiveData.postValue(true);
+                    onGotUserData.postValue(true);
                 }else{
                     onErrorLiveData.postValue(response.getError());
                 }

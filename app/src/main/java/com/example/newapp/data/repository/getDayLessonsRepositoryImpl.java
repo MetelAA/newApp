@@ -61,7 +61,7 @@ public class getDayLessonsRepositoryImpl implements getDayLessonsRepository {
                                 ));
                             }
                         }
-                        Log.d("Aboba", "response setData  result List по дню - " + resultList.getDayOfWeek() + "  стастус нахуй статус"  + "  со знач "  + resultList.toString());
+                        //Log.d("Aboba", "response setData  result List по дню - " + resultList.getDayOfWeek() + "  стастус нахуй статус"  + "  со знач "  + resultList.toString());
                         response.setData(resultList);
                     }
                 });

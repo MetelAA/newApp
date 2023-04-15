@@ -28,7 +28,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class createNewChatDialogFragment extends Fragment {
+public class createNewChatFragment extends Fragment {
 
     private FragmentCreateNewChatBinding binding;
 

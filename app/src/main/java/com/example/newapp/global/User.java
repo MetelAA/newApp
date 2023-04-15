@@ -30,6 +30,8 @@ public class User {
         name = username;
         email = Email;
         type = Type;
+        groupKey = null;
+        userProfilePhotoUrl = null;
     }
 
 

@@ -46,7 +46,6 @@ public class sendMessageRepositoryImpl implements sendMessageRepository {
         Response<String, String> response = new Response<>();
         Map<String, Object> messageData = new HashMap<>();
         String messageID = UUID.randomUUID().toString().substring(0, 25);
-        messageData.put(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs, Arrays.asList(User.getUID()));
         messageData.put(constants.KEY_CHAT_MESSAGE_SENDER_NAME, message.senderName);
         messageData.put(constants.KEY_CHAT_MESSAGE_SENDER_UID, message.senderUID);
         messageData.put(constants.KEY_CHAT_MSG_SENT_TIME, message.messageSentTime);
@@ -109,7 +108,6 @@ public class sendMessageRepositoryImpl implements sendMessageRepository {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         Map<String, Object> messageData = new HashMap<>();
-                                        messageData.put(constants.KEY_CHAT_MESSAGE_READ_USERS_UIDs, Arrays.asList(User.getUID()));
                                         messageData.put(constants.KEY_CHAT_MESSAGE_SENDER_NAME, message.senderName);
                                         messageData.put(constants.KEY_CHAT_MESSAGE_SENDER_UID, message.senderUID);
                                         messageData.put(constants.KEY_CHAT_MSG_SENT_TIME, message.messageSentTime);

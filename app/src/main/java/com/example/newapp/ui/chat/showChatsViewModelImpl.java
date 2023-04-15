@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.newapp.data.repository.chat.getExistingChatsRepositoryImpl;
+import com.example.newapp.domain.models.chatModels.chatInfo;
 import com.example.newapp.domain.models.chatModels.chatInfoWithSnapshotStatus;
 import com.example.newapp.domain.useCases.chatUseCase.getExistingChatsUseCase;
 import com.example.newapp.global.Response;
@@ -24,7 +25,7 @@ public class showChatsViewModelImpl extends ViewModel implements showChatsViewMo
     public MutableLiveData<chatInfoWithSnapshotStatus> gotListExitingChats = new MutableLiveData<>();
     public boolean isListenerActiveFlag = false;
 
-    public ArrayList<chatInfoWithSnapshotStatus> chatInfosList = new ArrayList<>();
+    public ArrayList<chatInfo> chatInfosList = new ArrayList<>();
 
 
     @Override
@@ -38,7 +39,6 @@ public class showChatsViewModelImpl extends ViewModel implements showChatsViewMo
                     onErrorLiveData.postValue(response.getError());
                     return;
                 }
-                chatInfosList.add(response.getData());
                 gotListExitingChats.setValue(response.getData());
             }
         });

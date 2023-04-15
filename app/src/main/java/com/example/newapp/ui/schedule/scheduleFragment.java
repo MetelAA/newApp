@@ -106,7 +106,7 @@ public class scheduleFragment extends Fragment {
         ViewPagerScheduleAdapter adapter = new ViewPagerScheduleAdapter(daysOfWeek, new adapterOnBindViewHolder() {
             @Override
             public void callback(String param) {
-                Log.d("aboba", "вызов запроса через вью моедль по дню " + param);
+                //Log.d("aboba", "вызов запроса через вью моедль по дню " + param);
                 viewModel.getDayLessons(param);
             }
         });
@@ -114,7 +114,8 @@ public class scheduleFragment extends Fragment {
         viewModel.onGotDayLessonsLiveData.observe(getViewLifecycleOwner(), new Observer<arrayListForSchedule>() {
             @Override
             public void onChanged(arrayListForSchedule lessonsList) {
-                Log.d("Aboba", "on live data changed");
+                Log.d("Aboba", lessonsList.toString() + " lessonsList.toString()");
+                //Log.d("Aboba", "on live data changed");
                 adapter.addNewDayLessons(lessonsList);
             }
         });

@@ -53,15 +53,12 @@ public class showMessageRecViewAdapter extends RecyclerView.Adapter<showMessageR
         }
 
         //if(messagesList.size() >= position - 7) callback.callback(messagesList.getLast().sentTime);
-        Log.d("Aboba", "bind        showList");
-        for (int i = 0; i < messagesList.size(); i++) {
-            Log.d("Aboba", messagesList.get(i).toString());
-        }
+        //Log.d("Aboba", "bind        showList");
+        //Log.d("Aboba", messagesList.get(position).toString() + "   position");
     }
 
     @Override
     public int getItemCount() {
-
         return messagesList.size();
     }
 
@@ -70,10 +67,9 @@ public class showMessageRecViewAdapter extends RecyclerView.Adapter<showMessageR
         notifyDataSetChanged();
     }
 
-    public void addItemsToBack(List<message> list){
-        messagesList.addAll(messagesList.size(),list);
-
-        notifyDataSetChanged();
+    public void addItemsToBack(message msg){
+        messagesList.add(messagesList.size(),msg);
+        notifyItemInserted(messagesList.size());
     }
 
     class viewHolder extends RecyclerView.ViewHolder {
@@ -90,7 +86,6 @@ public class showMessageRecViewAdapter extends RecyclerView.Adapter<showMessageR
         private final TextView outgoingMessageSentTime;
         private final TextView outgoingMessageSenderName;
         private final ImageView outgoingMessageImageView;
-        private final View outgoingMessageStatus;
         public viewHolder(@NonNull View view) {
             super(view);
             incomingMessageLayout = view.findViewById(R.id.incomingMessageLayout);
@@ -105,7 +100,6 @@ public class showMessageRecViewAdapter extends RecyclerView.Adapter<showMessageR
             outgoingMessageSentTime = view.findViewById(R.id.outgoingMessageSentTime);
             outgoingMessageSenderName = view.findViewById(R.id.outgoingMessageSenderName);
             outgoingMessageImageView = view.findViewById(R.id.outgoingMessageImage);
-            outgoingMessageStatus = view.findViewById(R.id.outgoingMessageStatus);
         }
         public void bindOutgoingMessage(message message) {
             incomingMessageLayout.setVisibility(View.GONE);
@@ -113,13 +107,11 @@ public class showMessageRecViewAdapter extends RecyclerView.Adapter<showMessageR
             showOutgoingMessageBaseData(message);
             if(message instanceof chatMessageWithText){
                 chatMessageWithText textMessage = (chatMessageWithText) message;
-                showStatus(textMessage.getMessageStatus());
                 outgoingMessageText.setVisibility(View.VISIBLE);
                 outgoingMessageText.setText(textMessage.messageText);
                 outgoingMessageImageView.setVisibility(View.GONE);
             }else{
                 chatMessageWithImage imageMessage = (chatMessageWithImage) message;
-                showStatus(imageMessage.getMessageStatus());
                 outgoingMessageText.setVisibility(View.GONE);
                 outgoingMessageImageView.setVisibility(View.VISIBLE);
                 Picasso.get()
@@ -146,17 +138,6 @@ public class showMessageRecViewAdapter extends RecyclerView.Adapter<showMessageR
                         .load(imageMessage.messageImageURL)
                         .placeholder(R.drawable.ic_sync)
                         .into(incomingMessageImageView);
-            }
-        }
-
-        private void changeStatus(){
-
-        }
-        private void showStatus(String status){
-            if(TextUtils.equals(status, constants.KEY_CHAT_MESSAGE_STATUS_READ)){
-                outgoingMessageStatus.setVisibility(View.VISIBLE);
-            }else{
-                outgoingMessageStatus.setVisibility(View.INVISIBLE);
             }
         }
 

@@ -66,27 +66,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
-    <TextView
-        android:id="@+id/profileNameTextView"
-        style="@style/simpleTextStyleRoboto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.20"
-        app:layout_constraintStart_toEndOf="@+id/profileImageView"
-        app:layout_constraintTop_toTopOf="@+id/profileImageView" />
 
-    <TextView
-        android:id="@+id/profileEmailTextView"
-        style="@style/simpleTextStyleRoboto"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Email"
-        app:layout_constraintStart_toStartOf="@+id/profileNameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/profileNameTextView" />
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toEndOf="@+id/profileImageView"
+        app:layout_constraintTop_toTopOf="@+id/profileImageView">
+
+        <TextView
+            android:id="@+id/profileNameTextView"
+            style="@style/simpleTextStyleRoboto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name" />
+
+        <TextView
+            android:id="@+id/profileEmailTextView"
+            style="@style/simpleTextStyleRoboto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Email" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"

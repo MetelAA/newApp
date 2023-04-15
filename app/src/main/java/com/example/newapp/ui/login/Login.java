@@ -67,6 +67,13 @@ public class Login extends AppCompatActivity {
         viewModel.onUserLogin.observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
+                viewModel.checkUser();
+            }
+        });
+
+        viewModel.onGotUserData.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             }
@@ -77,8 +84,8 @@ public class Login extends AppCompatActivity {
         binding.loginButtonLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String Email =  editTextEmail.getText().toString();
-                String Password = editTextPassword.getText().toString();
+                String Email =  editTextEmail.getText().toString().trim();
+                String Password = editTextPassword.getText().toString().trim();
                 if(TextUtils.isEmpty(Email)){
                     editTextEmail.setError("Введите Email");
                     return;
@@ -96,8 +103,8 @@ public class Login extends AppCompatActivity {
         binding.redirectionToRegistrationLog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Registration.class));
-                finish();
+//                startActivity(new Intent(getApplicationContext(), Registration.class));
+//                finish();
             }
         });
     }

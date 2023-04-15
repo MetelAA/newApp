@@ -9,7 +9,7 @@ import java.util.Date;
 
 public interface getAndObserveMessagesRepository {
     Response<ArrayList<message>, String> getPreviousMessages(Date startSearchDate);
-    Response<ArrayList<message>, String> getNewMessages(Date startSearchDate);
+    Response<message, String> getNewMessages(Date startSearchDate);
     void setChatID(String chatID);
     void removeListener();
 }
