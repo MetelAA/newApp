@@ -1,63 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="5dp"
+    android:id="@+id/mainElemShowDayEvents"
     >
-    <LinearLayout
+
+    <CheckBox
+        android:id="@+id/checkBoxShowDayEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:theme="@style/customCheckBoxStyleDayEvents"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
+        />
+
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        >
+        android:layout_marginStart="3dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout8"
+        app:layout_constraintStart_toEndOf="@+id/checkBoxShowDayEvent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/eventStartTimeShowDayEvent"
+            style="@style/simpleTextStyleMontserrat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/simpleTextStyleMontserrat"
-            android:text="10:50"
-            />
+            android:text="10:50" />
+
         <TextView
             android:id="@+id/eventEndTimeShowDayEvent"
-            android:layout_marginTop="2dp"
+            style="@style/simpleTextStyleMontserrat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/simpleTextStyleMontserrat"
-            android:textSize="14sp"
-            android:textColor="@color/grey"
+            android:layout_marginTop="2dp"
             android:text="16:00"
-            />
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:padding="10dp"
+        android:id="@+id/linearLayout8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1"
+        android:layout_marginStart="2dp"
         android:background="@drawable/green_round_shape"
-        >
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout9"
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/eventTitleShowDayEvent"
+            style="@style/simpleTextStyleMontserrat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/simpleTextStyleMontserrat"
-            android:textColor="@color/white"
             android:text="Заголовок"
-            />
+            android:textColor="@color/white" />
+
         <TextView
             android:id="@+id/eventDescriptionShowDayEvent"
+            style="@style/simpleTextStyleMontserrat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/simpleTextStyleMontserrat"
             android:text="Описание"
-            android:textSize="15sp"
             android:textColor="@color/white"
-            />
+            android:textSize="15sp" />
     </LinearLayout>
-</LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,6 +27,7 @@ import com.example.newapp.adapters.showChatsListRecViewAdapter;
 import com.example.newapp.adapters.showEmptyMessageRecViewAdapter;
 import com.example.newapp.domain.models.chatModels.chatInfo;
 import com.example.newapp.databinding.FragmentShowChatsBinding;
+import com.example.newapp.domain.models.chatModels.chatInfoWithPositionInList;
 import com.example.newapp.domain.models.chatModels.chatInfoWithSnapshotStatus;
 import com.example.newapp.domain.models.chatModels.personChatInfo;
 import com.example.newapp.domain.models.comparators.chatInfoComparator;
@@ -45,9 +46,10 @@ public class showChatsFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private ImageButton addNewChats;
-
+    private final ArrayList<chatInfo> chatList = new ArrayList<>();
     private showChatsListRecViewAdapter showChatsAdapter;
-    ArrayList<chatInfo> chatList = new ArrayList<>();
+    private showEmptyMessageRecViewAdapter showEmptyMessage;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,9 +64,8 @@ public class showChatsFragment extends Fragment {
         mainElem = binding.mainElemShowChats;
         addNewChats = binding.addNewChatBtnShowChats;
 
-
+        setObservers();
         showChats();
-
         return binding.getRoot();
     }
 
@@ -94,9 +95,39 @@ public class showChatsFragment extends Fragment {
 
 
     private void showChats(){
+//        Log.d("Aboba", "showChats");
 
         if(!viewModel.isListenerActiveFlag){
+ //           Log.d("Aboba", "viewModel first Start");
             viewModel.getExistingChats();
+            viewModel.onChatAdded.observe(getViewLifecycleOwner(), new Observer<chatInfo>() {
+                @Override
+                public void onChanged(chatInfo chatInfo) {
+                    chatList.add(chatInfo);
+                    sortChatList();
+//                    Log.d("Aboba", "chatAdded  " + chatInfo.toString());
+                }
+            });
+
+            viewModel.onChatModified.observe(getViewLifecycleOwner(), new Observer<chatInfoWithPositionInList>() {
+                @Override
+                public void onChanged(chatInfoWithPositionInList chatInfoWithPositionInList) {
+                    chatList.set(chatInfoWithPositionInList.position, chatInfoWithPositionInList.chatInfo);
+                    sortChatList();
+//                    Log.d("Aboba", "onChat Modified  " + chatInfoWithPositionInList.chatInfo.toString());
+                }
+            });
+
+            viewModel.onChatRemoved.observe(getViewLifecycleOwner(), new Observer<chatInfo>() {
+                @Override
+                public void onChanged(chatInfo chatInfo) {
+                    chatList.remove(chatInfo);
+                    sortChatList();
+//                    Log.d("Aboba", "chatRemoved " + chatInfo.toString());
+                }
+            });
+
+
             showChatsAdapter = new showChatsListRecViewAdapter(chatList, new adapterOnClickInterface() {
                 @Override
                 public void callback(Object data) {
@@ -106,59 +137,35 @@ public class showChatsFragment extends Fragment {
                     Navigation.findNavController(mainElem).navigate(R.id.action_fragment_show_chats_to_chatFragment, bundle);
                 }
             });
-            showEmptyMessageRecViewAdapter showEmptyMessage = new showEmptyMessageRecViewAdapter();
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setAdapter(showEmptyMessage);
+            showEmptyMessage = new showEmptyMessageRecViewAdapter();
         }
 
-        for (int i = 0; i < viewModel.chatInfosList.size() - 1; i++) {
-            chatList.add(viewModel.chatInfosList.get(i));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(showEmptyMessage);
+
+//        Log.d("Aboba", viewModel.chatInfosList + " viewModel ChatList");
+//        Log.d("Aboba", chatList.toString() + " chatList");
+        if(viewModel.chatInfosList.size() >= 1){
+            chatList.addAll(viewModel.chatInfosList);
+            sortChatList();
+//            Log.d("Aboba", "chat List after adding viewModel elements    " + chatList.toString());
         }
-        viewModel.gotListExitingChats.observe(getViewLifecycleOwner(), new Observer<chatInfoWithSnapshotStatus>() {
-            @Override
-            public void onChanged(chatInfoWithSnapshotStatus chatInfoWithSnapshotStatus) {
-                Log.d("Aboba", "onChanged");
-                switch (chatInfoWithSnapshotStatus.changeType) {
-                    case ADDED:
-                        Log.d("Aboba", "chat added " + chatInfoWithSnapshotStatus.chatInfo.chatID);
-                        chatList.add(chatInfoWithSnapshotStatus.chatInfo);
-                        viewModel.chatInfosList.add(chatInfoWithSnapshotStatus.chatInfo);
-                        break;
-                    case MODIFIED:
-                        Log.d("Aboba", "chat modified" + chatInfoWithSnapshotStatus.chatInfo.chatID);
-                        chatInfo changedChat = chatList.stream()
-                                .filter(chat -> chatInfoWithSnapshotStatus.chatInfo.chatID.equals(chat.chatID))
-                                .findAny()
-                                .orElse(null);
-                        Log.d("Aboba", "changed chat - " + changedChat);
-                        if(changedChat == null){
-                            chatList.add(chatInfoWithSnapshotStatus.chatInfo);
-                        }else{
-                            chatList.set(chatList.indexOf(changedChat), chatInfoWithSnapshotStatus.chatInfo);
-                        }
-                        break;
-                    case REMOVED:
-                        Log.d("Aboba", "chat rewmoved" + chatInfoWithSnapshotStatus.chatInfo.chatID);
-                        chatInfo removingChat = chatList.stream()
-                                .filter(chat -> chatInfoWithSnapshotStatus.chatInfo.chatID.equals(chat.chatID))
-                                .findAny()
-                                .orElse(null);
-                        chatList.remove(removingChat);
-                        viewModel.chatInfosList.remove(removingChat);
-                        break;
-                }
-                chatList.sort(new chatInfoComparator());
-                Log.d("Aboba", chatList.toString());
-                if((!chatList.isEmpty()) && recyclerView.getAdapter() instanceof showEmptyMessageRecViewAdapter) {
-                    recyclerView.setAdapter(showChatsAdapter);
-                }
-            }
-        });
 
 
+    }
 
+    private void sortChatList(){
+//        Log.d("Aboba", "sortChatList");
+        chatList.sort(new chatInfoComparator());
+//        Log.d("Aboba", chatList.toString() + " chatListAfter sorting");
+        if((!chatList.isEmpty()) && recyclerView.getAdapter() instanceof showEmptyMessageRecViewAdapter) {
+            recyclerView.setAdapter(showChatsAdapter);
+        }
+    }
+
+    private void setObservers(){
         viewModel.onErrorLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -166,22 +173,23 @@ public class showChatsFragment extends Fragment {
             }
         });
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("Aboba", "onDestroy");
+//        Log.d("Aboba", "onDestroy");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("Aboba", "onStop");
+//        Log.d("Aboba", "onStop  " + showChatsAdapter.toString());
         chatList.clear();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("Aboba", showChatsAdapter + "  adapter start");
+//        Log.d("Aboba",  "  start " + showChatsAdapter.toString());
     }
 }

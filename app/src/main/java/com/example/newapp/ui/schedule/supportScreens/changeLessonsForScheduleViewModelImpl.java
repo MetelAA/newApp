@@ -20,10 +20,10 @@ public class changeLessonsForScheduleViewModelImpl extends ViewModel implements 
 
     private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
-    private getLessonsDescriptionRepositoryImpl getLessonsDescriptionRepository = new getLessonsDescriptionRepositoryImpl(fStore);
-    private addDeleteLessonDescriptionRepositoryImpl addDeleteLessonDescriptionRepository = new addDeleteLessonDescriptionRepositoryImpl(fStore);
-    private getLessonsDescriptionUseCase getLessonsDescriptionUseCase = new getLessonsDescriptionUseCase(getLessonsDescriptionRepository);
-    private addDeleteLessonDescriptionUseCase addDeleteLessonDescriptionUseCase = new addDeleteLessonDescriptionUseCase(addDeleteLessonDescriptionRepository);
+    private final getLessonsDescriptionRepositoryImpl getLessonsDescriptionRepository = new getLessonsDescriptionRepositoryImpl(fStore);
+    private final addDeleteLessonDescriptionRepositoryImpl addDeleteLessonDescriptionRepository = new addDeleteLessonDescriptionRepositoryImpl(fStore);
+    private final getLessonsDescriptionUseCase getLessonsDescriptionUseCase = new getLessonsDescriptionUseCase(getLessonsDescriptionRepository);
+    private final addDeleteLessonDescriptionUseCase addDeleteLessonDescriptionUseCase = new addDeleteLessonDescriptionUseCase(addDeleteLessonDescriptionRepository);
 
     MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
     MutableLiveData<ArrayList<lessonDescription>> gotLessonsDescriptionLiveData = new MutableLiveData<>();

@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="15dp"
-
         >
+
         <EditText
             android:id="@+id/inputForNameGroupTextInAlertDialog"
             android:layout_width="match_parent"
@@ -32,11 +32,6 @@
             style="@style/AlertDialogButtonStyle"
             android:background="@null"
             />
-
-
-
-
-
 
     </LinearLayout>
 </RelativeLayout>

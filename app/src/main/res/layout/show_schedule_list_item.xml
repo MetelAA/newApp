@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/white_round_shape_background"
+    android:background="@drawable/white_round_topright_bottomleft_shape_background"
     android:layout_marginTop="15dp"
     >
     <LinearLayout
@@ -22,8 +22,8 @@
                 android:layout_height="match_parent"
                 android:text="aboba"
                 android:layout_weight="3"
-                style="@style/simpleTextStyleRobotoLight"
-                android:textSize="24sp"
+                style="@style/simpleTextStyleRoboto"
+                android:textSize="20sp"
                 />
             <TextView
                 android:id="@+id/lessonTimeShowScheduleItem"
@@ -33,7 +33,7 @@
                 android:text="aboba"
                 android:fontFamily="@font/montserrat_light"
                 android:textColor="@color/textStrongGrey"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 />
         </LinearLayout>
         <TextView
@@ -43,7 +43,7 @@
             android:text="aboba"
             android:fontFamily="@font/montserrat_light"
             android:textColor="@color/textStrongGrey"
-            android:textSize="18sp"
+            android:textSize="16sp"
             />
 
         <TextView
@@ -53,7 +53,7 @@
             android:text="aboba"
             android:fontFamily="@font/montserrat_light"
             android:textColor="@color/black"
-            android:textSize="18sp"
+            android:textSize="16sp"
             />
     </LinearLayout>
 </FrameLayout>

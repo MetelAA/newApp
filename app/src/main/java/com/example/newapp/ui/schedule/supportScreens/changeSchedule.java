@@ -9,6 +9,7 @@ import androidx.navigation.Navigation;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,10 @@ import com.example.newapp.domain.models.oldModels.LessonForScheduleSettings;
 import com.example.newapp.databinding.FragmentChangeScheduleScreenForScheduleBinding;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class changeSchedule extends Fragment {
@@ -50,7 +54,7 @@ public class changeSchedule extends Fragment {
 
     private ArrayList<lessonDescription> listLessonsDescription;
 
-    private String dayOfWeek;
+    private LocalDate selectDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,19 +73,21 @@ public class changeSchedule extends Fragment {
 
         mainElem = binding.mainElemChangeScheduleDesc;
 
-        dayOfWeek = getArguments().getString("dayOfWeek");
+        assert getArguments() != null;
+        selectDate = (LocalDate) getArguments().getSerializable("selectDate");
 
-        textDay.setText(dayOfWeek);
+
+        textDay.setText(formatDateToDayOfWeek(selectDate));
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        changeSchedule();
+        init();
     }
 
-    private void changeSchedule() {
+    private void init() {
         undoChangesSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,7 +126,7 @@ public class changeSchedule extends Fragment {
     }
 
     private void checkDayLessonExist() {
-        viewModel.getDayLessons(dayOfWeek);
+        viewModel.getDayLessons(selectDate.getDayOfWeek().toString());
 
         viewModel.onGotDayLessonsLiveData.observe(getViewLifecycleOwner(), new Observer<arrayListForSchedule>() {
             @Override
@@ -166,49 +172,54 @@ public class changeSchedule extends Fragment {
         ArrayList<lesson> listLessons = new ArrayList<>();
         for (int i = 0; i < linearLayoutForChangeInScrollViewSchedule.getChildCount(); i++) {
             View v = linearLayoutForChangeInScrollViewSchedule.getChildAt(i);
-            EditText lessonNumber = v.findViewById(R.id.lessonNumberEditTextChangeScheduleSchedule);
-            EditText startTime = v.findViewById(R.id.startTimeEditTextChangeScheduleSchedule);
-            EditText endTime = v.findViewById(R.id.endTimeEditTextChangeScheduleSchedule);
-            EditText studyRoom = v.findViewById(R.id.cabinetNumberEditTextChangeScheduleSchedule);
-            Spinner spinner = v.findViewById(R.id.spinnerCustomLayoutChangeScheduleSchedule);
+            EditText lessonNumberEditText = v.findViewById(R.id.lessonNumberEditTextChangeScheduleSchedule);
+            EditText startTimeEditText = v.findViewById(R.id.startTimeEditTextChangeScheduleSchedule);
+            EditText endTimeEditText = v.findViewById(R.id.endTimeEditTextChangeScheduleSchedule);
+            EditText studyRoomEditText = v.findViewById(R.id.cabinetNumberEditTextChangeScheduleSchedule);
+            Spinner spinnerEditText = v.findViewById(R.id.spinnerCustomLayoutChangeScheduleSchedule);
 
-            if (TextUtils.isEmpty(lessonNumber.getText())) {
-                lessonNumber.setError("Ввидте номер урока");
+            String lessonNumber = lessonNumberEditText.getText().toString().trim();
+            String startTime = startTimeEditText.getText().toString().trim();
+            String endTime = endTimeEditText.getText().toString().trim();
+            String studyRoom = studyRoomEditText.getText().toString().trim();
+
+            if (TextUtils.isEmpty(lessonNumber)) {
+                lessonNumberEditText.setError("Ввидте номер урока");
                 return;
             }
-            if (Integer.parseInt(lessonNumber.getText().toString()) > 10) {
-                lessonNumber.setError("Количество уроков не может превыщать 10");
+            if (Integer.parseInt(lessonNumber) > 10) {
+                lessonNumberEditText.setError("Количество уроков не может превыщать 10");
                 return;
             }
-            if (TextUtils.isEmpty(startTime.getText())) {
-                startTime.setError("Ввидте время начало урока");
+            if (TextUtils.isEmpty(startTime)) {
+                startTimeEditText.setError("Ввидте время начало урока");
                 return;
             }
-            if (TextUtils.isEmpty(endTime.getText())) {
-                endTime.setError("Ввидте время конца урока");
+            if (TextUtils.isEmpty(endTime)) {
+                endTimeEditText.setError("Ввидте время конца урока");
                 return;
             }
-            if (TextUtils.isEmpty(studyRoom.getText())) {
-                studyRoom.setError("Ввидте номер кабинета");
+            if (TextUtils.isEmpty(studyRoom)) {
+                studyRoomEditText.setError("Ввидте номер кабинета");
                 return;
             }
-            if(spinner.getSelectedItem() == null){
-                lessonNumber.setError("Выберете урок в выпадающем меню");
+            if(spinnerEditText.getSelectedItem() == null){
+                lessonNumberEditText.setError("Выберете урок в выпадающем меню");
                 return;
             }
 
-
-
-            listLessons.add(new lesson(
-                    lessonNumber.getText().toString(),
-                    startTime.getText().toString(),
-                    endTime.getText().toString(),
-                    studyRoom.getText().toString(),
-                    ((lessonDescription) spinner.getSelectedItem()).teacherName,
-                    ((lessonDescription) spinner.getSelectedItem()).subjectName
-            ));
+            lesson lesson = new lesson(
+                    lessonNumber,
+                    startTime,
+                    endTime,
+                    studyRoom,
+                    ((lessonDescription) spinnerEditText.getSelectedItem()).teacherName,
+                    ((lessonDescription) spinnerEditText.getSelectedItem()).subjectName
+            );
+            listLessons.add(lesson);
+            Log.d("Aboba", "added lesson " + lesson.toString());
         }
-        viewModel.addDayLessons(listLessons, dayOfWeek);
+        viewModel.addDayLessons(listLessons, selectDate.getDayOfWeek().toString());
     }
 
     private void showNewSubjectConstructor() { //проверить зачем здесь одноэлементный массив со спинером
@@ -249,5 +260,12 @@ public class changeSchedule extends Fragment {
                 }
             }
         });
+    }
+
+
+    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE").withLocale( new Locale("ru"));
+    private String formatDateToDayOfWeek(LocalDate localDate){
+        String trueFormat = dateFormat.format(localDate);
+        return trueFormat.substring(0,1).toUpperCase() + trueFormat.substring(1);
     }
 }

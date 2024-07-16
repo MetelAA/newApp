@@ -31,6 +31,8 @@ public class addDayLessonsRepositoryImpl implements addDayLessonsRepository {
     public Response<String, String> addDayLessons(ArrayList<lesson> listLessons, String dayOfWeek) {
         Response<String, String> response = new Response<>();
 
+        Log.d("Aboba", "addDayLessons   list " + listLessons);
+
         WriteBatch batch = fStore.batch();
         for (int i = 1; i <= 10; i++) {
             batch.delete(fStore.collection(constants.KEY_GROUP_COLLECTION)
@@ -68,6 +70,7 @@ public class addDayLessonsRepositoryImpl implements addDayLessonsRepository {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        Log.d("Aboba", "succes");
                         response.setData("ok");
                     }
                 });

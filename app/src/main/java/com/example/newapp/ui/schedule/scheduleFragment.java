@@ -20,16 +20,17 @@ import android.widget.TextView;
 
 
 import com.example.newapp.R;
-import com.example.newapp.adapters.ViewPagerScheduleAdapter;
 
+import com.example.newapp.adapters.ViewPagerScheduleAdapter;
 import com.example.newapp.databinding.FragmentScheduleBinding;
 import com.example.newapp.domain.models.arrayListForSchedule;
 import com.example.newapp.interfaces.adapterOnBindViewHolder;
 import com.example.newapp.ui.schedule.supportScreens.changeLessonsForSchedule;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class scheduleFragment extends Fragment {
 
@@ -45,7 +46,10 @@ public class scheduleFragment extends Fragment {
     private TextView textDaySchedule;
     private TextView textDateSchedule;
 
+    private LocalDate selectDate;
+
     private ViewPager2 viewPager;
+    private ViewPagerScheduleAdapter viewPagerAdapter;
 
 
 
@@ -64,6 +68,7 @@ public class scheduleFragment extends Fragment {
 
 
         textDaySchedule = binding.textDaySchedule;
+        selectDate = LocalDate.now();
 
         View v = binding.getRoot();
         mainElem =  getActivity().findViewById(android.R.id.content);
@@ -74,36 +79,13 @@ public class scheduleFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        settingsBtnSchedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), changeLessonsForSchedule.class));
-            }
-        });
-
-        changeBtnSchedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("dayOfWeek", textDaySchedule.getText().toString());
-                Navigation.findNavController(view).navigate(R.id.action_scheduleFragment_to_changeScheduleScreenForScheduleFragment, bundle);
-            }
-        });
+        setListeners();
         setObservers();
         showSchedule();
     }
-    String[] daysOfWeek = {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"};
 
-
-    private void showSchedule(){
-
-        Calendar calendar = Calendar.getInstance();
-        int defaultDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2;
-        if(calendar.get(Calendar.DAY_OF_WEEK) == 1){
-            defaultDayOfWeek = 0;
-            calendar.add(Calendar.DATE, 1);
-        }
-        ViewPagerScheduleAdapter adapter = new ViewPagerScheduleAdapter(daysOfWeek, new adapterOnBindViewHolder() {
+    private void showSchedule() {
+        ViewPagerScheduleAdapter adapter = new ViewPagerScheduleAdapter(new adapterOnBindViewHolder() {
             @Override
             public void callback(String param) {
                 //Log.d("aboba", "вызов запроса через вью моедль по дню " + param);
@@ -120,32 +102,41 @@ public class scheduleFragment extends Fragment {
             }
         });
 
-        final int[] previousPosition = {defaultDayOfWeek};
 
-        int finalDefaultDayOfWeek = defaultDayOfWeek;
         viewPager.post(new Runnable() {
             @Override
             public void run() {
-                viewPager.setCurrentItem(finalDefaultDayOfWeek);
+                Log.d("Aboba", selectDate.getDayOfWeek().getValue() + " ");
+                viewPager.setCurrentItem(selectDate.getDayOfWeek().getValue() - 1);
+                showTextSchedule();
+                registerPageChangeCallback();
+            }
+
+            private void registerPageChangeCallback() {
+                viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        selectDate = selectDate.plusDays(position - (selectDate.getDayOfWeek().getValue() - 1));
+                        showTextSchedule();
+                    }
+                });
             }
         });
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
 
-                textDaySchedule.setText(daysOfWeek[position]);
-                if(position > previousPosition[0]){
-                    calendar.add(Calendar.DAY_OF_WEEK, 1);
-                }else if(position < previousPosition[0]){
-                    calendar.add(Calendar.DAY_OF_WEEK, -1);
-                }
-                previousPosition[0] = position;
-                textDateSchedule.setText(new SimpleDateFormat("yyyy.MM.dd").format(calendar.getTime()));
-            }
-        });
         viewPager.setAdapter(adapter);
+    }
+
+    private void showTextSchedule(){
+        textDaySchedule.setText(formatDateToDayOfWeek(selectDate));
+        textDateSchedule.setText(selectDate.getYear() + "." + selectDate.getMonthValue() + "." + selectDate.getDayOfMonth());
+    }
+
+    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEEE").withLocale( new Locale("ru"));
+    private String formatDateToDayOfWeek(LocalDate localDate){
+        String trueFormat = dateFormat.format(localDate);
+        return trueFormat.substring(0,1).toUpperCase() + trueFormat.substring(1);
     }
 
     private void setObservers(){
@@ -157,4 +148,22 @@ public class scheduleFragment extends Fragment {
         });
     }
 
+
+    private void setListeners(){
+        settingsBtnSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), changeLessonsForSchedule.class));
+            }
+        });
+
+        changeBtnSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("selectDate", selectDate);
+                Navigation.findNavController(v).navigate(R.id.action_scheduleFragment_to_changeScheduleScreenForScheduleFragment, bundle);
+            }
+        });
+    }
 }

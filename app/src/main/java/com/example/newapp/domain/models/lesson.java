@@ -10,4 +10,16 @@ public class lesson {
         this.teacher = teacher;
         this.subject = subject;
     }
+
+    @Override
+    public String toString() {
+        return "lesson{" +
+                "numberLesson='" + numberLesson + '\'' +
+                ", timeStart='" + timeStart + '\'' +
+                ", timeEnd='" + timeEnd + '\'' +
+                ", studyRoom='" + studyRoom + '\'' +
+                ", teacher='" + teacher + '\'' +
+                ", subject='" + subject + '\'' +
+                '}';
+    }
 }

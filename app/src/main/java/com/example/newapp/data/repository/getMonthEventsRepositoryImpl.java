@@ -13,7 +13,6 @@ import com.example.newapp.global.constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,7 +40,7 @@ public class getMonthEventsRepositoryImpl implements getMonthEventsRepository {
                 .collection(constants.KEY_GROUP_EVENTS_COLLECTION)
                 .document(String.valueOf(date.getYear()))
                 .collection(String.valueOf(date.getMonthValue()))
-                .orderBy("dayDate", Query.Direction.DESCENDING)
+                .orderBy(constants.KEY_GROUP_EVENTS_DAY_DATE, Query.Direction.DESCENDING)
                 .get()
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -79,18 +78,31 @@ public class getMonthEventsRepositoryImpl implements getMonthEventsRepository {
                                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                             ArrayList<eventData> dayEventsList = new ArrayList<>();
                                             for (DocumentSnapshot dayEventsDocument : queryDocumentSnapshots.getDocuments()) {
-                                                dayEventsList.add(
-                                                        new eventData(
-                                                                dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_TITLE),
-                                                                dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_DESCRIPTION),
-                                                                dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_START_TIME),
-                                                                dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_END_TIME)
-                                                        )
-                                                );
+                                                eventData event;
+                                                if(Boolean.TRUE.equals(dayEventsDocument.getBoolean(constants.KEY_GROUP_EVENTS_DAY_EVENT_IS_FULL_DAY))){
+                                                    event = new eventData(
+                                                            dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_TITLE),
+                                                            dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_DESCRIPTION),
+                                                            Boolean.TRUE.equals(dayEventsDocument.getBoolean(constants.KEY_GROUP_EVENTS_DAY_EVENT_IS_FULL_DAY))
+                                                    );
+                                                }else{
+                                                    event = new eventData(
+                                                            dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_TITLE),
+                                                            dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_DESCRIPTION),
+                                                            dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_START_TIME),
+                                                            dayEventsDocument.getString(constants.KEY_GROUP_EVENTS_DAY_EVENT_END_TIME),
+                                                            Boolean.TRUE.equals(dayEventsDocument.getBoolean(constants.KEY_GROUP_EVENTS_DAY_EVENT_IS_FULL_DAY))
+                                                    );
+                                                }
+                                                dayEventsList.add(event);
                                             }
                                             responseData.put(dayDocument.getId(), new dayEventsData(dayEventsList, dayDocument.getId()));
                                             counter++;
-                                            if(onCompleteCounter == counter) response.setData(responseData);
+                                            if(onCompleteCounter == counter){
+                                                Log.d("Aboba", "onComplete");
+                                                response.setData(responseData);
+
+                                            }
                                         }
                                     });
                         }

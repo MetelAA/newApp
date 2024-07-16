@@ -18,8 +18,8 @@ import java.util.Observer;
 public class scheduleViewModelImpl extends ViewModel implements scheduleViewModel {
     private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
-    private getDayLessonsRepositoryImpl getDayLessonsRepository = new getDayLessonsRepositoryImpl(fStore);
-    private getDayLessonsUseCase getDayLessonsUseCase = new getDayLessonsUseCase(getDayLessonsRepository);
+    private final getDayLessonsRepositoryImpl getDayLessonsRepository = new getDayLessonsRepositoryImpl(fStore);
+    private final getDayLessonsUseCase getDayLessonsUseCase = new getDayLessonsUseCase(getDayLessonsRepository);
 
     MutableLiveData<arrayListForSchedule> onGotDayLessonsLiveData = new MutableLiveData<>();
     MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
@@ -31,9 +31,9 @@ public class scheduleViewModelImpl extends ViewModel implements scheduleViewMode
             @Override
             public void update(Observable observable, Object o) {
                 if(response.getError() == null){
-                    onGotDayLessonsLiveData.postValue(response.getData());
+                    onGotDayLessonsLiveData.setValue(response.getData());
                 }else{
-                    onErrorLiveData.postValue(response.getError());
+                    onErrorLiveData.setValue(response.getError());
                 }
                 response.deleteObservers();
             }

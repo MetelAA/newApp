@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="50dp"
+    tools:context=".ui.news.newsDialogFragment"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:background="@drawable/white_round_shape"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            />
+
+        <ImageButton
+            android:id="@+id/doneNewsDialog"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:src="@drawable/ic_baseline_done"
+            android:scaleType="fitXY"
+            app:tint="@color/bluePrimary"
+            />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/eventTitleNewsDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/simpleTextStyleMontserrat"
+        android:textSize="14sp"
+        android:textColor="@color/grey"
+        android:hint="Название  события"
+    />
+
+    <EditText
+        android:id="@+id/eventDescriptionNewsDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/simpleTextStyleMontserrat"
+        android:textSize="14sp"
+        android:textColor="@color/grey"
+        android:hint="Описание"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <CheckBox
+            android:id="@+id/isFullDayCheckBoxDialogNews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:theme="@style/customCheckBoxStyleNewsDialog"
+            />
+
+        <TextView
+            android:layout_marginStart="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Длительность- весь день"
+            android:fontFamily="@font/montserrat_light"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/eventStartTimeNewsDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/simpleTextStyleMontserrat"
+        android:textSize="14sp"
+        android:textColor="@color/grey"
+        android:hint="Время начала"
+        />
+
+    <EditText
+        android:id="@+id/eventEndTimeNewsDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/simpleTextStyleMontserrat"
+        android:textSize="14sp"
+        android:textColor="@color/grey"
+        android:hint="Время конца"
+        />
+</LinearLayout>

@@ -18,8 +18,8 @@ import java.util.Observer;
 public class newsFragmentViewModelImpl extends ViewModel implements newsFragmentViewModel {
 
     private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    private getMonthEventsRepositoryImpl getMonthEventsRepository = new getMonthEventsRepositoryImpl(fStore);
-    private getMonthEventsUseCase getMonthEventsUseCase = new getMonthEventsUseCase(getMonthEventsRepository);
+    private final getMonthEventsRepositoryImpl getMonthEventsRepository = new getMonthEventsRepositoryImpl(fStore);
+    private final getMonthEventsUseCase getMonthEventsUseCase = new getMonthEventsUseCase(getMonthEventsRepository);
 
     MutableLiveData<String> onErrorLiveData = new MutableLiveData<>();
     MutableLiveData<Map<String, dayEventsData>> gotMonthEvents = new MutableLiveData<>();

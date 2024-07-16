@@ -58,14 +58,26 @@ public class constants {
 
     public static final String KEY_CHAT_MESSAGE_ID = "messageID";
     public static final String KEY_CHAT_MSG_TYPE = "messageType";
+    //public static final String KEY_CHAT_LAST_MESSAGE = "lastMessage"; //хуй знает правильно или нет
     public static final String KEY_CHAT_MSG_TYPE_EQUALS_TEXT = "text";
     public static final String KEY_CHAT_MSG_TYPE_EQUALS_IMAGE = "photo";
     public static final String KEY_PROFILE_IMAGE = "profileImage";
     public static final String KEY_STORAGE_COLLECTION_PROFILE_IMAGEs = "profileImages";
     public static final String KEY_STORAGE_COLLECTION_CHAT_IMAGES = "chatImages";
 
+
     public static final String KEY_GROUP_EVENTS_DAY_EVENT_START_TIME = "eventStartTime";
     public static final String KEY_GROUP_EVENTS_DAY_EVENT_END_TIME = "eventEndTime";
     public static final String KEY_GROUP_EVENTS_DAY_EVENT_TITLE = "eventTitle";
     public static final String KEY_GROUP_EVENTS_DAY_EVENT_DESCRIPTION = "eventDescription";
+    public static final String KEY_GROUP_EVENTS_DAY_EVENT_IS_FULL_DAY = "isFullDay";
+    public static final String KEY_GROUP_EVENTS_DAY_DATE = "dayDate";
+
+
+
+
+    public static final String NEWS_DIALOG_FRAGMENT_RESULT_KEY = "newsDialogResultKey";
+    public static final String SERIALIZABLE_DATE_BUNDLE_KEY = "date";
+    public static final String SERIALIZABLE_EVENT_DATA_BUNDLE_KEY = "eventData";
+
 }

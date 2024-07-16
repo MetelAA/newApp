@@ -16,9 +16,9 @@ import com.example.newapp.R;
 import com.example.newapp.domain.models.arrayListForSchedule;
 import com.example.newapp.domain.models.lesson;
 import com.example.newapp.interfaces.adapterOnBindViewHolder;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -26,22 +26,21 @@ import java.util.Map;
 
 public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerScheduleAdapter.PagerViewHolder> {
 
-    private String[] daysOfWeek;
+    private DayOfWeek[] daysOfWeek1 = DayOfWeek.values();
 
     private adapterOnBindViewHolder callback;
 
-    private Map<String, arrayListForSchedule> weekLessonsList = new HashMap<>();
+    private Map<String, arrayListForSchedule> weekLessonsMap = new HashMap<>();
 
 
-    public ViewPagerScheduleAdapter(String[] daysOfWeek, adapterOnBindViewHolder callback) {
-        this.daysOfWeek = daysOfWeek;
+    public ViewPagerScheduleAdapter(adapterOnBindViewHolder callback) {
         this.callback = callback;
     }
 
     @NonNull
     @Override
     public PagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        weekLessonsList.put("test", null);
+        weekLessonsMap.put("test", null);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_screen, null);
         view.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         ((RecyclerView) view.findViewById(R.id.RecyclerViewInCustomScreen)).setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -50,13 +49,14 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
 
     @Override
     public void onBindViewHolder(@NonNull PagerViewHolder holder, int position) {
-        Log.d("Aboba", "bind day " + daysOfWeek[position]);
-        if (weekLessonsList.get(daysOfWeek[position]) == null) {
-            Log.d("Aboba", "Запрос на получения по дню недели " + daysOfWeek[position]);
-            callback.callback(daysOfWeek[position]);
-            weekLessonsList.put(daysOfWeek[position], new arrayListForSchedule()); //затычка чтобы после вызова notifyDataSetChanged не вызвались заново вызовы бд
+        Log.d("Aboba", "bind day " + daysOfWeek1[position]);
+        if (weekLessonsMap.get(daysOfWeek1[position].toString()) == null) {
+            Log.d("Aboba", "Запрос на получения по дню недели " + daysOfWeek1[position]);
+            callback.callback(daysOfWeek1[position].toString());
+//            weekLessonsMap.put(daysOfWeek[position], new arrayListForSchedule()); //затычка чтобы после вызова notifyDataSetChanged не вызвались заново вызовы бд
         } else {
-            arrayListForSchedule lessonList = weekLessonsList.get(daysOfWeek[position]);
+            arrayListForSchedule lessonList = weekLessonsMap.get(daysOfWeek1[position].toString());
+            assert lessonList != null;
             if (!lessonList.isEmpty()) {
                 holder.bind(lessonList);
             } else {
@@ -67,13 +67,18 @@ public class ViewPagerScheduleAdapter extends RecyclerView.Adapter<ViewPagerSche
 
     @Override
     public int getItemCount() {
-        return daysOfWeek.length;
+        return daysOfWeek1.length;
     }
 
     public void addNewDayLessons(arrayListForSchedule lessons) {
-        weekLessonsList.put(lessons.getDayOfWeek(), lessons);
+        weekLessonsMap.put(lessons.getDayOfWeek(), lessons);
+        for (int i = 0; i < daysOfWeek1.length; i++) {
+            if(TextUtils.equals(lessons.getDayOfWeek(), daysOfWeek1[i].toString())){
+                notifyItemChanged(i);
+            }
+        }
         //Log.d("Aboba", "добавление нового расписания на день недели " + lessons.getDayOfWeek() + "   со знач " + lessons.toString());
-        notifyDataSetChanged();
+
     }
 
 

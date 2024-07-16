@@ -70,7 +70,7 @@ public class calendarViewAdapter extends RecyclerView.Adapter<calendarViewAdapte
         public void bind(dayEventsData dayEvent){
             if(dayEvent != null){
                 date.setText(dayEvent.dayDate);
-                if(dayEvent.events != null){
+                if(dayEvent.events.size() > 0){
                     ///Log.d("Aboba", "event not null");
                     mainEvent.setText(dayEvent.events.get(0).eventTitle);
                     if(dayEvent.events.size() - 1 > 0){

@@ -8,7 +8,7 @@
     android:paddingRight="20dp"
     android:paddingBottom="20dp"
     android:paddingTop="10dp"
-    android:background="@drawable/white_round_shape_background"
+    android:background="@drawable/white_round_topright_bottomleft_shape_background"
     >
     <LinearLayout
         android:layout_width="match_parent"

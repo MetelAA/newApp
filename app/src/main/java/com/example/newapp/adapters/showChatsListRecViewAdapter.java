@@ -48,7 +48,7 @@ public class showChatsListRecViewAdapter extends RecyclerView.Adapter<showChatsL
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-        Log.d("Aboba", "bind   " + list.toString());
+        //Log.d("Aboba", "bind   " + list.get(position).toString());
         holder.bind(list.get(position));
     }
 
